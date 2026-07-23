@@ -1,0 +1,8 @@
+DVS Planning v19.0.2
+
+- Il semaforo Backup rappresenta lo stato condiviso su tutti i dispositivi.
+- Verde quando l'autorizzazione è attiva, l'Agent non segnala errori e l'ultimo backup riuscito risale a non più di 24 ore.
+- Rosso quando l'autorizzazione è revocata, la cartella o i file non sono validi, l'ultimo tentativo è fallito, manca un backup riuscito o sono trascorse più di 24 ore.
+- Un Agent non autorizzato conserva l'errore localmente senza sovrascrivere lo stato globale.
+- Backup Agent aggiornato alla versione 2.0.1.
+- Conservata l'autorizzazione automatica del nuovo computer introdotta nella v19.0.1.

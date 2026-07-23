@@ -1,0 +1,8 @@
+DVS Planning v19.0.3
+
+- Sale 11–15 rinominate visivamente in Sale 1A–5A.
+- Identificativi interni sala-11–sala-15 invariati.
+- Ordine delle sale invariato.
+- Aggiornate le etichette in Dashboard, Planning, moduli, riepiloghi e stampa.
+- Aggiunta migrazione Supabase per allineare export e Backup Agent.
+- Backup Agent 2.0.1 incluso senza modifiche.

@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>DVS Planning v19.0.3</title>
+  <meta name="theme-color" content="#09090b">
+  <link rel="icon" type="image/png" sizes="64x64" href="./assets/icons/dvs-planning-64.png">
+  <link rel="apple-touch-icon" href="./assets/icons/dvs-planning-180.png">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./src/styles.css?v=19-0-3">
+</head>
+<body>
+  <section id="profileGate" class="profile-gate" aria-label="Selezione profilo">
+    <div class="profile-gate-content">
+      <div class="profile-brand">
+        <img src="./assets/logos/digital-video-full.png" alt="Digital Video">
+        <div class="planning-word">PLANNING</div>
+        <div class="planning-glow"></div>
+      </div>
+      <h1>Scegli il tuo profilo</h1>
+      <div id="profileGrid" class="profile-grid"></div>
+      <label class="remember-profile"><input id="rememberProfile" type="checkbox"><span class="checkmark">✓</span><span>Rimani connesso</span></label>
+      <div class="profile-footer">© 2026 Marco D'Agostino per Digital Video Service · Tutti i diritti riservati</div>
+    </div>
+  </section>
+
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="./assets/logos/digital-video-full.png" alt="Digital Video">
+      </div>
+
+      <nav class="sidebar-nav" aria-label="Navigazione principale">
+        <button class="nav-item active" data-view="dashboard" type="button">
+          <span class="nav-icon"><svg class="sf-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="6.5" height="6.5" rx="1.5"/><rect x="14" y="3.5" width="6.5" height="6.5" rx="1.5"/><rect x="3.5" y="14" width="6.5" height="6.5" rx="1.5"/><rect x="14" y="14" width="6.5" height="6.5" rx="1.5"/></svg></span><span>Dashboard</span>
+        </button>
+        <button class="nav-item" data-view="planning" type="button">
+          <span class="nav-icon"><svg class="sf-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16" rx="3"/><path d="M7 2.5v4M17 2.5v4M3 9h18"/><path d="M8 13h3M13 13h3M8 17h3"/></svg></span><span>Planning</span>
+        </button>
+        <button class="nav-item" data-view="editors" type="button">
+          <span class="nav-icon"><svg class="sf-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3.5 20c.5-4 2.4-6 5.5-6s5 2 5.5 6M14 15c3.7-.4 5.8 1.3 6.5 5"/></svg></span><span>Dipendenti</span>
+        </button>
+        <button class="nav-item" data-view="summaries" type="button">
+          <span class="nav-icon"><svg class="sf-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V11M10 20V5M16 20v-7M22 20V8"/></svg></span><span>Riepiloghi</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-status-stack">
+        <button id="backupStatusCard" class="status-card backup-card backup-status-button" type="button" aria-label="Apri stato backup">
+          <div class="status-card-icon"><svg class="sf-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18.5H6a4 4 0 0 1-.6-8A6.5 6.5 0 0 1 18 9a4.8 4.8 0 0 1 0 9.5h-1"/><path d="M12 19V10M8.5 13.5 12 10l3.5 3.5"/></svg></div>
+          <div class="status-card-copy">
+            <strong><i id="backupSidebarLight" class="backup-light is-red" aria-hidden="true"></i>Backup</strong>
+            <span id="backupSidebarDate">Nessun backup registrato</span>
+          </div>
+          <span class="status-card-chevron">›</span>
+        </button>
+
+        <button id="connectedUsersCard" class="status-card users-card" type="button" aria-label="Apri utenti collegati">
+          <div class="status-card-icon"><svg class="sf-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3.5 20c.5-4 2.4-6 5.5-6s5 2 5.5 6M14 15c3.7-.4 5.8 1.3 6.5 5"/></svg></div>
+          <div class="status-card-copy">
+            <strong>Utenti collegati</strong>
+            <span id="sidebarOnlineCount">0 utenti connessi</span>
+          </div>
+          <div id="sidebarOnlineAvatars" class="mini-avatars" aria-hidden="true"></div>
+        </button>
+      </div>
+
+      <div class="sidebar-footer">
+        <button class="nav-item" data-view="settings" type="button">
+          <span class="nav-icon"><svg class="sf-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6V21h-4v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H3v-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1A1.7 1.7 0 0 0 9 4.6 1.7 1.7 0 0 0 10 3V3h4v.1a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.1v4H21a1.7 1.7 0 0 0-1.6 1z"/></svg></span><span>Impostazioni</span>
+        </button>
+        <button id="logoutBtn" class="nav-item logout-item" type="button">
+          <span class="nav-icon"><svg class="sf-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 5H5.5A2.5 2.5 0 0 0 3 7.5v9A2.5 2.5 0 0 0 5.5 19H10M14 8l4 4-4 4M8 12h10"/></svg></span><span>Esci</span>
+        </button>
+        <span id="activeProfileLabel" class="active-profile-label"></span>
+        <span class="build-pill">v19.0.3</span>
+      </div>
+    </aside>
+
+
+    <header id="iphoneTopBar" class="iphone-topbar" aria-label="Barra superiore iPhone">
+      <h1 id="iphoneSectionTitle">Dashboard</h1>
+      <div class="iphone-topbar-status">
+        <button id="iphoneBackupStatus" class="iphone-backup-status" type="button" aria-label="Stato backup">
+          <svg class="iphone-backup-cloud" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18.5H6a4 4 0 0 1-.6-8A6.5 6.5 0 0 1 18 9a4.8 4.8 0 0 1 0 9.5h-1"/></svg>
+          <i id="iphoneBackupLight" class="backup-light is-red" aria-hidden="true"></i>
+        </button>
+        <button id="iphoneOnlineUsers" class="iphone-online-users" type="button" aria-label="Utenti collegati">
+          <span id="iphoneOnlineAvatars" class="iphone-online-avatars"></span>
+        </button>
+        <button id="iphoneContextAction" class="iphone-context-action hidden" type="button"></button>
+      </div>
+    </header>
+
+    <main class="main-area">
+      <section id="dashboardView" class="app-view active dashboard-view">
+        <header class="dashboard-header">
+          <div>
+            <h1 id="dashboardGreeting">Buongiorno</h1>
+            <p id="dashboardDate"></p>
+          </div>
+        </header>
+
+        <section class="dashboard-content">
+          <div class="dashboard-kpis">
+            <button id="todayShiftsCard" class="dashboard-kpi is-clickable" type="button">
+              <span class="kpi-icon"><svg class="sf-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16" rx="3"/><path d="M7 2.5v4M17 2.5v4M3 9h18"/><path d="m9 15 2 2 4-5"/></svg></span><span class="kpi-copy"><small>Turni oggi</small><strong id="todayShiftCount">0</strong></span><span class="kpi-action">Apri Planning&nbsp; →</span>
+            </button>
+            <article class="dashboard-kpi">
+              <span class="kpi-icon"><svg class="sf-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3.5 20c.5-4 2.4-6 5.5-6s5 2 5.5 6M14 15c3.7-.4 5.8 1.3 6.5 5"/></svg></span><span class="kpi-copy"><small>Persone presenti</small><strong id="todayPeopleCount">0</strong></span>
+            </article>
+            <article class="dashboard-kpi">
+              <span class="kpi-icon"><svg class="sf-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4" width="17" height="16" rx="2.5"/><path d="M8 20V8h8v12M11 13h2"/></svg></span><span class="kpi-copy"><small>Sale occupate</small><strong id="todayRoomCount">0/15</strong></span>
+            </article>
+          </div>
+
+          <div class="dashboard-grid">
+            <article class="dashboard-panel today-planning-panel">
+              <div class="panel-heading"><div><small>OGGI</small><h2>Planning di oggi</h2></div><button id="openTodayPlanning" type="button">Apri</button></div>
+              <div id="todayPlanningList" class="today-planning-list"></div>
+            </article>
+
+            <article class="dashboard-panel rooms-panel">
+              <div class="panel-heading"><div><small>DISPONIBILITÀ</small><h2>Stato sale</h2></div></div>
+              <div id="todayRoomsList" class="compact-dashboard-list"></div>
+            </article>
+
+            <article class="dashboard-panel employees-panel">
+              <div class="panel-heading"><div><small>PRESENZE</small><h2>Dipendenti presenti</h2></div></div>
+              <div id="todayEmployeesList" class="compact-dashboard-list"></div>
+            </article>
+
+            <article class="dashboard-panel reminders-panel">
+              <div class="panel-heading"><div><small>CONDIVISI</small><h2>Promemoria</h2></div><span id="remindersCount" class="panel-badge">0</span></div>
+              <form id="reminderForm" class="reminder-form"><input id="reminderInput" maxlength="180" placeholder="Scrivi un promemoria condiviso…" autocomplete="off"><button type="submit">+</button></form>
+              <div id="remindersList" class="reminders-list"></div>
+            </article>
+          </div>
+        </section>
+      </section>
+
+      <section id="planningView" class="app-view">
+        <header class="topbar">
+          <div class="page-title">
+            <h1>Planning sale</h1>
+            <p>Turni giornalieri · Sale 1–15</p>
+          </div>
+
+          <div class="toolbar">
+            <button id="todayBtn" class="toolbar-btn" type="button">Oggi</button>
+
+            <div class="month-switcher">
+              <button id="prevMonth" class="icon-btn" type="button" aria-label="Mese precedente">‹</button>
+              <button id="monthLabel" class="month-label" type="button">Luglio 2026</button>
+              <button id="nextMonth" class="icon-btn" type="button" aria-label="Mese successivo">›</button>
+            </div>
+
+            <label class="zoom-control" title="Lo zoom agisce soltanto sul planning">
+              <span>Zoom</span>
+              <select id="zoomSelect" aria-label="Zoom planning">
+                <option value="fit">Adatta finestra</option>
+                <option value="0.5">50%</option><option value="0.75">75%</option><option value="1" selected>100%</option>
+                <option value="1.25">125%</option><option value="1.5">150%</option><option value="1.75">175%</option><option value="2">200%</option>
+              </select>
+            </label>
+
+            <button id="newShiftBtn" class="primary-btn" type="button">+ Nuovo turno</button>
+          </div>
+        </header>
+
+        <section class="planning-frame">
+          <div id="planningScroller" class="planning-scroller">
+            <div id="planningCanvas" class="planning-canvas">
+              <div id="planningGrid" class="planning-grid" aria-label="Planning mensile"></div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section id="editorsView" class="app-view">
+        <header class="topbar">
+          <div class="page-title">
+            <h1>Dipendenti</h1>
+            <p>Rubrica del personale sincronizzata con Supabase</p>
+          </div>
+          <button id="newEditorBtn" class="primary-btn" type="button">+ Nuovo dipendente</button>
+        </header>
+
+        <section class="editors-page">
+          <div class="editors-card">
+            <div class="editors-toolbar">
+              <input id="editorSearch" type="search" placeholder="Cerca per nome, qualifica, telefono, email o note">
+              <select id="editorRoleFilter" class="editor-role-filter" aria-label="Filtra per qualifica">
+                <option value="">Tutte le qualifiche</option>
+                <option value="Montatore">Montatore</option>
+                <option value="Grafico">Grafico</option>
+                <option value="Colorist">Colorist</option>
+                <option value="Sound">Sound</option>
+                <option value="Assistente">Assistente</option>
+                <option value="Altro">Altro</option>
+              </select>
+              <span id="editorsCount" class="count-pill"></span>
+            </div>
+            <div id="editorsList" class="editors-list"></div>
+          </div>
+        </section>
+      </section>
+
+      <section id="summariesView" class="app-view summaries-view">
+        <header class="topbar summaries-topbar">
+          <div class="page-title"><h1>Riepiloghi</h1><p>Conteggio mensile dei turni per dipendente</p></div>
+          <div class="toolbar summaries-toolbar">
+            <div class="month-switcher">
+              <button id="summaryPrevMonth" class="icon-btn" type="button" aria-label="Mese precedente">‹</button>
+              <button id="summaryMonthLabel" class="month-label" type="button">Luglio 2026</button>
+              <button id="summaryNextMonth" class="icon-btn" type="button" aria-label="Mese successivo">›</button>
+            </div>
+            <input id="summarySearch" class="summary-search" type="search" placeholder="Cerca dipendente" autocomplete="off">
+            <button id="summaryPdfBtn" class="toolbar-btn" type="button">Esporta PDF</button>
+          </div>
+        </header>
+        <section class="summaries-page">
+          <div class="summaries-card">
+            <div class="summary-table-head"><span>Dipendente</span><span>Turni</span><span>Ore</span></div>
+            <div id="summaryEmployeesList" class="summary-employees-list"></div>
+          </div>
+          <aside id="summaryDetailPanel" class="summary-detail-panel" aria-live="polite">
+            <div id="summaryDetailEmpty" class="summary-detail-empty"><span>▥</span><h2>Seleziona un dipendente</h2><p>Apri una riga per vedere il dettaglio dei turni del mese.</p></div>
+            <div id="summaryDetailContent" class="summary-detail-content" hidden></div>
+          </aside>
+        </section>
+      </section>
+
+      <section id="connectedView" class="app-view management-view">
+        <header class="topbar"><div class="page-title"><h1>Utenti collegati</h1><p>Presenza aggiornata automaticamente</p></div></header>
+        <div class="management-content">
+          <div class="management-card">
+            <div class="management-heading"><div><small>ONLINE</small><h2 id="connectedUsersTitle">0 utenti connessi</h2></div></div>
+            <div id="connectedUsersList" class="connected-users-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="settingsView" class="app-view management-view settings-view">
+        <header class="topbar"><div class="page-title"><h1 id="settingsPageTitle">Impostazioni</h1><p id="settingsPageSubtitle">Gestione applicazione</p></div></header>
+
+        <div id="settingsHome" class="settings-home">
+          <button id="openProfilesSettings" class="settings-liquid-card" type="button">
+            <span class="settings-profile-avatar" aria-hidden="true"><span class="profile-head"></span><span class="profile-body"></span></span>
+            <span class="settings-card-copy"><strong>Gestione Profili</strong><small>Aggiungi, modifica o elimina i profili registrati</small></span>
+            <span class="settings-card-chevron">›</span>
+          </button>
+          <button class="settings-liquid-card" type="button" data-settings-section="backup">
+            <span class="settings-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 18a5 5 0 0 1-.6-9.96A6.5 6.5 0 0 1 19 10.5 3.75 3.75 0 0 1 18.25 18H7Z"/><path d="M12 15V9m0 0-2.5 2.5M12 9l2.5 2.5"/></svg></span>
+            <span class="settings-card-copy"><strong>Backup</strong><small>Salvataggio e ripristino dei dati dell’applicazione</small></span>
+            <span class="settings-card-chevron">›</span>
+          </button>
+          <button class="settings-liquid-card" type="button" data-settings-section="print">
+            <span class="settings-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 9V4h10v5M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><path d="M7 14h10v6H7z"/><path d="M17.5 12h.01"/></svg></span>
+            <span class="settings-card-copy"><strong>Stampa</strong><small>Preferenze e layout per la stampa del Planning</small></span>
+            <span class="settings-card-chevron">›</span>
+          </button>
+          <button class="settings-liquid-card" type="button" data-settings-section="info">
+            <span class="settings-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 10v6M12 7.25h.01"/></svg></span>
+            <span class="settings-card-copy"><strong>Informazioni</strong><small>Versione, progetto e dettagli dell’applicazione</small></span>
+            <span class="settings-card-chevron">›</span>
+          </button>
+        </div>
+
+        <div id="profilesSettingsSection" class="settings-detail" hidden>
+          <div class="settings-detail-toolbar"><button id="backToSettings" class="toolbar-btn" type="button">‹ Impostazioni</button></div>
+          <div class="management-card profiles-settings-card">
+            <div class="management-heading"><div><small>ACCESSO</small><h2>Profili registrati</h2></div><button id="newProfileBtn" class="primary-btn" type="button">+ Nuovo profilo</button></div>
+            <div id="registeredProfilesList" class="registered-profiles-list"></div>
+          </div>
+        </div>
+
+        <div id="genericSettingsSection" class="settings-detail" hidden>
+          <div class="settings-detail-toolbar"><button id="backFromGenericSettings" class="toolbar-btn" type="button">‹ Impostazioni</button></div>
+          <div id="genericSettingsContent" class="management-card settings-generic-card">
+            <img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video">
+            <h2>DVS Planning</h2>
+            <p>Applicazione collaborativa per la gestione del Planning di Digital Video Service.</p>
+            <div class="settings-info-meta">
+              <div><span>Versione</span><strong>v19.0.3</strong></div>
+              <div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div>
+              <div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div>
+            </div>
+            <p class="settings-info-copyright"><strong>Copyright © 2026 Marco D'Agostino per Digital Video Service</strong><br>Tutti i diritti riservati.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+    <nav id="iphoneBottomNav" class="iphone-bottom-nav" aria-label="Navigazione iPhone">
+      <button class="iphone-nav-item active" data-view="dashboard" type="button" aria-label="Dashboard"><svg class="sf-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="6.5" height="6.5" rx="1.5"/><rect x="14" y="3.5" width="6.5" height="6.5" rx="1.5"/><rect x="3.5" y="14" width="6.5" height="6.5" rx="1.5"/><rect x="14" y="14" width="6.5" height="6.5" rx="1.5"/></svg></button>
+      <button class="iphone-nav-item" data-view="planning" type="button" aria-label="Planning"><svg class="sf-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16" rx="3"/><path d="M7 2.5v4M17 2.5v4M3 9h18"/><path d="M8 13h3M13 13h3M8 17h3"/></svg></button>
+      <button class="iphone-nav-item" data-view="editors" type="button" aria-label="Dipendenti"><svg class="sf-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3.5 20c.5-4 2.4-6 5.5-6s5 2 5.5 6M14 15c3.7-.4 5.8 1.3 6.5 5"/></svg></button>
+      <button class="iphone-nav-item" data-view="summaries" type="button" aria-label="Riepiloghi"><svg class="sf-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V11M10 20V5M16 20v-7M22 20V8"/></svg></button>
+      <button class="iphone-nav-item" data-view="settings" type="button" aria-label="Impostazioni"><svg class="sf-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6V21h-4v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H3v-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1A1.7 1.7 0 0 0 9 4.6 1.7 1.7 0 0 0 10 3V3h4v.1a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.1v4H21a1.7 1.7 0 0 0-1.6 1z"/></svg></button>
+    </nav>
+
+  </div>
+
+  <dialog id="shiftDialog" class="app-dialog shift-dialog-wide">
+    <form id="shiftForm">
+      <div class="dialog-header">
+        <div>
+          <span class="dialog-eyebrow">TURNO</span>
+          <h2 id="shiftDialogTitle">Nuovo turno</h2>
+        </div>
+        <button id="closeShiftDialog" class="dialog-close" type="button" aria-label="Chiudi">×</button>
+      </div>
+
+      <input id="shiftId" type="hidden">
+
+      <div class="form-grid">
+        <label>
+          Produzione
+          <input id="production" list="productionSuggestions" required placeholder="RAI, CATTLEYA…" autocomplete="off">
+          <datalist id="productionSuggestions"></datalist>
+        </label>
+
+        <label>
+          Film / Programma
+          <input id="film" list="filmSuggestions" required placeholder="VITA IN DIRETTA" autocomplete="off">
+          <datalist id="filmSuggestions"></datalist>
+        </label>
+
+        <fieldset class="date-range-field form-wide">
+          <legend>Periodo</legend>
+          <div class="date-picker-tabs">
+            <button id="dateFromTrigger" type="button" class="date-picker-tab" aria-expanded="false" aria-controls="dateCalendarPopover">
+              <small>Dal</small>
+              <strong id="dateFromDisplay">—</strong>
+            </button>
+            <span class="date-arrow">→</span>
+            <button id="dateToTrigger" type="button" class="date-picker-tab" aria-expanded="false" aria-controls="dateCalendarPopover">
+              <small>Al</small>
+              <strong id="dateToDisplay">—</strong>
+            </button>
+          </div>
+          <input id="dateFrom" type="hidden" required>
+          <input id="dateTo" type="hidden" required>
+          <div id="dateCalendarPopover" class="compact-date-popover hidden" aria-label="Calendario data">
+            <div class="compact-calendar-toolbar">
+              <button id="datePrevMonth" type="button" aria-label="Mese precedente">‹</button>
+              <strong id="dateCalendarTitle"></strong>
+              <button id="dateNextMonth" type="button" aria-label="Mese successivo">›</button>
+            </div>
+            <div class="compact-calendar-weekdays"><span>L</span><span>M</span><span>M</span><span>G</span><span>V</span><span>S</span><span>D</span></div>
+            <div id="dateCalendarGrid" class="compact-calendar-grid"></div>
+          </div>
+          <div id="weekdayPicker" class="weekday-picker" aria-label="Giorni della settimana">
+            <button type="button" data-weekday="all" class="active">T</button>
+            <button type="button" data-weekday="1">L</button>
+            <button type="button" data-weekday="2">M</button>
+            <button type="button" data-weekday="3">M</button>
+            <button type="button" data-weekday="4">G</button>
+            <button type="button" data-weekday="5">V</button>
+            <button type="button" data-weekday="6">S</button>
+            <button type="button" data-weekday="0">D</button>
+          </div>
+        </fieldset>
+
+        <label>
+          Dalle
+          <input id="start" type="time" required value="10:00">
+        </label>
+
+        <label>
+          Alle
+          <input id="end" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" maxlength="5" pattern="(?:[01]\d|2[0-3]):[0-5]\d|24:00" required value="18:00" placeholder="HH:MM">
+        </label>
+
+        <label>
+          Sala
+          <select id="room" required></select>
+        </label>
+
+        <label>
+          Lavorazione
+          <select id="workType" required>
+            <option>EDIT</option>
+            <option>ASSISTENTE</option>
+            <option>GRAFICA</option>
+            <option>COLOR</option>
+            <option>SOUND</option>
+            <option>REDAZIONE</option>
+          </select>
+        </label>
+
+        <label class="form-wide">
+          Dipendente
+          <input id="editorSearchInput" list="editorSuggestions" placeholder="Cerca per nome o cognome" autocomplete="off">
+          <datalist id="editorSuggestions"></datalist>
+          <input id="editor" type="hidden">
+        </label>
+
+        <label class="checkbox-label option-card">
+          <input id="isClient" type="checkbox">
+          <span><strong>CLIENTE</strong><small>Disabilita la selezione del dipendente</small></span>
+        </label>
+
+        <label class="checkbox-label option-card">
+          <input id="isDoubleStation" type="checkbox">
+          <span><strong>DOPPIA POSTAZIONE</strong><small>Mostra la dicitura rossa nel turno</small></span>
+        </label>
+
+        <label class="checkbox-label option-card">
+          <input id="isVariable" type="checkbox">
+          <span><strong>VARIABILE</strong><small>Mostra “- VARIABILE” in rosso accanto alla lavorazione</small></span>
+        </label>
+
+        <label class="checkbox-label option-card">
+          <input id="hasShiftNotes" type="checkbox">
+          <span><strong>NOTE</strong><small>Aggiunge una nota rossa sotto la lavorazione</small></span>
+        </label>
+
+        <label id="shiftNotesField" class="form-wide shift-notes-field hidden">
+          Nota turno
+          <textarea id="shiftNotes" maxlength="100" rows="2" placeholder="Inserisci una nota..." autocomplete="off"></textarea>
+          <small class="shift-notes-counter"><span id="shiftNotesCount">0</span>/100</small>
+        </label>
+
+        <fieldset class="status-field form-wide">
+          <legend>Stato</legend>
+          <div class="segmented-control">
+            <button type="button" data-status="definitivo" class="active">Definitivo</button>
+            <button type="button" data-status="provvisorio">Provvisorio</button>
+          </div>
+          <input id="status" type="hidden" value="definitivo">
+        </fieldset>
+
+        <label id="colorField" class="form-wide">
+          Colore turno
+          <select id="color" required></select>
+        </label>
+      </div>
+
+      <div id="shiftFormError" class="form-error" role="alert"></div>
+
+      <div class="dialog-actions">
+        <button id="deleteShiftBtn" class="danger-btn hidden" type="button">Elimina turno</button>
+        <div class="dialog-spacer"></div>
+        <button id="cancelShiftBtn" class="secondary-btn" type="button">Annulla</button>
+        <button class="primary-btn" type="submit">Salva turno</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="editorDialog" class="app-dialog editor-dialog">
+    <form id="editorForm">
+      <div class="dialog-header">
+        <div>
+          <span class="dialog-eyebrow">DIPENDENTE</span>
+          <h2 id="editorDialogTitle">Nuovo dipendente</h2>
+        </div>
+        <button id="closeEditorDialog" class="dialog-close" type="button" aria-label="Chiudi">×</button>
+      </div>
+
+      <input id="editorId" type="hidden">
+
+      <div class="form-grid">
+        <label>
+          Nome
+          <input id="editorFirstName" required placeholder="Nome" autocomplete="given-name">
+        </label>
+        <label>
+          Cognome
+          <input id="editorLastName" required placeholder="Cognome" autocomplete="family-name">
+        </label>
+        <label>
+          Qualifica
+          <select id="editorRole" required>
+            <option value="Montatore">Montatore</option>
+            <option value="Grafico">Grafico</option>
+            <option value="Colorist">Colorist</option>
+            <option value="Sound">Sound</option>
+            <option value="Assistente">Assistente</option>
+            <option value="Altro">Altro</option>
+          </select>
+        </label>
+        <label>
+          Telefono
+          <input id="editorPhone" type="tel" placeholder="333 1234567" autocomplete="tel">
+        </label>
+        <label class="form-wide">
+          Email
+          <input id="editorEmail" type="email" placeholder="nome@azienda.it" autocomplete="email">
+        </label>
+        <label class="form-wide">
+          Note
+          <textarea id="editorNotes" rows="4" placeholder="Aggiungi liberamente informazioni utili…"></textarea>
+        </label>
+      </div>
+
+      <div id="editorFormError" class="form-error" role="alert"></div>
+
+      <div class="dialog-actions">
+        <button id="deleteEditorBtn" class="danger-btn hidden" type="button">Elimina</button>
+        <div class="dialog-spacer"></div>
+        <button id="cancelEditorBtn" class="secondary-btn" type="button">Annulla</button>
+        <button class="primary-btn" type="submit">Salva dipendente</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="selectionBadge" class="selection-badge hidden" aria-live="polite"></div>
+
+  <div id="contextMenu" class="context-menu hidden" role="menu" aria-label="Azioni turno">
+    <button type="button" data-action="edit">Modifica turno</button>
+    <button type="button" data-action="confirm">Conferma turno</button>
+    <button type="button" data-action="unconfirm">Annulla conferma</button>
+    <div class="context-separator"></div>
+    <button type="button" data-action="copy">Copia</button>
+    <button type="button" data-action="cut">Taglia</button>
+    <button type="button" data-action="paste">Incolla</button>
+    <div class="context-separator"></div>
+    <button type="button" data-action="make-definitive">Rendi definitivo</button>
+    <button type="button" data-action="make-provisional">Rendi provvisorio</button>
+    <div class="context-separator"></div>
+    <button type="button" class="danger-action" data-action="delete">Elimina</button>
+  </div>
+
+  <dialog id="profileDialog" class="app-dialog profile-dialog">
+    <form id="profileForm">
+      <div class="dialog-header"><div><span class="dialog-eyebrow">PROFILO</span><h2 id="profileDialogTitle">Nuovo profilo</h2></div><button id="closeProfileDialog" class="dialog-close" type="button" aria-label="Chiudi">×</button></div>
+      <input id="profileId" type="hidden">
+      <div class="form-grid profile-form-grid">
+        <label>Nome<input id="profileFirstName" required maxlength="60" autocomplete="off"></label>
+        <label>Cognome<input id="profileLastName" required maxlength="60" autocomplete="off"></label>
+        <label>Iniziali<input id="profileInitials" maxlength="4" placeholder="MD" autocomplete="off"></label>
+        <label>Colore<select id="profileTone"><option value="red">Rosso</option><option value="blue">Blu</option><option value="purple">Viola</option><option value="orange">Arancione</option><option value="green">Verde</option><option value="cyan">Azzurro</option></select></label>
+        <label class="profile-active-field"><input id="profileActive" type="checkbox" checked><span>Profilo attivo</span></label>
+      </div>
+      <div class="dialog-actions"><button id="deleteProfileBtn" class="danger-btn" type="button">Elimina</button><span class="dialog-spacer"></span><button id="cancelProfileBtn" class="secondary-btn" type="button">Annulla</button><button class="primary-btn" type="submit">Salva</button></div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" aria-live="polite"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./src/config.js?v=11.0"></script>
+  <script src="./src/app.js?v=19-0-3"></script>
+</body>
+</html>
