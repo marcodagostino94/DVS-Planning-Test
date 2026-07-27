@@ -140,13 +140,17 @@ const planningCanvas = document.getElementById("planningCanvas");
 const planningScroller = document.getElementById("planningScroller");
 
 // Modalità iPad separata: il comportamento Mac resta invariato.
-const IS_IPHONE = /iPhone|iPod/.test(navigator.userAgent);
-const IS_IPAD = /iPad/.test(navigator.userAgent)
-  || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+const IS_SMALL_APPLE_TOUCH = navigator.maxTouchPoints > 1
+  && /Macintosh|MacIntel|iPhone|iPod/.test(`${navigator.userAgent} ${navigator.platform}`)
+  && Math.min(screen.width, screen.height) <= 500;
+const IS_IPHONE = /iPhone|iPod/.test(navigator.userAgent) || IS_SMALL_APPLE_TOUCH;
+const IS_IPAD = !IS_IPHONE && (/iPad/.test(navigator.userAgent)
+  || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1));
 const IS_TOUCH_APPLE = IS_IPAD || IS_IPHONE;
 function updateAppleDeviceLayout() {
   const iphoneLandscape = IS_IPHONE && window.matchMedia("(orientation: landscape)").matches;
   document.documentElement.classList.toggle("is-iphone-device", IS_IPHONE);
+  document.documentElement.classList.toggle("is-iphone-landscape", iphoneLandscape);
   document.documentElement.classList.toggle("is-iphone", IS_IPHONE && !iphoneLandscape);
   document.documentElement.classList.toggle("is-ipad", IS_IPAD || iphoneLandscape);
 }

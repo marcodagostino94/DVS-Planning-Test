@@ -1870,6 +1870,151 @@ html.is-iphone-device .iphone-profile-logout{
 }
 html.is-iphone-device .iphone-profile-logout{display:flex}
 html.is-iphone-device .iphone-profile-logout .sf-icon{width:20px;height:20px}
+
+/* v20.0 — iPhone orizzontale: navigazione iPad e Dashboard interamente accessibile. */
+html.is-iphone-landscape,
+html.is-iphone-landscape body{
+  width:100%;
+  min-width:0;
+  height:100%;
+  overflow:hidden;
+}
+html.is-iphone-landscape{
+  --sidebar-width:180px;
+}
+html.is-iphone-landscape .app-shell{
+  display:grid!important;
+  grid-template-columns:var(--sidebar-width) minmax(0,1fr)!important;
+  width:100vw;
+  height:100dvh;
+  padding:0!important;
+}
+html.is-iphone-landscape .sidebar{
+  display:flex!important;
+  min-width:0;
+  padding:8px!important;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+}
+html.is-iphone-landscape .brand{
+  flex:0 0 50px;
+  height:50px;
+  margin-bottom:7px;
+}
+html.is-iphone-landscape .brand img{
+  width:132px;
+  max-height:38px;
+}
+html.is-iphone-landscape .sidebar-nav{gap:3px}
+html.is-iphone-landscape .nav-item{
+  min-height:36px;
+  gap:9px;
+  padding:7px 9px;
+  font-size:11px;
+}
+html.is-iphone-landscape .sidebar-status-stack{
+  gap:6px;
+  padding-top:8px;
+}
+html.is-iphone-landscape .status-card{
+  min-height:52px;
+  grid-template-columns:30px minmax(0,1fr) auto;
+  gap:7px;
+  padding:7px;
+  border-radius:13px;
+}
+html.is-iphone-landscape .status-card-icon{
+  width:29px;
+  height:29px;
+}
+html.is-iphone-landscape .status-card-icon .sf-icon{width:17px;height:17px}
+html.is-iphone-landscape .sidebar-footer{margin-top:6px;gap:3px}
+html.is-iphone-landscape .active-profile-label,
+html.is-iphone-landscape .build-pill{display:none}
+html.is-iphone-landscape .main-area{
+  width:100%;
+  height:100dvh;
+  min-width:0;
+  min-height:0;
+  overflow:hidden;
+}
+html.is-iphone-landscape #dashboardView.dashboard-view{
+  display:block!important;
+  width:100%!important;
+  height:100dvh!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior-y:contain;
+}
+html.is-iphone-landscape #dashboardView .dashboard-header{
+  padding:14px 18px 5px;
+}
+html.is-iphone-landscape #dashboardView .dashboard-header h1{font-size:23px}
+html.is-iphone-landscape #dashboardView .dashboard-header p{margin-top:3px}
+html.is-iphone-landscape #dashboardView .dashboard-content{
+  display:block!important;
+  width:100%;
+  min-height:0;
+  padding:8px 18px calc(24px + env(safe-area-inset-bottom))!important;
+  overflow:visible!important;
+}
+html.is-iphone-landscape .dashboard-kpis{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:9px;
+  margin:0 0 10px;
+}
+html.is-iphone-landscape .dashboard-kpi{
+  width:100%;
+  min-height:86px;
+  grid-template-columns:38px minmax(0,1fr);
+  gap:9px;
+  padding:11px;
+  border-radius:16px;
+}
+html.is-iphone-landscape .dashboard-kpi .kpi-icon{width:38px;height:38px}
+html.is-iphone-landscape .dashboard-kpi .kpi-icon .sf-icon{width:20px;height:20px}
+html.is-iphone-landscape .dashboard-kpi .kpi-copy{gap:3px}
+html.is-iphone-landscape .dashboard-kpi .kpi-copy small{font-size:10px}
+html.is-iphone-landscape .dashboard-kpi .kpi-copy strong{font-size:28px}
+html.is-iphone-landscape .dashboard-kpi .kpi-action{display:none}
+html.is-iphone-landscape #dashboardView .dashboard-grid{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  grid-template-rows:auto!important;
+  gap:10px;
+  min-height:0!important;
+  overflow:visible!important;
+}
+html.is-iphone-landscape #dashboardView .dashboard-panel{
+  grid-column:auto;
+  grid-row:auto;
+  min-height:180px!important;
+  height:auto!important;
+  max-height:none!important;
+  padding:13px;
+  overflow:hidden!important;
+}
+html.is-iphone-landscape #dashboardView .today-planning-panel,
+html.is-iphone-landscape #dashboardView .reminders-panel{
+  grid-column:1 / -1;
+}
+html.is-iphone-landscape #dashboardView .today-planning-list,
+html.is-iphone-landscape #dashboardView .compact-dashboard-list,
+html.is-iphone-landscape #dashboardView .reminders-list{
+  flex:0 0 auto!important;
+  height:auto!important;
+  min-height:55px!important;
+  max-height:210px!important;
+  overflow-y:auto!important;
+  -webkit-overflow-scrolling:touch;
+}
+html.is-iphone-landscape #dashboardView #todayRoomsList{
+  height:auto!important;
+  min-height:150px!important;
+  max-height:210px!important;
+}
 @media(max-width:760px){
   html.is-iphone .app-shell{height:100dvh;overflow:hidden}
   html.is-iphone #dashboardView{overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain}
