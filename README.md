@@ -1,4 +1,10 @@
-# DVS Planning v20.1
+# DVS Planning v20.2
+
+## Novità 20.2
+
+- Barra Liquid Glass realmente sovrapposta ai contenuti.
+- Capsula attiva trascinabile tra le sezioni su iPhone verticale.
+- La sezione viene aperta al rilascio della capsula.
 
 ## Novità 20.1
 

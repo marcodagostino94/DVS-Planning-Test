@@ -1,4 +1,4 @@
-// DVS Planning v20.1 – iPhone Liquid Glass navigation
+// DVS Planning v20.2 – draggable iPhone Liquid Glass navigation
 
 const ROOMS = [
   ...Array.from({ length: 15 }, (_, index) => ({
@@ -2286,7 +2286,7 @@ function openPrintPreview() {
       });
     });
     const weekLabel=`${shortPrintDate(week.start)} – ${shortPrintDate(week.end)}`;
-    return `<main class="paper"><header class="head"><div><h1>Digital Video Service</h1><p>PLANNING · ${escapeHtml(monthName(printMonth))}</p><small>Settimana ${escapeHtml(weekLabel)}</small></div><strong>${selectedRooms.length===ROOMS.length?'Tutte le sale':`${selectedRooms.length} sale selezionate`}</strong></header><section class="grid">${cells.join('')}</section><footer class="page-footer"><span>DVS Planning · v20.1</span><span>Pagina ${pageIndex+1} di ${selectedWeeks.length}</span></footer></main>`;
+    return `<main class="paper"><header class="head"><div><h1>Digital Video Service</h1><p>PLANNING · ${escapeHtml(monthName(printMonth))}</p><small>Settimana ${escapeHtml(weekLabel)}</small></div><strong>${selectedRooms.length===ROOMS.length?'Tutte le sale':`${selectedRooms.length} sale selezionate`}</strong></header><section class="grid">${cells.join('')}</section><footer class="page-footer"><span>DVS Planning · v20.2</span><span>Pagina ${pageIndex+1} di ${selectedWeeks.length}</span></footer></main>`;
   }).join('');
   const popup=window.open('','_blank');
   if(!popup)return showToast('Consenti l’apertura della finestra di anteprima');
@@ -2312,6 +2312,7 @@ const IPHONE_VIEW_TITLES = {
 function updateIPhoneChrome(viewName) {
   if (!IS_IPHONE) return;
   document.querySelectorAll(".iphone-nav-item[data-view]").forEach(item => item.classList.toggle("active", item.dataset.view === viewName));
+  updateIPhoneNavIndicator(viewName);
   const title = document.getElementById("iphoneSectionTitle");
   if (title) title.textContent = IPHONE_VIEW_TITLES[viewName] || "DVS Planning";
   const action = document.getElementById("iphoneContextAction");
@@ -2330,6 +2331,85 @@ function updateIPhoneChrome(viewName) {
     action.onclick = () => document.getElementById("newEditorBtn")?.click();
     action.classList.remove("hidden");
   }
+}
+
+const IPHONE_NAV_VIEWS = ["dashboard", "planning", "editors", "summaries", "settings"];
+function updateIPhoneNavIndicator(viewName, animate = true) {
+  const indicator = document.getElementById("iphoneNavIndicator");
+  const nav = document.getElementById("iphoneBottomNav");
+  const index = IPHONE_NAV_VIEWS.indexOf(viewName);
+  if (!indicator || !nav || index < 0) return;
+  const step = Math.max(0, (nav.getBoundingClientRect().width - 10) / IPHONE_NAV_VIEWS.length);
+  indicator.classList.toggle("no-transition", !animate);
+  indicator.style.transform = `translate3d(${index * step}px,0,0)`;
+  if (!animate) requestAnimationFrame(() => indicator.classList.remove("no-transition"));
+}
+
+function bindIPhoneDraggableNavigation() {
+  const nav = document.getElementById("iphoneBottomNav");
+  const indicator = document.getElementById("iphoneNavIndicator");
+  if (!nav || !indicator || !IS_IPHONE) return;
+  let dragging = false;
+  let pointerId = null;
+  let suppressClick = false;
+  const geometry = () => {
+    const rect = nav.getBoundingClientRect();
+    return { rect, step:(rect.width - 10) / IPHONE_NAV_VIEWS.length };
+  };
+  const moveIndicator = clientX => {
+    const { rect, step } = geometry();
+    const x = Math.max(0, Math.min(step * (IPHONE_NAV_VIEWS.length - 1), clientX - rect.left - 5 - step / 2));
+    indicator.style.transform = `translate3d(${x}px,0,0)`;
+  };
+  nav.addEventListener("pointerdown", event => {
+    if (!document.documentElement.classList.contains("is-iphone")) return;
+    const item = event.target.closest(".iphone-nav-item");
+    if (!item?.classList.contains("active")) return;
+    dragging = true;
+    pointerId = event.pointerId;
+    suppressClick = false;
+    indicator.classList.add("is-dragging", "no-transition");
+    nav.setPointerCapture?.(pointerId);
+    moveIndicator(event.clientX);
+    event.preventDefault();
+  });
+  nav.addEventListener("pointermove", event => {
+    if (!dragging || event.pointerId !== pointerId) return;
+    suppressClick = true;
+    moveIndicator(event.clientX);
+    event.preventDefault();
+  });
+  const finish = event => {
+    if (!dragging || event.pointerId !== pointerId) return;
+    const { rect, step } = geometry();
+    const index = Math.max(0, Math.min(IPHONE_NAV_VIEWS.length - 1, Math.floor((event.clientX - rect.left - 5) / step)));
+    dragging = false;
+    nav.releasePointerCapture?.(pointerId);
+    pointerId = null;
+    indicator.classList.remove("is-dragging", "no-transition");
+    openView(IPHONE_NAV_VIEWS[index]);
+    suppressClick = true;
+    setTimeout(() => { suppressClick = false; }, 0);
+    event.preventDefault();
+  };
+  nav.addEventListener("pointerup", finish);
+  nav.addEventListener("pointercancel", event => {
+    if (!dragging || event.pointerId !== pointerId) return;
+    dragging = false;
+    pointerId = null;
+    indicator.classList.remove("is-dragging", "no-transition");
+    const active = nav.querySelector(".iphone-nav-item.active")?.dataset.view;
+    updateIPhoneNavIndicator(active || "dashboard");
+  });
+  nav.addEventListener("click", event => {
+    if (!suppressClick) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  }, true);
+  window.addEventListener("resize", () => {
+    const active = nav.querySelector(".iphone-nav-item.active")?.dataset.view;
+    updateIPhoneNavIndicator(active || "dashboard", false);
+  });
 }
 
 function updateIPhoneOnlineAvatars() {
@@ -2405,7 +2485,7 @@ document.querySelectorAll("[data-settings-section]").forEach(button => button.ad
   const sections = {
     backup: { title:"Backup", subtitle:"Stato e autorizzazione", html:backupSettingsHtml() },
     print: { title:"Stampa", subtitle:"Centro Stampa", html:printSettingsHtml() },
-    info: { title:"Informazioni", subtitle:"DVS Planning", html:`<img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video"><h2>DVS Planning</h2><p>Applicazione collaborativa per la gestione del Planning di Digital Video Service.</p><div class="settings-info-meta"><div><span>Versione</span><strong>v20.1</strong></div><div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div><div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div></div><p class="settings-info-copyright"><strong>Copyright © 2026 Marco D'Agostino per Digital Video Service</strong><br>Tutti i diritti riservati.</p>` }
+    info: { title:"Informazioni", subtitle:"DVS Planning", html:`<img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video"><h2>DVS Planning</h2><p>Applicazione collaborativa per la gestione del Planning di Digital Video Service.</p><div class="settings-info-meta"><div><span>Versione</span><strong>v20.2</strong></div><div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div><div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div></div><p class="settings-info-copyright"><strong>Copyright © 2026 Marco D'Agostino per Digital Video Service</strong><br>Tutti i diritti riservati.</p>` }
   };
   const selected = sections[section];
   if (!selected) return;
@@ -2574,6 +2654,7 @@ document.querySelectorAll(".nav-item[data-view]").forEach(button => {
 document.querySelectorAll(".iphone-nav-item[data-view]").forEach(button => {
   button.addEventListener("click", () => openView(button.dataset.view));
 });
+bindIPhoneDraggableNavigation();
 document.getElementById("iphoneBackupStatus")?.addEventListener("click", () => { openView("settings"); document.querySelector('[data-settings-section="backup"]')?.click(); });
 document.getElementById("iphoneOnlineUsers")?.addEventListener("click", () => openView("connected"));
 document.getElementById("iphoneLogoutProfile")?.addEventListener("click", logoutProfile);
