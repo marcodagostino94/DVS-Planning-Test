@@ -1,4 +1,11 @@
-# DVS Planning v19.0.3
+# DVS Planning v20.0
+
+## Novità 20.0
+
+- Su iPhone, il pannello Utenti collegati include il comando `Esci dal profilo`.
+- Su iPhone in verticale resta attiva l'interfaccia iPhone.
+- Ruotando un iPhone in orizzontale viene applicata automaticamente l'interfaccia iPad.
+- Mac e iPad mantengono il comportamento precedente.
 
 Release finale dell'applicazione collaborativa per la gestione del Planning di Digital Video Service.
 

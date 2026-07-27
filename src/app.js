@@ -1,4 +1,4 @@
-// DVS Planning v19.0.3 – Room display labels
+// DVS Planning v20.0 – iPhone portrait/landscape layout
 
 const ROOMS = [
   ...Array.from({ length: 15 }, (_, index) => ({
@@ -144,8 +144,15 @@ const IS_IPHONE = /iPhone|iPod/.test(navigator.userAgent);
 const IS_IPAD = /iPad/.test(navigator.userAgent)
   || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 const IS_TOUCH_APPLE = IS_IPAD || IS_IPHONE;
-document.documentElement.classList.toggle("is-ipad", IS_IPAD);
-document.documentElement.classList.toggle("is-iphone", IS_IPHONE);
+function updateAppleDeviceLayout() {
+  const iphoneLandscape = IS_IPHONE && window.matchMedia("(orientation: landscape)").matches;
+  document.documentElement.classList.toggle("is-iphone-device", IS_IPHONE);
+  document.documentElement.classList.toggle("is-iphone", IS_IPHONE && !iphoneLandscape);
+  document.documentElement.classList.toggle("is-ipad", IS_IPAD || iphoneLandscape);
+}
+updateAppleDeviceLayout();
+window.addEventListener("orientationchange", () => requestAnimationFrame(updateAppleDeviceLayout));
+window.matchMedia("(orientation: landscape)").addEventListener?.("change", updateAppleDeviceLayout);
 let planningRenderSignature = "";
 const monthLabel = document.getElementById("monthLabel");
 const zoomSelect = document.getElementById("zoomSelect");
@@ -2275,7 +2282,7 @@ function openPrintPreview() {
       });
     });
     const weekLabel=`${shortPrintDate(week.start)} – ${shortPrintDate(week.end)}`;
-    return `<main class="paper"><header class="head"><div><h1>Digital Video Service</h1><p>PLANNING · ${escapeHtml(monthName(printMonth))}</p><small>Settimana ${escapeHtml(weekLabel)}</small></div><strong>${selectedRooms.length===ROOMS.length?'Tutte le sale':`${selectedRooms.length} sale selezionate`}</strong></header><section class="grid">${cells.join('')}</section><footer class="page-footer"><span>DVS Planning · v19.0.3</span><span>Pagina ${pageIndex+1} di ${selectedWeeks.length}</span></footer></main>`;
+    return `<main class="paper"><header class="head"><div><h1>Digital Video Service</h1><p>PLANNING · ${escapeHtml(monthName(printMonth))}</p><small>Settimana ${escapeHtml(weekLabel)}</small></div><strong>${selectedRooms.length===ROOMS.length?'Tutte le sale':`${selectedRooms.length} sale selezionate`}</strong></header><section class="grid">${cells.join('')}</section><footer class="page-footer"><span>DVS Planning · v20.0</span><span>Pagina ${pageIndex+1} di ${selectedWeeks.length}</span></footer></main>`;
   }).join('');
   const popup=window.open('','_blank');
   if(!popup)return showToast('Consenti l’apertura della finestra di anteprima');
@@ -2394,7 +2401,7 @@ document.querySelectorAll("[data-settings-section]").forEach(button => button.ad
   const sections = {
     backup: { title:"Backup", subtitle:"Stato e autorizzazione", html:backupSettingsHtml() },
     print: { title:"Stampa", subtitle:"Centro Stampa", html:printSettingsHtml() },
-    info: { title:"Informazioni", subtitle:"DVS Planning", html:`<img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video"><h2>DVS Planning</h2><p>Applicazione collaborativa per la gestione del Planning di Digital Video Service.</p><div class="settings-info-meta"><div><span>Versione</span><strong>v19.0.3</strong></div><div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div><div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div></div><p class="settings-info-copyright"><strong>Copyright © 2026 Marco D'Agostino per Digital Video Service</strong><br>Tutti i diritti riservati.</p>` }
+    info: { title:"Informazioni", subtitle:"DVS Planning", html:`<img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video"><h2>DVS Planning</h2><p>Applicazione collaborativa per la gestione del Planning di Digital Video Service.</p><div class="settings-info-meta"><div><span>Versione</span><strong>v20.0</strong></div><div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div><div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div></div><p class="settings-info-copyright"><strong>Copyright © 2026 Marco D'Agostino per Digital Video Service</strong><br>Tutti i diritti riservati.</p>` }
   };
   const selected = sections[section];
   if (!selected) return;
@@ -2565,6 +2572,7 @@ document.querySelectorAll(".iphone-nav-item[data-view]").forEach(button => {
 });
 document.getElementById("iphoneBackupStatus")?.addEventListener("click", () => { openView("settings"); document.querySelector('[data-settings-section="backup"]')?.click(); });
 document.getElementById("iphoneOnlineUsers")?.addEventListener("click", () => openView("connected"));
+document.getElementById("iphoneLogoutProfile")?.addEventListener("click", logoutProfile);
 
 
 document.getElementById("connectedUsersCard")?.addEventListener("click", () => openView("connected"));

@@ -1,0 +1,6 @@
+DVS Planning v20.0
+
+- Aggiunto "Esci dal profilo" nel pannello Utenti collegati esclusivamente su iPhone.
+- L'iPhone usa il layout mobile in verticale e il layout iPad in orizzontale.
+- Aggiornati titolo, manifest, stampa e schermata Informazioni alla v20.0.
+- Nessuna modifica al comportamento Mac o iPad.
