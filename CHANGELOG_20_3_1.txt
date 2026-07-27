@@ -1,4 +1,0 @@
-DVS Planning v20.3.1
-
-- Corretto lo scorrimento finale della Dashboard su iPhone verticale.
-- Nessuna modifica alle altre sezioni o agli altri dispositivi.

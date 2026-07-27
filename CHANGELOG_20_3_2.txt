@@ -1,4 +1,0 @@
-DVS Planning v20.3.2
-
-- Corretto definitivamente lo scorrimento finale della Dashboard su Safari iPhone.
-- Aggiunto uno spaziatore reale nel documento dopo la griglia Dashboard.

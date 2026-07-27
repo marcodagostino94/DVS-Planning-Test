@@ -1,5 +1,0 @@
-DVS Planning v20.3
-
-- Dashboard e Centro Stampa possono scorrere oltre la barra Liquid Glass.
-- Aggiunto "Torna ai riepiloghi" nell'anteprima PDF.
-- Planning e Riepiloghi restano invariati.

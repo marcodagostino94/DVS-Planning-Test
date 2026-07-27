@@ -1,6 +1,0 @@
-DVS Planning v20.2
-
-- Barra Liquid Glass trasparente e sovrapposta al contenuto.
-- Capsula di navigazione trascinabile tra le cinque sezioni.
-- Cambio pagina al rilascio della capsula.
-- iPhone orizzontale, iPad e Mac invariati.
