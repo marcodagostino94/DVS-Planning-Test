@@ -1,0 +1,6 @@
+DVS Planning v20.1
+
+- Nuovo menu inferiore Liquid Glass esclusivamente su iPhone verticale.
+- Barra flottante traslucida, icone scure e capsula per la sezione attiva.
+- Aggiornati titolo, manifest, stampa e schermata Informazioni.
+- Nessuna modifica a iPhone orizzontale, iPad o Mac.

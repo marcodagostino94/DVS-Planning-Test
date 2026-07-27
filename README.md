@@ -1,4 +1,10 @@
-# DVS Planning v20.0
+# DVS Planning v20.1
+
+## Novità 20.1
+
+- Nuova barra di navigazione flottante Liquid Glass su iPhone verticale.
+- Sezione attiva evidenziata con una capsula traslucida.
+- iPhone orizzontale, iPad e Mac invariati.
 
 ## Novità 20.0
 
