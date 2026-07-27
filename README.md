@@ -1,4 +1,9 @@
-# DVS Planning v20.2
+# DVS Planning v20.3
+
+## Correzioni 20.3
+
+- Maggiore spazio finale scorribile in Dashboard e Centro Stampa su iPhone.
+- Aggiunto il comando per tornare ai Riepiloghi dall'anteprima PDF.
 
 ## Novità 20.2
 

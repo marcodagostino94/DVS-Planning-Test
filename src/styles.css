@@ -2344,3 +2344,17 @@ html.is-iphone-landscape .summary-shift-list{padding:6px 9px 10px}
     padding-bottom:calc(78px + env(safe-area-inset-bottom));
   }
 }
+
+/* v20.3 — spazio finale realmente scorribile sopra la barra flottante. */
+@media (max-width:760px) and (orientation:portrait){
+  html.is-iphone #dashboardView .dashboard-content{
+    padding-bottom:calc(180px + env(safe-area-inset-bottom))!important;
+  }
+  html.is-iphone #settingsView .settings-home,
+  html.is-iphone #settingsView .settings-detail{
+    padding-bottom:calc(180px + env(safe-area-inset-bottom))!important;
+  }
+  html.is-iphone #genericSettingsSection .settings-generic-card{
+    margin-bottom:20px;
+  }
+}
