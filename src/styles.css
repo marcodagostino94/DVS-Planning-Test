@@ -1874,61 +1874,83 @@ html.is-iphone-device .iphone-profile-logout .sf-icon{width:20px;height:20px}
 /* v20.0 — iPhone orizzontale: navigazione iPad e Dashboard interamente accessibile. */
 html.is-iphone-landscape,
 html.is-iphone-landscape body{
+  position:fixed;
+  inset:0;
   width:100%;
   min-width:0;
   height:100%;
+  min-height:100%;
+  margin:0!important;
+  padding:0!important;
   overflow:hidden;
+  background:#0d1014;
 }
 html.is-iphone-landscape{
   --sidebar-width:180px;
 }
 html.is-iphone-landscape .app-shell{
+  position:fixed;
+  inset:0;
   display:grid!important;
   grid-template-columns:var(--sidebar-width) minmax(0,1fr)!important;
-  width:100vw;
+  width:100%;
   height:100dvh;
+  min-height:100%;
+  margin:0!important;
   padding:0!important;
+  background:#0d1014;
 }
 html.is-iphone-landscape .sidebar{
   display:flex!important;
   min-width:0;
-  padding:8px!important;
+  padding:5px 7px 5px max(7px,env(safe-area-inset-left))!important;
   overflow-y:auto;
   -webkit-overflow-scrolling:touch;
 }
 html.is-iphone-landscape .brand{
-  flex:0 0 50px;
-  height:50px;
-  margin-bottom:7px;
+  flex:0 0 38px;
+  height:38px;
+  margin-bottom:4px;
+  padding:3px;
 }
 html.is-iphone-landscape .brand img{
-  width:132px;
-  max-height:38px;
+  width:112px;
+  max-height:31px;
 }
-html.is-iphone-landscape .sidebar-nav{gap:3px}
+html.is-iphone-landscape .sidebar-nav{gap:2px}
 html.is-iphone-landscape .nav-item{
-  min-height:36px;
-  gap:9px;
-  padding:7px 9px;
-  font-size:11px;
+  min-height:31px;
+  gap:7px;
+  padding:5px 8px;
+  border-radius:10px;
+  font-size:10px;
 }
+html.is-iphone-landscape .nav-icon .sf-icon{width:17px;height:17px}
 html.is-iphone-landscape .sidebar-status-stack{
-  gap:6px;
-  padding-top:8px;
+  gap:4px;
+  padding-top:5px;
 }
 html.is-iphone-landscape .status-card{
-  min-height:52px;
-  grid-template-columns:30px minmax(0,1fr) auto;
-  gap:7px;
-  padding:7px;
-  border-radius:13px;
+  min-height:42px;
+  grid-template-columns:25px minmax(0,1fr) auto;
+  gap:5px;
+  padding:5px;
+  border-radius:11px;
 }
 html.is-iphone-landscape .status-card-icon{
-  width:29px;
-  height:29px;
+  width:24px;
+  height:24px;
 }
-html.is-iphone-landscape .status-card-icon .sf-icon{width:17px;height:17px}
-html.is-iphone-landscape .sidebar-footer{margin-top:6px;gap:3px}
+html.is-iphone-landscape .status-card-icon .sf-icon{width:14px;height:14px}
+html.is-iphone-landscape .status-card-copy{gap:1px}
+html.is-iphone-landscape .status-card-copy strong{font-size:10px}
+html.is-iphone-landscape .status-card-copy span{font-size:7px}
+html.is-iphone-landscape .mini-avatars i{width:21px;height:21px;font-size:6px}
+html.is-iphone-landscape .sidebar-footer{
+  margin-top:4px;
+  padding-bottom:max(0px,env(safe-area-inset-bottom));
+  gap:2px;
+}
 html.is-iphone-landscape .active-profile-label,
 html.is-iphone-landscape .build-pill{display:none}
 html.is-iphone-landscape .main-area{
@@ -1937,6 +1959,8 @@ html.is-iphone-landscape .main-area{
   min-width:0;
   min-height:0;
   overflow:hidden;
+  padding-right:env(safe-area-inset-right);
+  background:#0d1014;
 }
 html.is-iphone-landscape #dashboardView.dashboard-view{
   display:block!important;
