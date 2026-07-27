@@ -1,4 +1,8 @@
-# DVS Planning v20.3.1
+# DVS Planning v20.3.2
+
+## Correzione 20.3.2
+
+- Inserito uno spazio fisico scorribile dopo i Promemoria della Dashboard su iPhone verticale.
 
 ## Correzione 20.3.1
 

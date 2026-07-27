@@ -27,6 +27,7 @@
 }
 
 * { box-sizing: border-box; }
+.iphone-dashboard-scroll-spacer{display:none}
 
 html, body {
   margin: 0;
@@ -2358,6 +2359,14 @@ html.is-iphone-landscape .summary-shift-list{padding:6px 9px 10px}
     margin-bottom:20px;
   }
   html.is-iphone #dashboardView .dashboard-grid{
-    margin-bottom:calc(150px + env(safe-area-inset-bottom))!important;
+    margin-bottom:0!important;
+  }
+  html.is-iphone .iphone-dashboard-scroll-spacer{
+    display:block!important;
+    width:100%;
+    height:calc(170px + env(safe-area-inset-bottom));
+    min-height:calc(170px + env(safe-area-inset-bottom));
+    flex:0 0 calc(170px + env(safe-area-inset-bottom));
+    pointer-events:none;
   }
 }

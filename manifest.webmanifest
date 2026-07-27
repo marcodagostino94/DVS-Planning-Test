@@ -1,4 +1,4 @@
 {
-  "name":"DVS Planning v20.3.1","short_name":"DVS Planning","description":"DVS Planning v20.3.1","start_url":"./index.html","display":"standalone","background_color":"#09090b","theme_color":"#09090b",
+  "name":"DVS Planning v20.3.2","short_name":"DVS Planning","description":"DVS Planning v20.3.2","start_url":"./index.html","display":"standalone","background_color":"#09090b","theme_color":"#09090b",
   "icons":[{"src":"./assets/icons/dvs-planning-192.png","sizes":"192x192","type":"image/png"},{"src":"./assets/icons/dvs-planning-512.png","sizes":"512x512","type":"image/png"}]
 }
