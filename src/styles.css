@@ -2348,7 +2348,7 @@ html.is-iphone-landscape .summary-shift-list{padding:6px 9px 10px}
 /* v20.3 — spazio finale realmente scorribile sopra la barra flottante. */
 @media (max-width:760px) and (orientation:portrait){
   html.is-iphone #dashboardView .dashboard-content{
-    padding-bottom:calc(180px + env(safe-area-inset-bottom))!important;
+    padding-bottom:20px!important;
   }
   html.is-iphone #settingsView .settings-home,
   html.is-iphone #settingsView .settings-detail{
@@ -2356,5 +2356,8 @@ html.is-iphone-landscape .summary-shift-list{padding:6px 9px 10px}
   }
   html.is-iphone #genericSettingsSection .settings-generic-card{
     margin-bottom:20px;
+  }
+  html.is-iphone #dashboardView .dashboard-grid{
+    margin-bottom:calc(150px + env(safe-area-inset-bottom))!important;
   }
 }

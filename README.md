@@ -1,4 +1,8 @@
-# DVS Planning v20.3
+# DVS Planning v20.3.1
+
+## Correzione 20.3.1
+
+- Spazio di scorrimento reale dopo l'ultima scheda della Dashboard su iPhone verticale.
 
 ## Correzioni 20.3
 
