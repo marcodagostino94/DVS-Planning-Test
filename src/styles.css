@@ -2039,6 +2039,123 @@ html.is-iphone-landscape #dashboardView #todayRoomsList{
   min-height:150px!important;
   max-height:210px!important;
 }
+html.is-iphone-landscape #summariesView{
+  height:100dvh;
+  min-width:0;
+  overflow:hidden;
+}
+html.is-iphone-landscape .summaries-topbar{
+  min-height:54px;
+  height:54px;
+  flex:0 0 54px;
+  gap:8px;
+  padding:6px 9px;
+}
+html.is-iphone-landscape .summaries-topbar .page-title{
+  flex:0 0 auto;
+}
+html.is-iphone-landscape .summaries-topbar .page-title h1{
+  font-size:17px;
+}
+html.is-iphone-landscape .summaries-topbar .page-title p{
+  display:none;
+}
+html.is-iphone-landscape .summaries-toolbar{
+  min-width:0;
+  flex:1 1 auto;
+  flex-wrap:nowrap;
+  gap:5px;
+}
+html.is-iphone-landscape .summaries-toolbar .month-switcher{
+  flex:0 0 auto;
+}
+html.is-iphone-landscape .summaries-toolbar .icon-btn,
+html.is-iphone-landscape .summaries-toolbar .month-label,
+html.is-iphone-landscape .summaries-toolbar .toolbar-btn,
+html.is-iphone-landscape .summary-search{
+  min-height:34px;
+  height:34px;
+}
+html.is-iphone-landscape .summaries-toolbar .month-label{
+  min-width:105px;
+  padding:0 7px;
+  font-size:10px;
+}
+html.is-iphone-landscape .summary-search{
+  min-width:90px;
+  width:auto;
+  flex:1 1 120px;
+  padding:0 9px;
+  font-size:10px;
+}
+html.is-iphone-landscape .summaries-toolbar .toolbar-btn{
+  flex:0 0 auto;
+  padding:0 9px;
+  font-size:9px;
+}
+html.is-iphone-landscape .summaries-page{
+  width:100%;
+  height:calc(100dvh - 54px)!important;
+  min-height:0;
+  padding:8px;
+  display:grid;
+  grid-template-columns:minmax(270px,1.05fr) minmax(230px,.95fr)!important;
+  grid-template-rows:minmax(0,1fr)!important;
+  gap:8px;
+  overflow:hidden!important;
+}
+html.is-iphone-landscape .summaries-card,
+html.is-iphone-landscape .summary-detail-panel{
+  min-width:0;
+  min-height:0!important;
+  height:100%;
+  border-radius:13px;
+}
+html.is-iphone-landscape .summary-table-head,
+html.is-iphone-landscape .summary-employee-row{
+  grid-template-columns:minmax(0,1fr) 46px 54px;
+  gap:6px;
+  padding-left:10px;
+  padding-right:10px;
+}
+html.is-iphone-landscape .summary-table-head{
+  flex:0 0 auto;
+  padding-top:8px;
+  padding-bottom:8px;
+  font-size:8px;
+}
+html.is-iphone-landscape .summary-employees-list{
+  flex:1 1 auto;
+  min-height:0;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+}
+html.is-iphone-landscape .summary-employee-row{
+  min-height:42px;
+  padding-top:8px;
+  padding-bottom:8px;
+}
+html.is-iphone-landscape .summary-employee-name{
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:#1b2025;
+  font-size:11px;
+}
+html.is-iphone-landscape .summary-number{
+  color:#1b2025;
+  font-size:12px;
+}
+html.is-iphone-landscape .summary-detail-header{
+  padding:11px;
+}
+html.is-iphone-landscape .summary-detail-header h2{font-size:16px}
+html.is-iphone-landscape .summary-totals{gap:6px;margin-top:8px}
+html.is-iphone-landscape .summary-total{padding:7px}
+html.is-iphone-landscape .summary-total strong{font-size:18px}
+html.is-iphone-landscape .summary-detail-actions{margin-top:8px}
+html.is-iphone-landscape .summary-shift-list{padding:6px 9px 10px}
 @media(max-width:760px){
   html.is-iphone .app-shell{height:100dvh;overflow:hidden}
   html.is-iphone #dashboardView{overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain}
