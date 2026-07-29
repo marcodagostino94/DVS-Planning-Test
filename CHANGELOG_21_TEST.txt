@@ -6,6 +6,8 @@ DVS Planning v21 – TEST
 - Creazione simultanea dello stesso turno su più sale.
 - Dipendente facoltativo e configurabile separatamente per ogni sala.
 - Prolungamento di un turno esistente modificando la data finale.
+- Campo “Dalle” senza menu orario nativo: inserimento diretto HH:MM.
+- Selezione con Shift trasformata in rettangolo tra date e sale.
 - Rimossa la gestione sperimentale delle serie.
 - Nessuna modifica SQL richiesta.
 

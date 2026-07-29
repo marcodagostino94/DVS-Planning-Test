@@ -8,7 +8,7 @@
   <link rel="icon" type="image/png" sizes="64x64" href="./assets/icons/dvs-planning-64.png">
   <link rel="apple-touch-icon" href="./assets/icons/dvs-planning-180.png">
   <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="stylesheet" href="./src/styles.css?v=21-test-2">
+  <link rel="stylesheet" href="./src/styles.css?v=21-test-3">
 </head>
 <body>
   <section id="profileGate" class="profile-gate" aria-label="Selezione profilo">
@@ -371,7 +371,7 @@
 
         <label>
           Dalle
-          <input id="start" type="time" required value="10:00">
+          <input id="start" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" maxlength="5" pattern="(?:[01]\d|2[0-3]):[0-5]\d" required value="10:00" placeholder="HH:MM">
         </label>
 
         <label>
@@ -557,6 +557,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="./src/config.js?v=11.0"></script>
-  <script src="./src/app.js?v=21-test-2"></script>
+  <script src="./src/app.js?v=21-test-3"></script>
 </body>
 </html>

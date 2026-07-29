@@ -366,23 +366,33 @@ function selectShiftRange(anchorId, targetId) {
     return;
   }
 
-  const visibleOrder = [...planningGrid.querySelectorAll(".shift-card")]
-    .map(card => card.dataset.shiftId)
-    .filter(Boolean);
-  const anchorIndex = visibleOrder.indexOf(anchorId);
-  const targetIndex = visibleOrder.indexOf(targetId);
-
-  if (anchorIndex < 0 || targetIndex < 0) {
+  const anchorRoomIndex = ROOMS.findIndex(room => room.id === anchorShift.room);
+  const targetRoomIndex = ROOMS.findIndex(room => room.id === targetShift.room);
+  if (anchorRoomIndex < 0 || targetRoomIndex < 0) {
     selectOnlyShift(targetId);
     return;
   }
 
-  const start = Math.min(anchorIndex, targetIndex);
-  const end = Math.max(anchorIndex, targetIndex);
-
-  selectedShiftIds = new Set(
-    visibleOrder.slice(start, end + 1)
+  const firstRoom = Math.min(anchorRoomIndex, targetRoomIndex);
+  const lastRoom = Math.max(anchorRoomIndex, targetRoomIndex);
+  const firstDate = anchorShift.date < targetShift.date ? anchorShift.date : targetShift.date;
+  const lastDate = anchorShift.date > targetShift.date ? anchorShift.date : targetShift.date;
+  const visibleIds = new Set(
+    [...planningGrid.querySelectorAll(".shift-card")]
+      .map(card => card.dataset.shiftId)
+      .filter(Boolean)
   );
+
+  selectedShiftIds = new Set(shifts
+    .filter(shift => {
+      const roomIndex = ROOMS.findIndex(room => room.id === shift.room);
+      return visibleIds.has(shift.id)
+        && roomIndex >= firstRoom
+        && roomIndex <= lastRoom
+        && shift.date >= firstDate
+        && shift.date <= lastDate;
+    })
+    .map(shift => shift.id));
   selectedCell = null;
 }
 
