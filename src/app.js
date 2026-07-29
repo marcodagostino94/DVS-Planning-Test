@@ -240,6 +240,75 @@ function saveLocal() {
   localStorage.setItem(EDITOR_STORAGE, JSON.stringify(editors));
 }
 
+const SHIFT_HISTORY_LIMIT = 20;
+let shiftUndoStack = [];
+let shiftRedoStack = [];
+let shiftHistoryBusy = false;
+
+function cloneShiftState() {
+  return structuredClone(shifts);
+}
+
+function recordShiftUndo(label) {
+  if (shiftHistoryBusy) return;
+  shiftUndoStack.push({ label, state: cloneShiftState() });
+  if (shiftUndoStack.length > SHIFT_HISTORY_LIMIT) shiftUndoStack.shift();
+  shiftRedoStack = [];
+}
+
+async function syncRestoredShiftState(previousState, restoredState) {
+  if (!db) return;
+  const previousById = new Map(previousState.map(shift => [shift.id, shift]));
+  const restoredById = new Map(restoredState.map(shift => [shift.id, shift]));
+  const deletedIds = [...previousById.keys()].filter(id => !restoredById.has(id));
+  const changed = [...restoredById.values()].filter(shift => {
+    const previous = previousById.get(shift.id);
+    return !previous || JSON.stringify(previous) !== JSON.stringify(shift);
+  });
+  await Promise.all([
+    ...deletedIds.map(id => deleteShiftFromSupabase(id)),
+    ...changed.map(shift => syncShiftToSupabase(shift))
+  ]);
+}
+
+async function restoreShiftHistory(sourceStack, destinationStack, actionName) {
+  if (shiftHistoryBusy || !sourceStack.length) {
+    if (!sourceStack.length) showToast(actionName === "Annullata" ? "Nessuna operazione da annullare" : "Nessuna operazione da ripristinare");
+    return;
+  }
+  shiftHistoryBusy = true;
+  try {
+    const entry = sourceStack.pop();
+    const previousState = cloneShiftState();
+    destinationStack.push({ label: entry.label, state: previousState });
+    if (destinationStack.length > SHIFT_HISTORY_LIMIT) destinationStack.shift();
+    shifts = structuredClone(entry.state);
+    clearSelection();
+    clearCutState();
+    copiedShifts = [];
+    clipboardMode = "copy";
+    saveLocal();
+    renderPlanning();
+    renderDashboard();
+    renderSummaries();
+    await syncRestoredShiftState(previousState, shifts);
+    showToast(`${actionName}: ${entry.label}`);
+  } catch (error) {
+    console.error("Errore ripristino cronologia turni:", error);
+    showToast("Impossibile completare l’operazione");
+  } finally {
+    shiftHistoryBusy = false;
+  }
+}
+
+function undoShiftOperation() {
+  return restoreShiftHistory(shiftUndoStack, shiftRedoStack, "Annullata");
+}
+
+function redoShiftOperation() {
+  return restoreShiftHistory(shiftRedoStack, shiftUndoStack, "Ripristinata");
+}
+
 function showToast(message) {
   toast.textContent = message;
   toast.classList.add("show");
@@ -474,6 +543,9 @@ function pasteCopiedShifts() {
     return true;
   }
 
+  recordShiftUndo(isCut
+    ? (candidates.length === 1 ? "spostamento turno" : `spostamento di ${candidates.length} turni`)
+    : (candidates.length === 1 ? "incolla turno" : `incolla di ${candidates.length} turni`));
   if (isCut) {
     const movedById = new Map(candidates.map(candidate => [candidate.id, candidate]));
     shifts = shifts.map(shift => movedById.get(shift.id) || shift);
@@ -556,6 +628,7 @@ function deleteSelectedShifts() {
   if (selected.some(shift => shift.confirmed)) return showToast("Il turno confermato è bloccato");
   if (!selected.length) return;
   if (!confirm(selected.length === 1 ? "Eliminare questo turno?" : `Eliminare ${selected.length} turni?`)) return;
+  recordShiftUndo(selected.length === 1 ? "eliminazione turno" : `eliminazione di ${selected.length} turni`);
   const ids = new Set(selected.map(s=>s.id));
   shifts = shifts.filter(s=>!ids.has(s.id));
   selected.forEach(s=>deleteShiftFromSupabase(s.id));
@@ -565,6 +638,7 @@ function deleteSelectedShifts() {
 function setSelectedStatus(status) {
   const selected = selectedShiftList();
   if (selected.some(shift => shift.confirmed)) return showToast("Il turno confermato è bloccato");
+  recordShiftUndo(selected.length === 1 ? `cambio stato in ${status}` : `cambio stato di ${selected.length} turni`);
   selected.forEach(s=>{ s.status=status; syncShiftToSupabase(s); });
   saveLocal(); renderPlanning();
   showToast(selected.length === 1 ? `Turno reso ${status}` : `${selected.length} turni aggiornati`);
@@ -594,6 +668,7 @@ function selectedGroupForDrag(sourceId) {
 
 async function setShiftConfirmed(shift, confirmed) {
   if (!shift) return;
+  recordShiftUndo(confirmed ? "conferma turno" : "annullamento conferma");
   shift.confirmed = confirmed;
   shift.confirmedAt = confirmed ? new Date().toISOString() : null;
   saveLocal();
@@ -606,6 +681,7 @@ async function confirmSelectedShift() {
   const selected = selectedShiftList().filter(shift => !shift.confirmed);
   if (!selected.length) return;
 
+  recordShiftUndo(selected.length === 1 ? "conferma turno" : `conferma di ${selected.length} turni`);
   const confirmedAt = new Date().toISOString();
   selected.forEach(shift => {
     shift.confirmed = true;
@@ -628,6 +704,7 @@ async function unconfirmSelectedShift() {
     : `Vuoi annullare la conferma di ${selected.length} turni?`;
   if (!confirm(message)) return;
 
+  recordShiftUndo(selected.length === 1 ? "annullamento conferma" : `annullamento conferma di ${selected.length} turni`);
   selected.forEach(shift => {
     shift.confirmed = false;
     shift.confirmedAt = null;
@@ -1211,6 +1288,7 @@ function bindPlanningEvents() {
     if (groupHasConflict(candidates)) {
       showToast('Orari non compatibili'); clearActiveDrag(); return removeDragGhost();
     }
+    recordShiftUndo(candidates.length === 1 ? 'spostamento turno' : `spostamento di ${candidates.length} turni`);
     const movedById = new Map(candidates.map(candidate => [candidate.id, candidate]));
     shifts = shifts.map(shift => movedById.get(shift.id) || shift);
     candidates.forEach(syncShiftToSupabase);
@@ -1638,6 +1716,9 @@ shiftForm.addEventListener("submit", event => {
   const conflict = candidates.find(candidate => roomConflict(candidate, editingShiftId));
   if (conflict) { error.textContent = `La sala contiene già un turno sovrapposto il ${new Date(conflict.date+"T12:00:00").toLocaleDateString("it-IT")}.`; return; }
 
+  recordShiftUndo(editingShiftId
+    ? (candidates.length > 1 ? `modifica e prolungamento con ${candidates.length - 1} nuovi turni` : "modifica turno")
+    : (candidates.length === 1 ? "creazione turno" : `creazione di ${candidates.length} turni`));
   if (editingShiftId) {
     const previous = shifts.find(item => item.id === editingShiftId);
     const edited = candidates.find(item => item.id === editingShiftId);
@@ -1665,6 +1746,7 @@ document.getElementById("deleteShiftBtn").addEventListener("click", () => {
   const lockedCount = targets.length - unlocked.length;
   const message = `Eliminare ${unlocked.length} ${unlocked.length === 1 ? "turno" : "turni"}${lockedCount ? `? ${lockedCount} confermati resteranno invariati.` : "?"}`;
   if (!unlocked.length || !confirm(message)) return;
+  recordShiftUndo(unlocked.length === 1 ? "eliminazione turno" : `eliminazione di ${unlocked.length} turni`);
   const ids = new Set(unlocked.map(item => item.id));
   shifts = shifts.filter(item => !ids.has(item.id));
   saveLocal();
@@ -1679,9 +1761,29 @@ document.getElementById("newShiftBtn").addEventListener("click", () => openNewSh
 
 document.getElementById("start").addEventListener("change", event => {
   const value = normalizeTime(event.target.value); if (!value) return;
+  event.target.value = value;
   const minutes = timeToMinutes(value) + 480;
   document.getElementById("end").value = minutes >= 1440 ? "24:00" : `${String(Math.floor(minutes/60)).padStart(2,"0")}:${String(minutes%60).padStart(2,"0")}`;
 });
+
+function bindTimeSegmentSelection(input) {
+  if (!input) return;
+  input.addEventListener("focus", () => {
+    requestAnimationFrame(() => input.setSelectionRange(0, 2));
+  });
+  input.addEventListener("mouseup", event => {
+    event.preventDefault();
+    const caret = input.selectionStart ?? 0;
+    requestAnimationFrame(() => {
+      if (caret >= 3) input.setSelectionRange(3, 5);
+      else input.setSelectionRange(0, 2);
+    });
+  });
+}
+
+bindTimeSegmentSelection(document.getElementById("start"));
+bindTimeSegmentSelection(document.getElementById("end"));
+
 document.getElementById("isClient").addEventListener("change", updateClientUI);
 document.getElementById("editorSearchInput").addEventListener("change", () => resolveEditorInput(false));
 document.querySelectorAll(".segmented-control [data-status]").forEach(button => button.addEventListener("click", () => setStatusUI(button.dataset.status)));
@@ -1779,7 +1881,14 @@ planningScroller.addEventListener("gesturechange", event => {
 
 document.addEventListener("keydown", event => {
   const target = event.target;
-  const isTyping = Boolean(target.closest("input, select, textarea"));
+  const isTyping = Boolean(target.closest?.("input, select, textarea, [contenteditable='true']"));
+
+  if (!isTyping && event.metaKey && event.key.toLowerCase() === "z") {
+    event.preventDefault();
+    if (event.shiftKey) redoShiftOperation();
+    else undoShiftOperation();
+    return;
+  }
 
   if (!isTyping && (event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "c") {
     if (copySelectedShifts()) event.preventDefault();
@@ -1961,6 +2070,7 @@ async function deleteCurrentEditor() {
   if (!confirm(`Eliminare definitivamente ${fullEmployeeName(editor)}?\n\nQuesta operazione non può essere annullata.${warning}`)) return;
 
   if (linkedShifts) {
+    recordShiftUndo(`rimozione dipendente da ${linkedShifts} ${linkedShifts === 1 ? "turno" : "turni"}`);
     shifts = shifts.map(shift => shift.editorId === editingEditorId ? { ...shift, editorId: null } : shift);
     for (const shift of shifts.filter(item => item.editorId === null)) await syncShiftToSupabase(shift);
   }
@@ -2256,6 +2366,7 @@ async function confirmSummaryShifts(editorId) {
   if (!pending.length) return;
   const message = `Confermare ${pending.length} ${pending.length === 1 ? "turno" : "turni"} di ${fullEmployeeName(row.editor)} per ${monthName(summaryMonth)}? I turni verranno confermati indipendentemente dalla sala.`;
   if (!window.confirm(message)) return;
+  recordShiftUndo(pending.length === 1 ? "conferma turno da riepilogo" : `conferma di ${pending.length} turni da riepilogo`);
   const confirmedAt = new Date().toISOString();
   pending.forEach(shift => { shift.confirmed = true; shift.confirmedAt = confirmedAt; });
   saveLocal();

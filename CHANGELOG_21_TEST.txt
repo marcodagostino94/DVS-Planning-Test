@@ -7,7 +7,10 @@ DVS Planning v21 – TEST
 - Dipendente facoltativo e configurabile separatamente per ogni sala.
 - Prolungamento di un turno esistente modificando la data finale.
 - Campo “Dalle” senza menu orario nativo: inserimento diretto HH:MM.
+- Selezione automatica del segmento ore; i minuti restano liberamente modificabili.
 - Selezione con Shift trasformata in rettangolo tra date e sale.
+- Cmd + Z annulla le operazioni sui turni; Cmd + Shift + Z le ripristina.
+- Cronologia locale delle ultime 20 operazioni, sincronizzata con Supabase.
 - Rimossa la gestione sperimentale delle serie.
 - Nessuna modifica SQL richiesta.
 

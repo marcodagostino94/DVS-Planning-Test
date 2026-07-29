@@ -9,7 +9,8 @@ Build sperimentale derivata dalla v20.5 ufficiale.
 - trascinamento simultaneo della selezione su più giorni e più sale;
 - creazione dello stesso turno su più sale, con dipendente distinto per sala;
 - dipendente facoltativo anche nella creazione multisala;
-- prolungamento di un turno modificando la data finale.
+- prolungamento di un turno modificando la data finale;
+- annullamento con `Cmd + Z` e ripristino con `Cmd + Shift + Z` delle ultime 20 operazioni sui turni.
 
 Questa revisione non richiede alcuna modifica SQL su Supabase.
 
