@@ -1,4 +1,17 @@
-# DVS Planning v20.5
+# DVS Planning v21 – TEST
+
+Build sperimentale derivata dalla v20.5 ufficiale.
+
+## Funzioni TEST (Mac)
+
+- selezione multipla di turni appartenenti anche a sale diverse;
+- selezione tramite riquadro su più righe del Planning;
+- creazione dello stesso turno su più sale, con dipendente distinto per sala;
+- creazione e continuazione di serie distribuite su più mesi;
+- eliminazione del singolo turno, dei successivi, dell’intera serie di una sala o dell’intero gruppo multisala.
+
+Prima del test eseguire `database/014_shift_series_v21_test.sql` su Supabase.
+La migrazione aggiunge soltanto colonne facoltative e non modifica il comportamento della v20.5.
 
 Release consolidata dell’applicazione collaborativa per la gestione del Planning di Digital Video Service.
 

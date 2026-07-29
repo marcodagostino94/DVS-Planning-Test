@@ -2370,3 +2370,61 @@ html.is-iphone-landscape .summary-shift-list{padding:6px 9px 10px}
     pointer-events:none;
   }
 }
+/* v21 TEST — funzioni sperimentali disponibili esclusivamente sul Mac. */
+.v21-test-field{
+  border:1px solid rgba(239,68,88,.28);
+  border-radius:18px;
+  padding:16px;
+  background:rgba(239,68,88,.045);
+}
+.v21-test-field legend{
+  padding:0 8px;
+  color:#ef4458;
+  font-weight:800;
+}
+.multi-room-assignments{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  margin-top:14px;
+  max-height:320px;
+  overflow:auto;
+  padding-right:4px;
+}
+.multi-room-row{
+  display:grid;
+  grid-template-columns:minmax(110px,.7fr) minmax(160px,1.3fr);
+  align-items:center;
+  gap:10px;
+  padding:9px 10px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:var(--panel);
+}
+.multi-room-check{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin:0;
+}
+.multi-room-check input{width:18px;height:18px}
+.multi-room-row select{min-width:0}
+.series-controls{
+  display:grid;
+  grid-template-columns:1fr 1.5fr;
+  gap:12px;
+}
+.v21-test-help{
+  display:block;
+  margin-top:10px;
+  color:var(--muted);
+}
+.v21-test-field.editing-disabled{
+  opacity:.55;
+  pointer-events:none;
+}
+.is-ipad .desktop-only-test,
+.is-iphone .desktop-only-test,
+.is-iphone-landscape .desktop-only-test{
+  display:none !important;
+}

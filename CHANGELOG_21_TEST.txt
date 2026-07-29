@@ -1,0 +1,12 @@
+DVS Planning v21 – TEST
+
+- Selezione multipla Mac estesa a più sale.
+- Riquadro di selezione esteso verticalmente a più righe.
+- Creazione simultanea dello stesso turno su più sale.
+- Dipendente configurabile separatamente per ogni sala.
+- Identificativi di serie e gruppo multisala.
+- Possibilità di continuare una serie esistente.
+- Eliminazione singola, da una data in avanti, dell'intera serie o dell'intero gruppo.
+- Migrazione Supabase additiva e retrocompatibile in database/014_shift_series_v21_test.sql.
+
+La v20.5 ufficiale non è stata modificata.

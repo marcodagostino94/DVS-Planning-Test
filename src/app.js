@@ -1,4 +1,4 @@
-// DVS Planning v20.5 – consolidated release
+// DVS Planning v21 – TEST
 
 const ROOMS = [
   ...Array.from({ length: 15 }, (_, index) => ({
@@ -132,7 +132,9 @@ let shifts = loadLocal(SHIFT_STORAGE, seedShifts).map(shift => ({
   isDoubleStation: Boolean(shift.isDoubleStation),
   isVariable: Boolean(shift.isVariable),
   notes: String(shift.notes || "").slice(0, 100),
-  confirmed: Boolean(shift.confirmed)
+  confirmed: Boolean(shift.confirmed),
+  seriesId: shift.seriesId || null,
+  seriesGroupId: shift.seriesGroupId || null
 }));
 
 const planningGrid = document.getElementById("planningGrid");
@@ -361,21 +363,16 @@ function selectShiftRange(anchorId, targetId) {
   const anchorShift = shifts.find(shift => shift.id === anchorId);
   const targetShift = shifts.find(shift => shift.id === targetId);
 
-  if (!anchorShift || !targetShift || anchorShift.room !== targetShift.room) {
+  if (!anchorShift || !targetShift) {
     selectOnlyShift(targetId);
     return;
   }
 
-  const sameRoom = shifts
-    .filter(shift => shift.room === anchorShift.room)
-    .sort((a, b) =>
-      a.date.localeCompare(b.date)
-      || a.start.localeCompare(b.start)
-      || a.id.localeCompare(b.id)
-    );
-
-  const anchorIndex = sameRoom.findIndex(shift => shift.id === anchorId);
-  const targetIndex = sameRoom.findIndex(shift => shift.id === targetId);
+  const visibleOrder = [...planningGrid.querySelectorAll(".shift-card")]
+    .map(card => card.dataset.shiftId)
+    .filter(Boolean);
+  const anchorIndex = visibleOrder.indexOf(anchorId);
+  const targetIndex = visibleOrder.indexOf(targetId);
 
   if (anchorIndex < 0 || targetIndex < 0) {
     selectOnlyShift(targetId);
@@ -386,7 +383,7 @@ function selectShiftRange(anchorId, targetId) {
   const end = Math.max(anchorIndex, targetIndex);
 
   selectedShiftIds = new Set(
-    sameRoom.slice(start, end + 1).map(shift => shift.id)
+    visibleOrder.slice(start, end + 1)
   );
   selectedCell = null;
 }
@@ -505,11 +502,6 @@ function updateSelectionBadge() {
 function toggleCommandSelection(id) {
   const target = shifts.find(shift => shift.id === id);
   if (!target) return;
-  const room = selectionRoom();
-  if (room && room !== target.room) {
-    selectOnlyShift(id);
-    return;
-  }
   if (selectedShiftIds.has(id)) {
     selectedShiftIds.delete(id);
     if (selectionAnchorId === id) selectionAnchorId = [...selectedShiftIds][0] || null;
@@ -701,13 +693,11 @@ function clearActiveDrag() {
 
 function startMarquee(event, cell) {
   if (event.button !== 0 || event.target.closest('.shift-card')) return;
-  const row = cell.getBoundingClientRect();
   marqueeState = {
-    room: cell.dataset.room,
     startX: event.clientX,
+    startY: event.clientY,
     currentX: event.clientX,
-    rowTop: row.top,
-    rowBottom: row.bottom,
+    currentY: event.clientY,
     additive: event.metaKey || event.ctrlKey,
     active: false
   };
@@ -716,7 +706,10 @@ function startMarquee(event, cell) {
 function updateMarquee(event) {
   if (!marqueeState) return;
   marqueeState.currentX = event.clientX;
-  if (!marqueeState.active && Math.abs(marqueeState.currentX - marqueeState.startX) < 5) return;
+  marqueeState.currentY = event.clientY;
+  if (!marqueeState.active
+    && Math.abs(marqueeState.currentX - marqueeState.startX) < 5
+    && Math.abs(marqueeState.currentY - marqueeState.startY) < 5) return;
 
   if (!marqueeState.active) {
     marqueeState.active = true;
@@ -729,10 +722,10 @@ function updateMarquee(event) {
 
   const left = Math.min(marqueeState.startX, marqueeState.currentX);
   const right = Math.max(marqueeState.startX, marqueeState.currentX);
-  const top = marqueeState.rowTop + 2;
-  const bottom = marqueeState.rowBottom - 2;
+  const top = Math.min(marqueeState.startY, marqueeState.currentY);
+  const bottom = Math.max(marqueeState.startY, marqueeState.currentY);
   Object.assign(marqueeElement.style, {left:`${left}px`, top:`${top}px`, width:`${Math.max(1,right-left)}px`, height:`${Math.max(1,bottom-top)}px`});
-  document.querySelectorAll(`.planning-cell[data-room="${marqueeState.room}"] .shift-card`).forEach(card => {
+  document.querySelectorAll('.planning-cell .shift-card').forEach(card => {
     const r = card.getBoundingClientRect();
     if (!(r.right < left || r.left > right || r.bottom < top || r.top > bottom)) selectedShiftIds.add(card.dataset.shiftId);
   });
@@ -1238,7 +1231,101 @@ function populateShiftSelects() {
   const films = [...new Set(shifts.map(shift => shift.film).filter(Boolean))].sort();
   document.getElementById("productionSuggestions").innerHTML = productions.map(value => `<option value="${escapeHtml(value)}"></option>`).join("");
   document.getElementById("filmSuggestions").innerHTML = films.map(value => `<option value="${escapeHtml(value)}"></option>`).join("");
+  renderMultiRoomAssignments();
+  populateExistingSeries();
 }
+
+function sortedActiveEditors() {
+  return [...editors]
+    .filter(editor => editor.active !== false)
+    .sort((a, b) => fullEmployeeName(a).localeCompare(fullEmployeeName(b), "it"));
+}
+
+function editorOptions(selectedId = "") {
+  return `<option value="">— Nessun dipendente —</option>${sortedActiveEditors().map(editor =>
+    `<option value="${escapeHtml(editor.id)}" ${editor.id === selectedId ? "selected" : ""}>${escapeHtml(fullEmployeeName(editor))}</option>`
+  ).join("")}`;
+}
+
+function renderMultiRoomAssignments(selected = new Map()) {
+  const container = document.getElementById("multiRoomAssignments");
+  if (!container) return;
+  container.innerHTML = ROOMS.map(room => {
+    const assignment = selected.get(room.id);
+    return `<div class="multi-room-row" data-multi-room="${room.id}">
+      <label class="multi-room-check"><input type="checkbox" ${assignment ? "checked" : ""}><strong>${escapeHtml(room.label)}</strong></label>
+      <select aria-label="Dipendente per ${escapeHtml(room.label)}">${editorOptions(assignment?.editorId || "")}</select>
+    </div>`;
+  }).join("");
+  updateMultiRoomUI();
+}
+
+function updateMultiRoomUI() {
+  const enabled = Boolean(document.getElementById("multiRoomEnabled")?.checked);
+  const container = document.getElementById("multiRoomAssignments");
+  const singleRoom = document.getElementById("room");
+  const singleEditor = document.getElementById("editorSearchInput");
+  container?.classList.toggle("hidden", !enabled);
+  if (singleRoom) singleRoom.disabled = enabled;
+  if (singleEditor) {
+    singleEditor.disabled = enabled || Boolean(document.getElementById("isClient")?.checked);
+    singleEditor.closest("label")?.classList.toggle("disabled-field", enabled);
+  }
+}
+
+function selectedRoomAssignments() {
+  if (!document.getElementById("multiRoomEnabled")?.checked) {
+    return [{
+      room: document.getElementById("room").value,
+      editorId: document.getElementById("editor").value || null
+    }];
+  }
+  return [...document.querySelectorAll("#multiRoomAssignments .multi-room-row")]
+    .filter(row => row.querySelector('input[type="checkbox"]')?.checked)
+    .map(row => ({
+      room: row.dataset.multiRoom,
+      editorId: row.querySelector("select")?.value || null
+    }));
+}
+
+function seriesGroups() {
+  const groups = new Map();
+  shifts.filter(shift => shift.seriesId).forEach(shift => {
+    const key = shift.seriesGroupId || shift.seriesId;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(shift);
+  });
+  return [...groups.entries()].map(([id, items]) => ({
+    id,
+    items,
+    production: items[0]?.production || "",
+    film: items[0]?.film || "",
+    from: items.reduce((value, item) => !value || item.date < value ? item.date : value, ""),
+    to: items.reduce((value, item) => !value || item.date > value ? item.date : value, ""),
+    rooms: [...new Set(items.map(item => item.room))]
+  })).sort((a, b) => b.to.localeCompare(a.to));
+}
+
+function populateExistingSeries(preferredId = "") {
+  const select = document.getElementById("existingSeries");
+  if (!select) return;
+  const groups = seriesGroups();
+  select.innerHTML = groups.length
+    ? groups.map(group => {
+        const roomLabels = group.rooms.map(id => ROOMS.find(room => room.id === id)?.label || id).join(", ");
+        return `<option value="${group.id}" ${group.id === preferredId ? "selected" : ""}>${escapeHtml(group.production)} · ${escapeHtml(group.film)} · ${escapeHtml(roomLabels)} · fino al ${escapeHtml(formatRangeDate(group.to))}</option>`;
+      }).join("")
+    : '<option value="">Nessuna serie disponibile</option>';
+}
+
+function updateSeriesUI() {
+  const continuing = document.getElementById("seriesMode")?.value === "continue";
+  document.getElementById("existingSeriesField")?.classList.toggle("hidden", !continuing);
+  if (continuing) populateExistingSeries(document.getElementById("existingSeries")?.value || "");
+}
+
+document.getElementById("multiRoomEnabled")?.addEventListener("change", updateMultiRoomUI);
+document.getElementById("seriesMode")?.addEventListener("change", updateSeriesUI);
 
 function setWeekdaySelection(values = ["all"]) {
   const selected = new Set(values.map(String));
@@ -1260,9 +1347,14 @@ function setStatusUI(status) {
 
 function updateClientUI() {
   const client = document.getElementById("isClient").checked;
+  const multiRoom = Boolean(document.getElementById("multiRoomEnabled")?.checked);
   const search = document.getElementById("editorSearchInput");
-  search.disabled = client;
+  search.disabled = client || multiRoom;
   if (client) { search.value = ""; document.getElementById("editor").value = ""; }
+  document.querySelectorAll("#multiRoomAssignments select").forEach(select => {
+    select.disabled = client;
+    if (client) select.value = "";
+  });
 }
 
 function resolveEditorInput(showError = false) {
@@ -1435,6 +1527,11 @@ function resetShiftForm(shift = {}) {
   document.getElementById("shiftNotes").value = noteValue;
   updateShiftNotesUI();
   document.getElementById("color").value = shift.color || "blue";
+  document.getElementById("multiRoomEnabled").checked = false;
+  renderMultiRoomAssignments();
+  document.getElementById("seriesMode").value = shift.seriesId ? "continue" : "new";
+  populateExistingSeries(shift.seriesGroupId || shift.seriesId || "");
+  updateSeriesUI();
   setStatusUI(shift.status || "definitivo");
   setWeekdaySelection(["all"]);
   updateClientUI();
@@ -1448,6 +1545,8 @@ function openNewShift(room = "sala-1", date = "") {
   document.querySelector(".date-range-field").classList.remove("calendar-disabled");
   document.querySelectorAll("#dateCalendarPopover button").forEach(button => button.disabled = false);
   document.getElementById("weekdayPicker").classList.remove("disabled");
+  document.getElementById("multiRoomField")?.classList.remove("editing-disabled");
+  document.getElementById("seriesField")?.classList.remove("editing-disabled");
   resetShiftForm({ room, date: date || isoDate(currentMonth.getFullYear(), currentMonth.getMonth(), 1) });
   shiftDialog.showModal();
 }
@@ -1463,6 +1562,8 @@ function openEditShift(id) {
   document.querySelector(".date-range-field").classList.add("calendar-disabled");
   document.querySelectorAll("#dateCalendarPopover button").forEach(button => button.disabled = true);
   document.getElementById("weekdayPicker").classList.add("disabled");
+  document.getElementById("multiRoomField")?.classList.add("editing-disabled");
+  document.getElementById("seriesField")?.classList.add("editing-disabled");
   shiftDialog.showModal();
 }
 
@@ -1488,18 +1589,26 @@ shiftForm.addEventListener("submit", event => {
   const error = document.getElementById("shiftFormError");
   error.textContent = "";
   if (!start || !end || timeToMinutes(end) <= timeToMinutes(start)) { error.textContent = "Inserisci un intervallo orario valido."; return; }
-  if (!document.getElementById("isClient").checked && !resolveEditorInput(true)) return;
+  const multiRoom = !editingShiftId && document.getElementById("multiRoomEnabled")?.checked;
+  if (!multiRoom && !document.getElementById("isClient").checked && !resolveEditorInput(true)) return;
 
   const dates = editingShiftId ? [document.getElementById("dateFrom").value] : datesForFormRange();
   if (!dates.length) { error.textContent = "Il periodo non contiene giorni selezionati."; return; }
 
+  const assignments = editingShiftId
+    ? [{ room: document.getElementById("room").value, editorId: document.getElementById("editor").value || null }]
+    : selectedRoomAssignments();
+  if (!assignments.length) { error.textContent = "Seleziona almeno una sala."; return; }
+  if (!document.getElementById("isClient").checked && assignments.some(item => !item.editorId)) {
+    error.textContent = "Assegna un dipendente a ogni sala selezionata oppure attiva CLIENTE.";
+    return;
+  }
+
   const common = {
-    room: document.getElementById("room").value,
     production: document.getElementById("production").value.trim().replace(/\s+/g," ").toUpperCase(),
     film: document.getElementById("film").value.trim().replace(/\s+/g," ").toUpperCase(),
     start, end,
     workType: document.getElementById("workType").value,
-    editorId: document.getElementById("editor").value || null,
     isClient: document.getElementById("isClient").checked,
     isDoubleStation: document.getElementById("isDoubleStation").checked,
     isVariable: document.getElementById("isVariable").checked,
@@ -1511,7 +1620,53 @@ shiftForm.addEventListener("submit", event => {
     confirmed: false
   };
 
-  const candidates = dates.map((date,index) => ({ ...common, id: editingShiftId || crypto.randomUUID(), date }));
+  let groupId = null;
+  const seriesByRoom = new Map();
+  if (editingShiftId) {
+    const previous = shifts.find(item => item.id === editingShiftId);
+    groupId = previous?.seriesGroupId || previous?.seriesId || null;
+    if (previous?.seriesId) seriesByRoom.set(previous.room, previous.seriesId);
+  } else if (!IS_TOUCH_APPLE && document.getElementById("seriesMode")?.value === "continue") {
+    groupId = document.getElementById("existingSeries")?.value || null;
+    if (!groupId) { error.textContent = "Seleziona la serie da continuare."; return; }
+    const existingGroup = shifts.filter(item => (item.seriesGroupId || item.seriesId) === groupId);
+    if (existingGroup.some(item => item.production !== common.production || item.film !== common.film)) {
+      error.textContent = "Produzione e film devono coincidere con la serie che vuoi continuare.";
+      return;
+    }
+    existingGroup.filter(item => item.seriesId)
+      .forEach(item => seriesByRoom.set(item.room, item.seriesId));
+  } else if (!IS_TOUCH_APPLE) {
+    groupId = crypto.randomUUID();
+  }
+  if (groupId) assignments.forEach(item => {
+    if (!seriesByRoom.has(item.room)) seriesByRoom.set(item.room, crypto.randomUUID());
+  });
+
+  const candidates = assignments.flatMap(assignment => dates.map(date => ({
+    ...common,
+    id: editingShiftId || crypto.randomUUID(),
+    room: assignment.room,
+    editorId: common.isClient ? null : assignment.editorId,
+    date,
+    seriesId: seriesByRoom.get(assignment.room) || null,
+    seriesGroupId: groupId
+  })));
+  const employeeConflict = candidates.find((candidate, index) => candidate.editorId && (
+    candidates.some((other, otherIndex) => otherIndex !== index
+      && other.editorId === candidate.editorId
+      && other.date === candidate.date
+      && overlaps(other, candidate))
+    || shifts.some(existing => existing.id !== editingShiftId
+      && existing.editorId === candidate.editorId
+      && existing.date === candidate.date
+      && overlaps(existing, candidate))
+  ));
+  if (employeeConflict) {
+    const employee = getEditor(employeeConflict.editorId);
+    error.textContent = `${employee ? fullEmployeeName(employee) : "Il dipendente"} ha già un turno sovrapposto il ${new Date(employeeConflict.date+"T12:00:00").toLocaleDateString("it-IT")}.`;
+    return;
+  }
   const conflict = candidates.find(candidate => roomConflict(candidate, editingShiftId));
   if (conflict) { error.textContent = `La sala contiene già un turno sovrapposto il ${new Date(conflict.date+"T12:00:00").toLocaleDateString("it-IT")}.`; return; }
 
@@ -1524,15 +1679,34 @@ shiftForm.addEventListener("submit", event => {
   saveLocal(); candidates.forEach(syncShiftToSupabase);
   selectedShiftIds = new Set(candidates.map(candidate => candidate.id)); selectionAnchorId = candidates[0].id; selectedCell = null;
   closeShiftDialog(); renderPlanning();
-  showToast(candidates.length === 1 ? "Turno salvato" : `${candidates.length} turni creati`);
+  showToast(candidates.length === 1 ? "Turno salvato" : `${candidates.length} turni creati in ${assignments.length} ${assignments.length === 1 ? "sala" : "sale"}`);
 });
 
 document.getElementById("deleteShiftBtn").addEventListener("click", () => {
   const shift = shifts.find(item => item.id === editingShiftId);
   if (!editingShiftId || shift?.confirmed) return;
-  if (!confirm("Eliminare questo turno?")) return;
-  shifts = shifts.filter(item => item.id !== editingShiftId); saveLocal(); deleteShiftFromSupabase(editingShiftId);
+  let targets = [shift];
+  if (!IS_TOUCH_APPLE && shift.seriesId) {
+    const choice = window.prompt(
+      "Cosa vuoi eliminare?\n\n1 = Solo questo turno\n2 = Questa data e i successivi della stessa sala\n3 = Tutta la serie di questa sala\n4 = Tutto il gruppo, comprese le altre sale\n\nScrivi 1, 2, 3 oppure 4.",
+      "1"
+    );
+    if (choice === null) return;
+    if (choice === "2") targets = shifts.filter(item => item.seriesId === shift.seriesId && item.date >= shift.date);
+    else if (choice === "3") targets = shifts.filter(item => item.seriesId === shift.seriesId);
+    else if (choice === "4") targets = shifts.filter(item => (item.seriesGroupId || item.seriesId) === (shift.seriesGroupId || shift.seriesId));
+    else if (choice !== "1") return showToast("Scelta non valida");
+  }
+  const unlocked = targets.filter(item => !item.confirmed);
+  const lockedCount = targets.length - unlocked.length;
+  const message = `Eliminare ${unlocked.length} ${unlocked.length === 1 ? "turno" : "turni"}${lockedCount ? `? ${lockedCount} confermati resteranno invariati.` : "?"}`;
+  if (!unlocked.length || !confirm(message)) return;
+  const ids = new Set(unlocked.map(item => item.id));
+  shifts = shifts.filter(item => !ids.has(item.id));
+  saveLocal();
+  unlocked.forEach(item => deleteShiftFromSupabase(item.id));
   selectedShiftIds.clear(); selectionAnchorId = null; closeShiftDialog(); renderPlanning();
+  showToast(`${unlocked.length} ${unlocked.length === 1 ? "turno eliminato" : "turni eliminati"}`);
 });
 
 document.getElementById("closeShiftDialog").addEventListener("click", closeShiftDialog);
@@ -2286,7 +2460,7 @@ function openPrintPreview() {
       });
     });
     const weekLabel=`${shortPrintDate(week.start)} – ${shortPrintDate(week.end)}`;
-    return `<main class="paper"><header class="head"><div><h1>Digital Video Service</h1><p>PLANNING · ${escapeHtml(monthName(printMonth))}</p><small>Settimana ${escapeHtml(weekLabel)}</small></div><strong>${selectedRooms.length===ROOMS.length?'Tutte le sale':`${selectedRooms.length} sale selezionate`}</strong></header><section class="grid">${cells.join('')}</section><footer class="page-footer"><span>DVS Planning · v20.5</span><span>Pagina ${pageIndex+1} di ${selectedWeeks.length}</span></footer></main>`;
+    return `<main class="paper"><header class="head"><div><h1>Digital Video Service</h1><p>PLANNING · ${escapeHtml(monthName(printMonth))}</p><small>Settimana ${escapeHtml(weekLabel)}</small></div><strong>${selectedRooms.length===ROOMS.length?'Tutte le sale':`${selectedRooms.length} sale selezionate`}</strong></header><section class="grid">${cells.join('')}</section><footer class="page-footer"><span>DVS Planning · v21 TEST</span><span>Pagina ${pageIndex+1} di ${selectedWeeks.length}</span></footer></main>`;
   }).join('');
   const popup=window.open('','_blank');
   if(!popup)return showToast('Consenti l’apertura della finestra di anteprima');
@@ -2485,7 +2659,7 @@ document.querySelectorAll("[data-settings-section]").forEach(button => button.ad
   const sections = {
     backup: { title:"Backup", subtitle:"Stato e autorizzazione", html:backupSettingsHtml() },
     print: { title:"Stampa", subtitle:"Centro Stampa", html:printSettingsHtml() },
-    info: { title:"Informazioni", subtitle:"DVS Planning", html:`<img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video"><h2>DVS Planning</h2><p>Applicazione collaborativa per la gestione del Planning di Digital Video Service.</p><div class="settings-info-meta"><div><span>Versione</span><strong>v20.5</strong></div><div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div><div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div></div><p class="settings-info-copyright"><strong>Copyright © 2026 Marco D'Agostino per Digital Video Service</strong><br>Tutti i diritti riservati.</p>` }
+    info: { title:"Informazioni", subtitle:"DVS Planning", html:`<img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video"><h2>DVS Planning</h2><p>Applicazione collaborativa per la gestione del Planning di Digital Video Service.</p><div class="settings-info-meta"><div><span>Versione</span><strong>v21 – TEST</strong></div><div><span>Stato</span><strong>Build sperimentale: serie, multisala e selezione Mac</strong></div><div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div><div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div></div><p class="settings-info-copyright"><strong>Copyright © 2026 Marco D'Agostino per Digital Video Service</strong><br>Tutti i diritti riservati.</p>` }
   };
   const selected = sections[section];
   if (!selected) return;
@@ -2718,7 +2892,9 @@ async function syncShiftToSupabase(shift) {
     status: shift.status,
     confirmed: Boolean(shift.confirmed),
     confirmed_at: shift.confirmed ? (shift.confirmedAt || new Date().toISOString()) : null,
-    color_key: shift.color
+    color_key: shift.color,
+    series_id: shift.seriesId || null,
+    series_group_id: shift.seriesGroupId || null
   };
   const { error } = await db.from("shifts").upsert(row);
   if (error) showToast(`Supabase: ${error.message}`);
@@ -2822,7 +2998,9 @@ async function loadSupabaseData() {
     status: row.status,
     color: row.color_key,
     confirmed: Boolean(row.confirmed),
-    confirmedAt: row.confirmed_at || null
+    confirmedAt: row.confirmed_at || null,
+    seriesId: row.series_id || null,
+    seriesGroupId: row.series_group_id || null
   }));
 
   saveLocal();

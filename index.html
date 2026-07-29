@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-  <title>DVS Planning v20.5</title>
+  <title>DVS Planning v21 – TEST</title>
   <meta name="theme-color" content="#09090b">
   <link rel="icon" type="image/png" sizes="64x64" href="./assets/icons/dvs-planning-64.png">
   <link rel="apple-touch-icon" href="./assets/icons/dvs-planning-180.png">
   <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="stylesheet" href="./src/styles.css?v=20-5">
+  <link rel="stylesheet" href="./src/styles.css?v=21-test">
 </head>
 <body>
   <section id="profileGate" class="profile-gate" aria-label="Selezione profilo">
@@ -74,7 +74,7 @@
           <span class="nav-icon"><svg class="sf-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 5H5.5A2.5 2.5 0 0 0 3 7.5v9A2.5 2.5 0 0 0 5.5 19H10M14 8l4 4-4 4M8 12h10"/></svg></span><span>Esci</span>
         </button>
         <span id="activeProfileLabel" class="active-profile-label"></span>
-        <span class="build-pill">v20.5</span>
+        <span class="build-pill">v21 · TEST</span>
       </div>
     </aside>
 
@@ -288,7 +288,7 @@
             <h2>DVS Planning</h2>
             <p>Applicazione collaborativa per la gestione del Planning di Digital Video Service.</p>
             <div class="settings-info-meta">
-              <div><span>Versione</span><strong>v20.5</strong></div>
+              <div><span>Versione</span><strong>v21 – TEST</strong></div>
               <div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div>
               <div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div>
             </div>
@@ -402,6 +402,33 @@
           <datalist id="editorSuggestions"></datalist>
           <input id="editor" type="hidden">
         </label>
+
+        <fieldset id="multiRoomField" class="form-wide v21-test-field desktop-only-test">
+          <legend>Creazione su più sale · TEST</legend>
+          <label class="checkbox-label option-card">
+            <input id="multiRoomEnabled" type="checkbox">
+            <span><strong>PIÙ SALE CONTEMPORANEAMENTE</strong><small>Crea un turno distinto per ogni sala e assegna il relativo dipendente</small></span>
+          </label>
+          <div id="multiRoomAssignments" class="multi-room-assignments hidden"></div>
+        </fieldset>
+
+        <fieldset id="seriesField" class="form-wide v21-test-field desktop-only-test">
+          <legend>Serie turni · TEST</legend>
+          <div class="series-controls">
+            <label>
+              Operazione
+              <select id="seriesMode">
+                <option value="new">Crea una nuova serie</option>
+                <option value="continue">Continua una serie esistente</option>
+              </select>
+            </label>
+            <label id="existingSeriesField" class="hidden">
+              Serie da prolungare
+              <select id="existingSeries"></select>
+            </label>
+          </div>
+          <small class="v21-test-help">Una serie permette di eliminare anche turni appartenenti a mesi non visualizzati.</small>
+        </fieldset>
 
         <label class="checkbox-label option-card">
           <input id="isClient" type="checkbox">
@@ -548,6 +575,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="./src/config.js?v=11.0"></script>
-  <script src="./src/app.js?v=20-5"></script>
+  <script src="./src/app.js?v=21-test"></script>
 </body>
 </html>
