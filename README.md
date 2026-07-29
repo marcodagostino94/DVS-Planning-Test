@@ -1,8 +1,8 @@
-# DVS Planning v21 – TEST
+# DVS Planning v22 – FINALE
 
-Build sperimentale derivata dalla v20.5 ufficiale.
+Versione finale pronta per il collaudo.
 
-## Funzioni TEST (Mac)
+## Funzioni Mac
 
 - selezione multipla di turni appartenenti anche a sale diverse;
 - selezione tramite riquadro su più righe del Planning;

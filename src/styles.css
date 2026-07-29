@@ -2370,17 +2370,21 @@ html.is-iphone-landscape .summary-shift-list{padding:6px 9px 10px}
     pointer-events:none;
   }
 }
-/* v21 TEST — funzioni sperimentali disponibili esclusivamente sul Mac. */
-.v21-test-field{
-  border:1px solid rgba(239,68,88,.28);
-  border-radius:18px;
-  padding:16px;
-  background:rgba(239,68,88,.045);
+/* Creazione multisala disponibile esclusivamente sul Mac. */
+.multi-room-field{
+  min-width:0;
+  margin:0;
+  padding:0;
+  border:0;
+  background:transparent;
 }
-.v21-test-field legend{
-  padding:0 8px;
-  color:#ef4458;
-  font-weight:800;
+.multi-room-field > .option-card{
+  width:min(100%,720px);
+  margin-inline:auto;
+  justify-content:center;
+}
+.multi-room-field > .option-card span{
+  text-align:left;
 }
 .multi-room-assignments{
   display:grid;
@@ -2409,12 +2413,12 @@ html.is-iphone-landscape .summary-shift-list{padding:6px 9px 10px}
 }
 .multi-room-check input{width:18px;height:18px}
 .multi-room-row select{min-width:0}
-.v21-test-field.editing-disabled{
+.multi-room-field.editing-disabled{
   opacity:.55;
   pointer-events:none;
 }
-.is-ipad .desktop-only-test,
-.is-iphone .desktop-only-test,
-.is-iphone-landscape .desktop-only-test{
+.is-ipad .desktop-only-multi-room,
+.is-iphone .desktop-only-multi-room,
+.is-iphone-landscape .desktop-only-multi-room{
   display:none !important;
 }
