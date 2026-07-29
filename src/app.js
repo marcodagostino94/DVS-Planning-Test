@@ -132,9 +132,7 @@ let shifts = loadLocal(SHIFT_STORAGE, seedShifts).map(shift => ({
   isDoubleStation: Boolean(shift.isDoubleStation),
   isVariable: Boolean(shift.isVariable),
   notes: String(shift.notes || "").slice(0, 100),
-  confirmed: Boolean(shift.confirmed),
-  seriesId: shift.seriesId || null,
-  seriesGroupId: shift.seriesGroupId || null
+  confirmed: Boolean(shift.confirmed)
 }));
 
 const planningGrid = document.getElementById("planningGrid");
@@ -574,10 +572,11 @@ function selectedGroupForDrag(sourceId) {
   }
 
   return selectedShiftList()
-    .filter(shift => shift.room === source.room && !shift.confirmed)
+    .filter(shift => !shift.confirmed)
     .map(shift => ({ ...shift }))
     .sort((a, b) =>
-      a.date.localeCompare(b.date)
+      (ROOMS.findIndex(room => room.id === a.room) - ROOMS.findIndex(room => room.id === b.room))
+      || a.date.localeCompare(b.date)
       || a.start.localeCompare(b.start)
       || a.id.localeCompare(b.id)
     );
@@ -644,14 +643,20 @@ function buildMovedGroup(targetRoom, targetDate) {
   const sourceDate = new Date(`${activeDragSource.date}T12:00:00`);
   const destinationDate = new Date(`${targetDate}T12:00:00`);
   const offsetDays = Math.round((destinationDate - sourceDate) / 86400000);
+  const sourceRoomIndex = ROOMS.findIndex(room => room.id === activeDragSource.room);
+  const targetRoomIndex = ROOMS.findIndex(room => room.id === targetRoom);
+  if (sourceRoomIndex < 0 || targetRoomIndex < 0) return [];
 
-  return activeDragGroup.map(original => {
+  const candidates = activeDragGroup.map(original => {
     const movedDate = new Date(`${original.date}T12:00:00`);
     movedDate.setDate(movedDate.getDate() + offsetDays);
+    const originalRoomIndex = ROOMS.findIndex(room => room.id === original.room);
+    const movedRoom = ROOMS[targetRoomIndex + (originalRoomIndex - sourceRoomIndex)];
+    if (!movedRoom) return null;
 
     return {
       ...original,
-      room: targetRoom,
+      room: movedRoom.id,
       date: isoDate(
         movedDate.getFullYear(),
         movedDate.getMonth(),
@@ -659,6 +664,7 @@ function buildMovedGroup(targetRoom, targetDate) {
       )
     };
   });
+  return candidates.includes(null) ? [] : candidates;
 }
 
 function groupHasConflict(candidates) {
@@ -673,15 +679,24 @@ function groupHasConflict(candidates) {
         && a.date === b.date
         && overlaps(a, b)
       ) return true;
+      if (
+        a.editorId
+        && a.editorId === b.editorId
+        && a.date === b.date
+        && overlaps(a, b)
+      ) return true;
     }
   }
 
   return candidates.some(candidate =>
     shifts.some(existing =>
       !movingIds.has(existing.id)
-      && existing.room === candidate.room
       && existing.date === candidate.date
       && overlaps(existing, candidate)
+      && (
+        existing.room === candidate.room
+        || (candidate.editorId && existing.editorId === candidate.editorId)
+      )
     )
   );
 }
@@ -1232,7 +1247,6 @@ function populateShiftSelects() {
   document.getElementById("productionSuggestions").innerHTML = productions.map(value => `<option value="${escapeHtml(value)}"></option>`).join("");
   document.getElementById("filmSuggestions").innerHTML = films.map(value => `<option value="${escapeHtml(value)}"></option>`).join("");
   renderMultiRoomAssignments();
-  populateExistingSeries();
 }
 
 function sortedActiveEditors() {
@@ -1288,44 +1302,7 @@ function selectedRoomAssignments() {
     }));
 }
 
-function seriesGroups() {
-  const groups = new Map();
-  shifts.filter(shift => shift.seriesId).forEach(shift => {
-    const key = shift.seriesGroupId || shift.seriesId;
-    if (!groups.has(key)) groups.set(key, []);
-    groups.get(key).push(shift);
-  });
-  return [...groups.entries()].map(([id, items]) => ({
-    id,
-    items,
-    production: items[0]?.production || "",
-    film: items[0]?.film || "",
-    from: items.reduce((value, item) => !value || item.date < value ? item.date : value, ""),
-    to: items.reduce((value, item) => !value || item.date > value ? item.date : value, ""),
-    rooms: [...new Set(items.map(item => item.room))]
-  })).sort((a, b) => b.to.localeCompare(a.to));
-}
-
-function populateExistingSeries(preferredId = "") {
-  const select = document.getElementById("existingSeries");
-  if (!select) return;
-  const groups = seriesGroups();
-  select.innerHTML = groups.length
-    ? groups.map(group => {
-        const roomLabels = group.rooms.map(id => ROOMS.find(room => room.id === id)?.label || id).join(", ");
-        return `<option value="${group.id}" ${group.id === preferredId ? "selected" : ""}>${escapeHtml(group.production)} · ${escapeHtml(group.film)} · ${escapeHtml(roomLabels)} · fino al ${escapeHtml(formatRangeDate(group.to))}</option>`;
-      }).join("")
-    : '<option value="">Nessuna serie disponibile</option>';
-}
-
-function updateSeriesUI() {
-  const continuing = document.getElementById("seriesMode")?.value === "continue";
-  document.getElementById("existingSeriesField")?.classList.toggle("hidden", !continuing);
-  if (continuing) populateExistingSeries(document.getElementById("existingSeries")?.value || "");
-}
-
 document.getElementById("multiRoomEnabled")?.addEventListener("change", updateMultiRoomUI);
-document.getElementById("seriesMode")?.addEventListener("change", updateSeriesUI);
 
 function setWeekdaySelection(values = ["all"]) {
   const selected = new Set(values.map(String));
@@ -1529,9 +1506,6 @@ function resetShiftForm(shift = {}) {
   document.getElementById("color").value = shift.color || "blue";
   document.getElementById("multiRoomEnabled").checked = false;
   renderMultiRoomAssignments();
-  document.getElementById("seriesMode").value = shift.seriesId ? "continue" : "new";
-  populateExistingSeries(shift.seriesGroupId || shift.seriesId || "");
-  updateSeriesUI();
   setStatusUI(shift.status || "definitivo");
   setWeekdaySelection(["all"]);
   updateClientUI();
@@ -1544,9 +1518,9 @@ function openNewShift(room = "sala-1", date = "") {
   document.getElementById("deleteShiftBtn").classList.add("hidden");
   document.querySelector(".date-range-field").classList.remove("calendar-disabled");
   document.querySelectorAll("#dateCalendarPopover button").forEach(button => button.disabled = false);
+  document.getElementById("dateFromTrigger").disabled = false;
   document.getElementById("weekdayPicker").classList.remove("disabled");
   document.getElementById("multiRoomField")?.classList.remove("editing-disabled");
-  document.getElementById("seriesField")?.classList.remove("editing-disabled");
   resetShiftForm({ room, date: date || isoDate(currentMonth.getFullYear(), currentMonth.getMonth(), 1) });
   shiftDialog.showModal();
 }
@@ -1559,11 +1533,11 @@ function openEditShift(id) {
   document.getElementById("shiftDialogTitle").textContent = "Modifica turno";
   document.getElementById("deleteShiftBtn").classList.remove("hidden");
   resetShiftForm(shift);
-  document.querySelector(".date-range-field").classList.add("calendar-disabled");
-  document.querySelectorAll("#dateCalendarPopover button").forEach(button => button.disabled = true);
-  document.getElementById("weekdayPicker").classList.add("disabled");
+  document.querySelector(".date-range-field").classList.remove("calendar-disabled");
+  document.getElementById("dateFromTrigger").disabled = true;
+  document.getElementById("dateToTrigger").disabled = false;
+  document.getElementById("weekdayPicker").classList.remove("disabled");
   document.getElementById("multiRoomField")?.classList.add("editing-disabled");
-  document.getElementById("seriesField")?.classList.add("editing-disabled");
   shiftDialog.showModal();
 }
 
@@ -1592,18 +1566,13 @@ shiftForm.addEventListener("submit", event => {
   const multiRoom = !editingShiftId && document.getElementById("multiRoomEnabled")?.checked;
   if (!multiRoom && !document.getElementById("isClient").checked && !resolveEditorInput(true)) return;
 
-  const dates = editingShiftId ? [document.getElementById("dateFrom").value] : datesForFormRange();
+  const dates = datesForFormRange();
   if (!dates.length) { error.textContent = "Il periodo non contiene giorni selezionati."; return; }
 
   const assignments = editingShiftId
     ? [{ room: document.getElementById("room").value, editorId: document.getElementById("editor").value || null }]
     : selectedRoomAssignments();
   if (!assignments.length) { error.textContent = "Seleziona almeno una sala."; return; }
-  if (!document.getElementById("isClient").checked && assignments.some(item => !item.editorId)) {
-    error.textContent = "Assegna un dipendente a ogni sala selezionata oppure attiva CLIENTE.";
-    return;
-  }
-
   const common = {
     production: document.getElementById("production").value.trim().replace(/\s+/g," ").toUpperCase(),
     film: document.getElementById("film").value.trim().replace(/\s+/g," ").toUpperCase(),
@@ -1620,38 +1589,27 @@ shiftForm.addEventListener("submit", event => {
     confirmed: false
   };
 
-  let groupId = null;
-  const seriesByRoom = new Map();
-  if (editingShiftId) {
-    const previous = shifts.find(item => item.id === editingShiftId);
-    groupId = previous?.seriesGroupId || previous?.seriesId || null;
-    if (previous?.seriesId) seriesByRoom.set(previous.room, previous.seriesId);
-  } else if (!IS_TOUCH_APPLE && document.getElementById("seriesMode")?.value === "continue") {
-    groupId = document.getElementById("existingSeries")?.value || null;
-    if (!groupId) { error.textContent = "Seleziona la serie da continuare."; return; }
-    const existingGroup = shifts.filter(item => (item.seriesGroupId || item.seriesId) === groupId);
-    if (existingGroup.some(item => item.production !== common.production || item.film !== common.film)) {
-      error.textContent = "Produzione e film devono coincidere con la serie che vuoi continuare.";
-      return;
-    }
-    existingGroup.filter(item => item.seriesId)
-      .forEach(item => seriesByRoom.set(item.room, item.seriesId));
-  } else if (!IS_TOUCH_APPLE) {
-    groupId = crypto.randomUUID();
-  }
-  if (groupId) assignments.forEach(item => {
-    if (!seriesByRoom.has(item.room)) seriesByRoom.set(item.room, crypto.randomUUID());
-  });
-
-  const candidates = assignments.flatMap(assignment => dates.map(date => ({
+  const original = editingShiftId ? shifts.find(item => item.id === editingShiftId) : null;
+  let candidates = assignments.flatMap(assignment => dates.map(date => ({
     ...common,
-    id: editingShiftId || crypto.randomUUID(),
+    id: editingShiftId && date === original?.date ? editingShiftId : crypto.randomUUID(),
     room: assignment.room,
     editorId: common.isClient ? null : assignment.editorId,
-    date,
-    seriesId: seriesByRoom.get(assignment.room) || null,
-    seriesGroupId: groupId
+    date
   })));
+  if (editingShiftId) {
+    candidates = candidates.filter(candidate => candidate.id === editingShiftId || !shifts.some(existing =>
+      existing.id !== editingShiftId
+      && existing.room === candidate.room
+      && existing.date === candidate.date
+      && existing.start === candidate.start
+      && existing.end === candidate.end
+      && existing.production === candidate.production
+      && existing.film === candidate.film
+      && existing.workType === candidate.workType
+      && existing.editorId === candidate.editorId
+    ));
+  }
   const employeeConflict = candidates.find((candidate, index) => candidate.editorId && (
     candidates.some((other, otherIndex) => otherIndex !== index
       && other.editorId === candidate.editorId
@@ -1672,31 +1630,27 @@ shiftForm.addEventListener("submit", event => {
 
   if (editingShiftId) {
     const previous = shifts.find(item => item.id === editingShiftId);
-    candidates[0].confirmed = Boolean(previous?.confirmed);
-    shifts[shifts.findIndex(item => item.id === editingShiftId)] = candidates[0];
+    const edited = candidates.find(item => item.id === editingShiftId);
+    if (!edited) { error.textContent = "Il turno originale non è disponibile."; return; }
+    edited.confirmed = Boolean(previous?.confirmed);
+    shifts[shifts.findIndex(item => item.id === editingShiftId)] = edited;
+    shifts.push(...candidates.filter(item => item.id !== editingShiftId));
   } else shifts.push(...candidates);
 
   saveLocal(); candidates.forEach(syncShiftToSupabase);
   selectedShiftIds = new Set(candidates.map(candidate => candidate.id)); selectionAnchorId = candidates[0].id; selectedCell = null;
   closeShiftDialog(); renderPlanning();
-  showToast(candidates.length === 1 ? "Turno salvato" : `${candidates.length} turni creati in ${assignments.length} ${assignments.length === 1 ? "sala" : "sale"}`);
+  showToast(candidates.length === 1
+    ? "Turno salvato"
+    : editingShiftId
+      ? `Turno modificato e prolungato: ${candidates.length - 1} nuovi turni`
+      : `${candidates.length} turni creati in ${assignments.length} ${assignments.length === 1 ? "sala" : "sale"}`);
 });
 
 document.getElementById("deleteShiftBtn").addEventListener("click", () => {
   const shift = shifts.find(item => item.id === editingShiftId);
   if (!editingShiftId || shift?.confirmed) return;
-  let targets = [shift];
-  if (!IS_TOUCH_APPLE && shift.seriesId) {
-    const choice = window.prompt(
-      "Cosa vuoi eliminare?\n\n1 = Solo questo turno\n2 = Questa data e i successivi della stessa sala\n3 = Tutta la serie di questa sala\n4 = Tutto il gruppo, comprese le altre sale\n\nScrivi 1, 2, 3 oppure 4.",
-      "1"
-    );
-    if (choice === null) return;
-    if (choice === "2") targets = shifts.filter(item => item.seriesId === shift.seriesId && item.date >= shift.date);
-    else if (choice === "3") targets = shifts.filter(item => item.seriesId === shift.seriesId);
-    else if (choice === "4") targets = shifts.filter(item => (item.seriesGroupId || item.seriesId) === (shift.seriesGroupId || shift.seriesId));
-    else if (choice !== "1") return showToast("Scelta non valida");
-  }
+  const targets = [shift];
   const unlocked = targets.filter(item => !item.confirmed);
   const lockedCount = targets.length - unlocked.length;
   const message = `Eliminare ${unlocked.length} ${unlocked.length === 1 ? "turno" : "turni"}${lockedCount ? `? ${lockedCount} confermati resteranno invariati.` : "?"}`;
@@ -2659,7 +2613,7 @@ document.querySelectorAll("[data-settings-section]").forEach(button => button.ad
   const sections = {
     backup: { title:"Backup", subtitle:"Stato e autorizzazione", html:backupSettingsHtml() },
     print: { title:"Stampa", subtitle:"Centro Stampa", html:printSettingsHtml() },
-    info: { title:"Informazioni", subtitle:"DVS Planning", html:`<img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video"><h2>DVS Planning</h2><p>Applicazione collaborativa per la gestione del Planning di Digital Video Service.</p><div class="settings-info-meta"><div><span>Versione</span><strong>v21 – TEST</strong></div><div><span>Stato</span><strong>Build sperimentale: serie, multisala e selezione Mac</strong></div><div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div><div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div></div><p class="settings-info-copyright"><strong>Copyright © 2026 Marco D'Agostino per Digital Video Service</strong><br>Tutti i diritti riservati.</p>` }
+    info: { title:"Informazioni", subtitle:"DVS Planning", html:`<img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video"><h2>DVS Planning</h2><p>Applicazione collaborativa per la gestione del Planning di Digital Video Service.</p><div class="settings-info-meta"><div><span>Versione</span><strong>v21 – TEST</strong></div><div><span>Stato</span><strong>Build sperimentale: multisala, selezione e spostamento multiplo Mac</strong></div><div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div><div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div></div><p class="settings-info-copyright"><strong>Copyright © 2026 Marco D'Agostino per Digital Video Service</strong><br>Tutti i diritti riservati.</p>` }
   };
   const selected = sections[section];
   if (!selected) return;
@@ -2892,9 +2846,7 @@ async function syncShiftToSupabase(shift) {
     status: shift.status,
     confirmed: Boolean(shift.confirmed),
     confirmed_at: shift.confirmed ? (shift.confirmedAt || new Date().toISOString()) : null,
-    color_key: shift.color,
-    series_id: shift.seriesId || null,
-    series_group_id: shift.seriesGroupId || null
+    color_key: shift.color
   };
   const { error } = await db.from("shifts").upsert(row);
   if (error) showToast(`Supabase: ${error.message}`);
@@ -2998,9 +2950,7 @@ async function loadSupabaseData() {
     status: row.status,
     color: row.color_key,
     confirmed: Boolean(row.confirmed),
-    confirmedAt: row.confirmed_at || null,
-    seriesId: row.series_id || null,
-    seriesGroupId: row.series_group_id || null
+    confirmedAt: row.confirmed_at || null
   }));
 
   saveLocal();

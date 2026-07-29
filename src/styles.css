@@ -2409,16 +2409,6 @@ html.is-iphone-landscape .summary-shift-list{padding:6px 9px 10px}
 }
 .multi-room-check input{width:18px;height:18px}
 .multi-room-row select{min-width:0}
-.series-controls{
-  display:grid;
-  grid-template-columns:1fr 1.5fr;
-  gap:12px;
-}
-.v21-test-help{
-  display:block;
-  margin-top:10px;
-  color:var(--muted);
-}
 .v21-test-field.editing-disabled{
   opacity:.55;
   pointer-events:none;

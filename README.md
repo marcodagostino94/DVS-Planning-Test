@@ -6,12 +6,12 @@ Build sperimentale derivata dalla v20.5 ufficiale.
 
 - selezione multipla di turni appartenenti anche a sale diverse;
 - selezione tramite riquadro su più righe del Planning;
+- trascinamento simultaneo della selezione su più giorni e più sale;
 - creazione dello stesso turno su più sale, con dipendente distinto per sala;
-- creazione e continuazione di serie distribuite su più mesi;
-- eliminazione del singolo turno, dei successivi, dell’intera serie di una sala o dell’intero gruppo multisala.
+- dipendente facoltativo anche nella creazione multisala;
+- prolungamento di un turno modificando la data finale.
 
-Prima del test eseguire `database/014_shift_series_v21_test.sql` su Supabase.
-La migrazione aggiunge soltanto colonne facoltative e non modifica il comportamento della v20.5.
+Questa revisione non richiede alcuna modifica SQL su Supabase.
 
 Release consolidata dell’applicazione collaborativa per la gestione del Planning di Digital Video Service.
 
