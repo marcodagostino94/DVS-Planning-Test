@@ -7,10 +7,13 @@ Versione finale pronta per il collaudo.
 - selezione multipla di turni appartenenti anche a sale diverse;
 - selezione tramite riquadro su più righe del Planning;
 - trascinamento simultaneo della selezione su più giorni e più sale;
-- creazione dello stesso turno su più sale, con dipendente distinto per sala;
-- dipendente facoltativo anche nella creazione multisala;
 - prolungamento di un turno modificando la data finale;
 - annullamento con `Cmd + Z` e ripristino con `Cmd + Shift + Z` delle ultime 20 operazioni sui turni.
+
+## Funzioni Mac, iPad e iPhone
+
+- creazione dello stesso turno su più sale, con dipendente distinto per sala;
+- dipendente facoltativo anche nella creazione multisala.
 
 Questa revisione non richiede alcuna modifica SQL su Supabase.
 

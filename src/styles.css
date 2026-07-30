@@ -2370,7 +2370,7 @@ html.is-iphone-landscape .summary-shift-list{padding:6px 9px 10px}
     pointer-events:none;
   }
 }
-/* Creazione multisala disponibile esclusivamente sul Mac. */
+/* Creazione multisala disponibile su Mac, iPad e iPhone. */
 .multi-room-field{
   min-width:0;
   margin:0;
@@ -2417,8 +2417,18 @@ html.is-iphone-landscape .summary-shift-list{padding:6px 9px 10px}
   opacity:.55;
   pointer-events:none;
 }
-.is-ipad .desktop-only-multi-room,
-.is-iphone .desktop-only-multi-room,
-.is-iphone-landscape .desktop-only-multi-room{
-  display:none !important;
+
+.is-iphone .multi-room-field > .option-card{
+  width:100%;
+}
+.is-iphone .multi-room-assignments{
+  grid-template-columns:1fr;
+  max-height:46dvh;
+}
+.is-iphone .multi-room-row{
+  grid-template-columns:minmax(92px,.7fr) minmax(0,1.3fr);
+}
+.is-ipad .multi-room-assignments,
+.is-iphone-landscape .multi-room-assignments{
+  max-height:42dvh;
 }

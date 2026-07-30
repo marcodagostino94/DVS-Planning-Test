@@ -147,6 +147,7 @@ const IS_IPHONE = /iPhone|iPod/.test(navigator.userAgent) || IS_SMALL_APPLE_TOUC
 const IS_IPAD = !IS_IPHONE && (/iPad/.test(navigator.userAgent)
   || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1));
 const IS_TOUCH_APPLE = IS_IPAD || IS_IPHONE;
+const IS_MAC_APP = !IS_TOUCH_APPLE;
 function updateAppleDeviceLayout() {
   const iphoneLandscape = IS_IPHONE && window.matchMedia("(orientation: landscape)").matches;
   document.documentElement.classList.toggle("is-iphone-device", IS_IPHONE);
@@ -427,6 +428,10 @@ function selectOnlyShift(id) {
 }
 
 function selectShiftRange(anchorId, targetId) {
+  if (!IS_MAC_APP) {
+    selectOnlyShift(targetId);
+    return;
+  }
   const anchorShift = shifts.find(shift => shift.id === anchorId);
   const targetShift = shifts.find(shift => shift.id === targetId);
 
@@ -580,6 +585,10 @@ function updateSelectionBadge() {
 }
 
 function toggleCommandSelection(id) {
+  if (!IS_MAC_APP) {
+    selectOnlyShift(id);
+    return;
+  }
   const target = shifts.find(shift => shift.id === id);
   if (!target) return;
   if (selectedShiftIds.has(id)) {
@@ -654,6 +663,8 @@ function selectedGroupForDrag(sourceId) {
   if (!selectedShiftIds.has(sourceId)) {
     selectOnlyShift(sourceId);
   }
+
+  if (!IS_MAC_APP) return [{ ...source }];
 
   return selectedShiftList()
     .filter(shift => !shift.confirmed)
@@ -794,6 +805,7 @@ function clearActiveDrag() {
 }
 
 function startMarquee(event, cell) {
+  if (!IS_MAC_APP) return;
   if (event.button !== 0 || event.target.closest('.shift-card')) return;
   marqueeState = {
     startX: event.clientX,
@@ -1168,8 +1180,8 @@ function bindPlanningEvents() {
       if (suppressNextClick) { suppressNextClick = false; return; }
       hideContextMenu();
       const id = card.dataset.shiftId;
-      if (event.metaKey || event.ctrlKey) toggleCommandSelection(id);
-      else if (event.shiftKey && selectionAnchorId) selectShiftRange(selectionAnchorId, id);
+      if (IS_MAC_APP && (event.metaKey || event.ctrlKey)) toggleCommandSelection(id);
+      else if (IS_MAC_APP && event.shiftKey && selectionAnchorId) selectShiftRange(selectionAnchorId, id);
       else selectOnlyShift(id);
       syncPlanningSelectionUI();
       return;
@@ -1883,7 +1895,7 @@ document.addEventListener("keydown", event => {
   const target = event.target;
   const isTyping = Boolean(target.closest?.("input, select, textarea, [contenteditable='true']"));
 
-  if (!isTyping && event.metaKey && event.key.toLowerCase() === "z") {
+  if (IS_MAC_APP && !isTyping && event.metaKey && event.key.toLowerCase() === "z") {
     event.preventDefault();
     if (event.shiftKey) redoShiftOperation();
     else undoShiftOperation();
