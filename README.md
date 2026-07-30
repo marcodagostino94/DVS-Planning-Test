@@ -25,7 +25,7 @@ Release consolidata dell’applicazione collaborativa per la gestione del Planni
 - Interfacce dedicate a Mac, iPad e iPhone.
 - Planning, Dashboard, Dipendenti, Riepiloghi, Stampa e Backup.
 - Sincronizzazione tramite Supabase Realtime.
-- Backup Agent incluso nella cartella `downloads`.
+- Backup Agent 2.0.2 incluso nella cartella `downloads`.
 - Migrazioni e materiale di ripristino conservati nella cartella `database`.
 
 ## Avvio

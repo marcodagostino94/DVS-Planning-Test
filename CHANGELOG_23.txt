@@ -17,5 +17,6 @@ DVS Planning v23
 - Cronologia locale delle ultime 20 operazioni, sincronizzata con Supabase.
 - Rimossa la gestione sperimentale delle serie.
 - Nessuna modifica SQL richiesta.
+- Backup Agent aggiornato alla versione 2.0.2 con controllo alle 16:00, verifica oraria e tre tentativi automatici.
 
 Versione pronta per il collaudo.
