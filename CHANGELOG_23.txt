@@ -1,4 +1,4 @@
-DVS Planning v22 – FINALE
+DVS Planning v23
 
 - Selezione multipla Mac estesa a più sale.
 - Riquadro di selezione esteso verticalmente a più righe.
@@ -7,6 +7,7 @@ DVS Planning v22 – FINALE
 - Creazione multisala disponibile su Mac, iPad e iPhone.
 - Selezione multipla, spostamento multiplo e Cmd + Z limitati al Mac.
 - Incolla multiplo corretto: mantiene la distanza relativa tra le sale selezionate.
+- Eliminazione dei turni selezionati con il tasto Cancella/Backspace del Mac.
 - Dipendente facoltativo e configurabile separatamente per ogni sala.
 - Prolungamento di un turno esistente modificando la data finale.
 - Campo “Dalle” senza menu orario nativo: inserimento diretto HH:MM.
@@ -17,4 +18,4 @@ DVS Planning v22 – FINALE
 - Rimossa la gestione sperimentale delle serie.
 - Nessuna modifica SQL richiesta.
 
-Versione pronta per il collaudo finale.
+Versione pronta per il collaudo.

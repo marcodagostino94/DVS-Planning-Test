@@ -1,6 +1,6 @@
-# DVS Planning v22 – FINALE
+# DVS Planning v23
 
-Versione finale pronta per il collaudo.
+Versione pronta per il collaudo.
 
 ## Funzioni Mac
 
@@ -8,7 +8,8 @@ Versione finale pronta per il collaudo.
 - selezione tramite riquadro su più righe del Planning;
 - trascinamento simultaneo della selezione su più giorni e più sale;
 - prolungamento di un turno modificando la data finale;
-- annullamento con `Cmd + Z` e ripristino con `Cmd + Shift + Z` delle ultime 20 operazioni sui turni.
+- annullamento con `Cmd + Z` e ripristino con `Cmd + Shift + Z` delle ultime 20 operazioni sui turni;
+- eliminazione dei turni selezionati con il tasto Cancella/Backspace.
 
 ## Funzioni Mac, iPad e iPhone
 

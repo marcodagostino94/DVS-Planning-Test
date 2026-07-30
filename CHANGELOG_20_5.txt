@@ -1,6 +1,0 @@
-DVS Planning v20.5
-
-- Consolidata la versione iPhone con navigazione Liquid Glass.
-- Mantenute le correzioni per orientamento, Dashboard, Centro Stampa e Riepiloghi.
-- Rimossi changelog superati e note obsolete del Backup Agent.
-- Conservati database, documentazione, icone e Backup Agent necessari al progetto.
