@@ -485,6 +485,7 @@ function copySelectedShifts() {
   const selected = selectedShiftList()
     .sort((a, b) =>
       a.date.localeCompare(b.date)
+      || (ROOMS.findIndex(room => room.id === a.room) - ROOMS.findIndex(room => room.id === b.room))
       || a.start.localeCompare(b.start)
     );
 
@@ -500,7 +501,11 @@ function copySelectedShifts() {
 
 function cutSelectedShifts() {
   const selected = selectedShiftList()
-    .sort((a, b) => a.date.localeCompare(b.date) || a.start.localeCompare(b.start));
+    .sort((a, b) =>
+      a.date.localeCompare(b.date)
+      || (ROOMS.findIndex(room => room.id === a.room) - ROOMS.findIndex(room => room.id === b.room))
+      || a.start.localeCompare(b.start)
+    );
   if (!selected.length) return false;
   if (selected.some(shift => shift.confirmed)) { showToast("Il turno confermato è bloccato"); return false; }
 
@@ -520,19 +525,35 @@ function pasteCopiedShifts() {
   const offsetDays = Math.round((targetBase - sourceBase) / 86400000);
   const isCut = clipboardMode === "cut";
   const movingIds = isCut ? new Set(copiedShifts.map(shift => shift.id)) : new Set();
+  const sourceRoomIndexes = copiedShifts.map(shift => ROOMS.findIndex(room => room.id === shift.room));
+  const sourceBaseRoomIndex = Math.min(...sourceRoomIndexes);
+  const targetBaseRoomIndex = ROOMS.findIndex(room => room.id === selectedCell.room);
+
+  if (sourceBaseRoomIndex < 0 || targetBaseRoomIndex < 0) {
+    showToast("Sala di destinazione non valida");
+    return true;
+  }
 
   const candidates = copiedShifts.map(source => {
     const sourceDate = new Date(`${source.date}T12:00:00`);
     sourceDate.setDate(sourceDate.getDate() + offsetDays);
+    const sourceRoomIndex = ROOMS.findIndex(room => room.id === source.room);
+    const targetRoom = ROOMS[targetBaseRoomIndex + (sourceRoomIndex - sourceBaseRoomIndex)];
+    if (!targetRoom) return null;
     return {
       ...source,
       id: isCut ? source.id : crypto.randomUUID(),
       confirmed: isCut ? Boolean(source.confirmed) : false,
       confirmedAt: null,
-      room: selectedCell.room,
+      room: targetRoom.id,
       date: isoDate(sourceDate.getFullYear(), sourceDate.getMonth(), sourceDate.getDate())
     };
   });
+
+  if (candidates.includes(null)) {
+    showToast("Non ci sono abbastanza sale disponibili nella direzione scelta");
+    return true;
+  }
 
   const hasInternalConflict = candidates.some((candidate, index) =>
     candidates.some((other, otherIndex) => index !== otherIndex

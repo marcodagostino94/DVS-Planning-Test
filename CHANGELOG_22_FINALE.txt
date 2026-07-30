@@ -6,6 +6,7 @@ DVS Planning v22 – FINALE
 - Creazione simultanea dello stesso turno su più sale.
 - Creazione multisala disponibile su Mac, iPad e iPhone.
 - Selezione multipla, spostamento multiplo e Cmd + Z limitati al Mac.
+- Incolla multiplo corretto: mantiene la distanza relativa tra le sale selezionate.
 - Dipendente facoltativo e configurabile separatamente per ogni sala.
 - Prolungamento di un turno esistente modificando la data finale.
 - Campo “Dalle” senza menu orario nativo: inserimento diretto HH:MM.
