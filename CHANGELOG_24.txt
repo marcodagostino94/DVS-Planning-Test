@@ -1,0 +1,10 @@
+DVS Planning v24
+Release: agosto 2026
+
+- Nuova icona Planning full-bleed con bagliore rosso lungo tutto il perimetro.
+- Bagliore collocato dentro l'area che resta visibile dopo la maschera iOS.
+- Rigenerate le icone 64, 180, 192, 512 e 1024 px.
+- Versione aggiornata a v24 nel titolo, nel badge, nelle Informazioni,
+  nell'esportazione di stampa e nel manifest.
+- URL degli asset versionati per evitare il riutilizzo dell'icona V23 in cache.
+- Nessun'altra funzione, dato, layout o configurazione è stata modificata.
