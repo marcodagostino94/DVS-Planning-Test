@@ -1,4 +1,4 @@
-// DVS Planning v24
+// DVS Planning v25
 
 const ROOMS = [
   ...Array.from({ length: 15 }, (_, index) => ({
@@ -64,7 +64,7 @@ const db = hasSupabaseConfig
     )
   : null;
 
-let currentMonth = new Date(2026, 6, 1);
+let currentMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
 let summaryMonth = new Date(2026, 6, 1);
 let selectedSummaryEditorId = null;
 let editingShiftId = null;
@@ -1379,7 +1379,7 @@ function sortedActiveEditors() {
 
 function selectedShiftsEligibleForEditorChange() {
   const selected = selectedShiftList();
-  return IS_MAC_APP && selected.length > 1
+  return IS_MAC_APP && selected.length > 0
     && selected.every(shift => !shift.isClient && !shift.confirmed);
 }
 
@@ -1392,7 +1392,7 @@ function closeAssignEditorDialog() {
 
 function openAssignEditorDialog() {
   if (!selectedShiftsEligibleForEditorChange()) {
-    showToast("Seleziona almeno due turni modificabili");
+    showToast("Seleziona un turno modificabile");
     return;
   }
   const selected = selectedShiftList();
@@ -2642,7 +2642,7 @@ function openPrintPreview() {
       });
     });
     const weekLabel=`${shortPrintDate(week.start)} – ${shortPrintDate(week.end)}`;
-    return `<main class="paper"><header class="head"><div><h1>Digital Video Service</h1><p>PLANNING · ${escapeHtml(monthName(printMonth))}</p><small>Settimana ${escapeHtml(weekLabel)}</small></div><strong>${selectedRooms.length===ROOMS.length?'Tutte le sale':`${selectedRooms.length} sale selezionate`}</strong></header><section class="grid">${cells.join('')}</section><footer class="page-footer"><span>DVS Planning · v24</span><span>Pagina ${pageIndex+1} di ${selectedWeeks.length}</span></footer></main>`;
+    return `<main class="paper"><header class="head"><div><h1>Digital Video Service</h1><p>PLANNING · ${escapeHtml(monthName(printMonth))}</p><small>Settimana ${escapeHtml(weekLabel)}</small></div><strong>${selectedRooms.length===ROOMS.length?'Tutte le sale':`${selectedRooms.length} sale selezionate`}</strong></header><section class="grid">${cells.join('')}</section><footer class="page-footer"><span>DVS Planning · v25</span><span>Pagina ${pageIndex+1} di ${selectedWeeks.length}</span></footer></main>`;
   }).join('');
   const popup=window.open('','_blank');
   if(!popup)return showToast('Consenti l’apertura della finestra di anteprima');
@@ -2784,7 +2784,12 @@ function updateIPhoneBackupLight() {
   light.classList.toggle("is-red", !healthy);
 }
 
-function openView(viewName) {
+function openView(viewName, keepPlanningMonth = false) {
+  if (viewName === "planning" && !keepPlanningMonth) {
+    const now = new Date();
+    currentMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    clearSelection();
+  }
   document.querySelectorAll(".nav-item[data-view]").forEach(item => item.classList.toggle("active", item.dataset.view === viewName));
   updateIPhoneChrome(viewName);
   document.querySelectorAll(".app-view").forEach(view => view.classList.remove("active"));
@@ -2792,6 +2797,7 @@ function openView(viewName) {
   if (viewName === "editors") renderEditors();
   if (viewName === "summaries") renderSummaries();
   if (viewName === "dashboard") renderDashboard();
+  if (viewName === "planning") renderPlanning();
   if (viewName === "connected") renderConnectedUsers();
   if (viewName === "settings") { showSettingsHome(); }
 }
@@ -2841,7 +2847,7 @@ document.querySelectorAll("[data-settings-section]").forEach(button => button.ad
   const sections = {
     backup: { title:"Backup", subtitle:"Stato e autorizzazione", html:backupSettingsHtml() },
     print: { title:"Stampa", subtitle:"Centro Stampa", html:printSettingsHtml() },
-    info: { title:"Informazioni", subtitle:"DVS Planning", html:`<img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video"><h2>DVS Planning</h2><p>Applicazione collaborativa per la gestione del Planning di Digital Video Service.</p><div class="settings-info-meta"><div><span>Versione</span><strong>v24</strong></div><div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div><div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div></div><p class="settings-info-copyright"><strong>Copyright © 2026 Marco D'Agostino per Digital Video Service</strong><br>Tutti i diritti riservati.</p>` }
+    info: { title:"Informazioni", subtitle:"DVS Planning", html:`<img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video"><h2>DVS Planning</h2><p>Applicazione collaborativa per la gestione del Planning di Digital Video Service.</p><div class="settings-info-meta"><div><span>Versione</span><strong>v25</strong></div><div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div><div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div></div><p class="settings-info-copyright"><strong>Copyright © 2026 Marco D'Agostino per Digital Video Service</strong><br>Tutti i diritti riservati.</p>` }
   };
   const selected = sections[section];
   if (!selected) return;
@@ -2855,13 +2861,8 @@ document.querySelectorAll("[data-settings-section]").forEach(button => button.ad
 function openPlanningToday() {
   const now = new Date();
   const targetMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-  const monthChanged = currentMonth.getFullYear() !== targetMonth.getFullYear()
-    || currentMonth.getMonth() !== targetMonth.getMonth();
   currentMonth = targetMonth;
-  openView("planning");
-
-  // Su iPad riutilizza la griglia già pronta se mese e dati non sono cambiati.
-  if (!IS_TOUCH_APPLE || monthChanged || planningNeedsRender()) renderPlanning();
+  openView("planning", true);
 
   requestAnimationFrame(() => {
     const todayCell = planningGrid.querySelector(`[data-date="${localTodayIso()}"]`);

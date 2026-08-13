@@ -1,0 +1,12 @@
+DVS Planning v25
+Release: agosto 2026
+
+- Il menu contestuale su Mac mostra "Assegna montatore" o "Modifica montatore"
+  anche quando è selezionato un solo turno.
+- L'assegnazione o modifica collettiva resta disponibile per selezioni su più
+  giorni e più sale ed è annullabile con Cmd-Z.
+- Ogni accesso alla sezione Planning dalla navigazione apre il mese della data
+  odierna, anche dopo l'avvio o l'aggiornamento dell'app.
+- Aggiornati a v25 titolo, manifest, badge, Informazioni e piè di pagina delle
+  stampe.
+- iPhone, iPad, database e Backup Agent 2.0.2 restano invariati.

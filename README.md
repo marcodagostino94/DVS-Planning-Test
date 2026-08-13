@@ -1,6 +1,6 @@
-# DVS Planning v24
+# DVS Planning v25
 
-Versione pronta per il collaudo. La V24 aggiorna esclusivamente l'icona iOS
+Versione pronta per il collaudo. La v25 mantiene l'identità grafica della v24
 con bagliore rosso perimetrale e i riferimenti visibili della versione.
 
 ## Funzioni Mac
