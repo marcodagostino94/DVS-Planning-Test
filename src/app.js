@@ -1425,27 +1425,36 @@ assignEditorForm?.addEventListener("submit", async event => {
     error.textContent = "La selezione non è più valida.";
     return;
   }
+  const selected = selectedShiftList();
+  const isChange = selected.some(shift => shift.editorId);
   const requestedName = assignEditorSearch.value.trim().toLocaleLowerCase("it");
-  const editor = sortedActiveEditors().find(item =>
-    fullEmployeeName(item).toLocaleLowerCase("it") === requestedName
-  );
-  if (!editor) {
+  if (!requestedName && !isChange) {
+    error.textContent = "Seleziona un montatore da assegnare.";
+    assignEditorSearch.focus();
+    return;
+  }
+  const editor = requestedName
+    ? sortedActiveEditors().find(item => fullEmployeeName(item).toLocaleLowerCase("it") === requestedName)
+    : null;
+  if (requestedName && !editor) {
     error.textContent = "Seleziona un montatore presente nell’elenco.";
     assignEditorSearch.focus();
     return;
   }
 
-  const selected = selectedShiftList();
-  const isChange = selected.some(shift => shift.editorId);
-  recordShiftUndo(`${isChange ? "modifica" : "assegnazione"} montatore a ${selected.length} turni`);
-  selected.forEach(shift => { shift.editorId = editor.id; });
+  recordShiftUndo(editor
+    ? `${isChange ? "modifica" : "assegnazione"} montatore a ${selected.length} turni`
+    : `rimozione montatore da ${selected.length} turni`);
+  selected.forEach(shift => { shift.editorId = editor?.id || null; });
   saveLocal();
   closeAssignEditorDialog();
   await Promise.all(selected.map(shift => syncShiftToSupabase(shift)));
   renderPlanning();
   renderDashboard();
   renderSummaries();
-  showToast(`${fullEmployeeName(editor)} applicato a ${selected.length} turni`);
+  showToast(editor
+    ? `${fullEmployeeName(editor)} applicato a ${selected.length} turni`
+    : `Montatore rimosso da ${selected.length} turni`);
 });
 
 document.getElementById("cancelAssignEditor")?.addEventListener("click", closeAssignEditorDialog);

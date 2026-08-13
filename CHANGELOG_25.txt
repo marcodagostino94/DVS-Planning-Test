@@ -10,3 +10,5 @@ Release: agosto 2026
 - Aggiornati a v25 titolo, manifest, badge, Informazioni e piè di pagina delle
   stampe.
 - iPhone, iPad, database e Backup Agent 2.0.2 restano invariati.
+- In "Modifica montatore", lasciando vuoto il campo, il montatore viene rimosso
+  da tutti i turni selezionati; l'operazione è annullabile con Cmd-Z.
