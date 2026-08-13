@@ -8,7 +8,7 @@
   <link rel="icon" type="image/png" sizes="64x64" href="./assets/icons/dvs-planning-64.png?v=24">
   <link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/dvs-planning-180.png?v=24">
   <link rel="manifest" href="./manifest.webmanifest?v=24-identity-fix">
-  <link rel="stylesheet" href="./src/styles.css?v=24">
+  <link rel="stylesheet" href="./src/styles.css?v=24-conflict-2">
 </head>
 <body>
   <section id="profileGate" class="profile-gate" aria-label="Selezione profilo">
@@ -526,6 +526,7 @@
     <button type="button" data-action="edit">Modifica turno</button>
     <button type="button" data-action="confirm">Conferma turno</button>
     <button type="button" data-action="unconfirm">Annulla conferma</button>
+    <button type="button" data-action="assign-editor">Assegna montatore</button>
     <div class="context-separator"></div>
     <button type="button" data-action="copy">Copia</button>
     <button type="button" data-action="cut">Taglia</button>
@@ -536,6 +537,27 @@
     <div class="context-separator"></div>
     <button type="button" class="danger-action" data-action="delete">Elimina</button>
   </div>
+
+  <dialog id="assignEditorDialog" class="app-dialog assign-editor-dialog">
+    <form id="assignEditorForm">
+      <div class="dialog-header">
+        <div><span class="dialog-eyebrow">TURNI SELEZIONATI</span><h2 id="assignEditorDialogTitle">Assegna montatore</h2></div>
+        <button id="closeAssignEditorDialog" class="dialog-close" type="button" aria-label="Chiudi">×</button>
+      </div>
+      <p id="assignEditorSelectionCount" class="assign-editor-summary"></p>
+      <label class="assign-editor-field">
+        Montatore
+        <input id="assignEditorSearch" type="text" list="assignEditorSuggestions" placeholder="Scrivi nome e cognome" autocomplete="off" required>
+        <datalist id="assignEditorSuggestions"></datalist>
+      </label>
+      <div id="assignEditorError" class="form-error" role="alert"></div>
+      <div class="dialog-actions">
+        <span class="dialog-spacer"></span>
+        <button id="cancelAssignEditor" class="secondary-btn" type="button">Annulla</button>
+        <button id="assignEditorSubmit" class="primary-btn" type="submit">Assegna</button>
+      </div>
+    </form>
+  </dialog>
 
   <dialog id="profileDialog" class="app-dialog profile-dialog">
     <form id="profileForm">
@@ -556,6 +578,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="./src/config.js?v=11.0"></script>
-  <script src="./src/app.js?v=24"></script>
+  <script src="./src/app.js?v=24-conflict-2"></script>
 </body>
 </html>

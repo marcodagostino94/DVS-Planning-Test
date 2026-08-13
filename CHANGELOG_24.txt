@@ -8,3 +8,12 @@ Release: agosto 2026
   nell'esportazione di stampa e nel manifest.
 - URL degli asset versionati per evitare il riutilizzo dell'icona V23 in cache.
 - Nessun'altra funzione, dato, layout o configurazione è stata modificata.
+- Uniformato il controllo degli spostamenti e della creazione: vengono bloccate
+  soltanto le sovrapposizioni nella sala di destinazione.
+- La sovrapposizione dello stesso montatore su più sale resta consentita e
+  viene segnalata dal triangolino nel Planning.
+- Su Mac, selezionando più turni tutti privi di montatore, il menu contestuale
+  permette di assegnare lo stesso montatore in un'unica operazione.
+- L'assegnazione multipla è sincronizzata con Supabase e annullabile con Cmd-Z.
+- Se uno o più turni selezionati hanno già un montatore, la stessa voce diventa
+  "Modifica montatore" e applica la nuova scelta all'intera selezione.

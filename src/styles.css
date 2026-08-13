@@ -927,6 +927,11 @@ input,textarea,select,.app-dialog{-webkit-user-select:text;user-select:text}
 .context-menu{position:fixed;z-index:120;min-width:190px;padding:6px;border:1px solid rgba(42,50,59,.16);border-radius:12px;background:rgba(238,240,243,.97);box-shadow:0 18px 50px rgba(23,30,37,.24);backdrop-filter:blur(24px)}
 .context-menu button{width:100%;display:block;padding:9px 10px;border:0;border-radius:8px;color:#252b31;background:transparent;text-align:left;font-size:11px;font-weight:650;cursor:pointer}
 .context-menu button:hover{color:#fff;background:#0a84ff}.context-menu button:disabled{opacity:.38;cursor:default}.context-menu button:disabled:hover{color:#252b31;background:transparent}.context-menu .danger-action{color:#a61929}.context-menu .danger-action:hover{color:#fff;background:#c72638}.context-separator{height:1px;margin:4px 5px;background:rgba(40,48,57,.12)}
+.assign-editor-dialog{width:min(520px,calc(100vw - 28px))}
+.assign-editor-summary{margin:4px 0 18px;color:#68737e;font-size:12px;font-weight:650}
+.assign-editor-field{display:grid;gap:7px;color:#56616c;font-size:11px;font-weight:800}
+.assign-editor-field input{width:100%;padding:12px 13px;border:1px solid rgba(47,56,66,.16);border-radius:11px;outline:none;color:#1f2429;background:rgba(240,242,244,.9);font:inherit}
+.assign-editor-field input:focus{border-color:rgba(10,132,255,.58);box-shadow:0 0 0 3px rgba(10,132,255,.11)}
 .drag-group-ghost{position:fixed;z-index:140;padding:8px 11px;border:1px solid rgba(10,132,255,.35);border-radius:10px;color:#135c98;background:rgba(225,241,255,.95);box-shadow:0 12px 30px rgba(28,70,106,.2);font-size:10px;font-weight:800;pointer-events:none}.planning-cell.group-drop-target{box-shadow:inset 0 0 0 2px rgba(10,132,255,.35),inset 0 0 22px rgba(10,132,255,.06)}
 
 
