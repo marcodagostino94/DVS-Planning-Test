@@ -10,6 +10,9 @@ Release: agosto 2026
 - Accesso al Planning sempre posizionato sul mese della data odierna.
 - Versione aggiornata a v26 in titolo, manifest, badge, Informazioni e stampe.
 - Nessuna modifica SQL richiesta. Backup Agent 2.0.2 invariato.
+- I turni della stessa sala vengono allineati per fascia oraria tra giorni
+  diversi: un 16:00–24:00 rimane nella seconda posizione anche quando il turno
+  08:00–16:00 di quella singola giornata è stato spostato o eliminato.
 
 Pulizia archivio:
 - rimossi changelog delle versioni precedenti e note tecniche temporanee;

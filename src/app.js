@@ -1079,6 +1079,43 @@ function planningNeedsRender() {
   return !planningGrid.children.length || planningRenderSignature !== currentPlanningSignature();
 }
 
+function buildRoomTimeSlots(roomId, dateMeta, shiftIndex) {
+  const dailyBuckets = dateMeta.map(meta => shiftIndex.get(`${roomId}|${meta.iso}`) || []);
+  const slotCount = Math.max(0, ...dailyBuckets.map(bucket => bucket.length));
+  return Array.from({ length: slotCount }, (_, slotIndex) => {
+    const completeBuckets = dailyBuckets.filter(bucket => bucket.length === slotCount);
+    const starts = (completeBuckets.length ? completeBuckets : dailyBuckets)
+      .map(bucket => bucket[slotIndex]?.start).filter(Boolean);
+    const frequency = new Map();
+    starts.forEach(start => frequency.set(start, (frequency.get(start) || 0) + 1));
+    const start = [...frequency.entries()]
+      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0]?.[0] || "00:00";
+    const height = Math.max(88, ...dailyBuckets
+      .map(bucket => bucket[slotIndex])
+      .filter(Boolean)
+      .map(shift => shift.notes ? 102 : 88));
+    return { start, height };
+  });
+}
+
+function alignDayShiftsToSlots(dayShifts, timeSlots) {
+  const aligned = Array(timeSlots.length).fill(null);
+  const freeSlots = new Set(timeSlots.map((_, index) => index));
+  for (const shift of dayShifts) {
+    const exactIndex = timeSlots.findIndex((slot, index) => freeSlots.has(index) && slot.start === shift.start);
+    const chosenIndex = exactIndex >= 0
+      ? exactIndex
+      : [...freeSlots].sort((a, b) =>
+          Math.abs(timeToMinutes(timeSlots[a].start) - timeToMinutes(shift.start))
+          - Math.abs(timeToMinutes(timeSlots[b].start) - timeToMinutes(shift.start))
+        )[0];
+    if (chosenIndex === undefined) continue;
+    aligned[chosenIndex] = shift;
+    freeSlots.delete(chosenIndex);
+  }
+  return aligned;
+}
+
 function renderPlanning() {
   const dates = planningDates(currentMonth);
   const activeMonth = currentMonth.getMonth();
@@ -1120,15 +1157,11 @@ function renderPlanning() {
   ROOMS.forEach((room, roomIndex) => {
     if (GROUPS[roomIndex]) html.push(`<div class="group-row">${GROUPS[roomIndex]}</div>`);
 
-    let tallestDayHeight = 98;
-    for (const meta of dateMeta) {
-      const dayShifts = shiftIndex.get(`${room.id}|${meta.iso}`) || [];
-      const cardsHeight = dayShifts.reduce((total, shift) => total + (shift.notes ? 102 : 88), 0);
-      const gapsHeight = Math.max(0, dayShifts.length - 1) * 5;
-      tallestDayHeight = Math.max(tallestDayHeight, cardsHeight + gapsHeight + 10);
-    }
-
-    const rowHeight = tallestDayHeight;
+    const timeSlots = buildRoomTimeSlots(room.id, dateMeta, shiftIndex);
+    const rowHeight = Math.max(98,
+      timeSlots.reduce((total, slot) => total + slot.height, 0)
+      + Math.max(0, timeSlots.length - 1) * 5
+      + 10);
     const roomNumber = room.label.replace(/^Sala\s+/i, "").replace(/^Remote?\s+/i, "");
     const roomKind = room.id.startsWith("remoto-") ? "REMOTO" : "SALA";
     html.push(`<div class="room-label" style="--row-height:${rowHeight}px"><span class="room-label-kind">${roomKind}</span><strong class="room-label-number">${escapeHtml(roomNumber)}</strong></div>`);
@@ -1136,12 +1169,16 @@ function renderPlanning() {
     for (const meta of dateMeta) {
       const isSelected = selectedCell?.room === room.id && selectedCell?.date === meta.iso;
       const dayShifts = shiftIndex.get(`${room.id}|${meta.iso}`) || [];
+      const alignedShifts = alignDayShiftsToSlots(dayShifts, timeSlots);
+      const alignedCards = dayShifts.length ? alignedShifts.map((shift, slotIndex) =>
+        `<div class="shift-time-slot${shift ? "" : " is-empty"}" style="height:${timeSlots[slotIndex].height}px">${shift ? renderCard(shift) : ""}</div>`
+      ).join("") : "";
 
       html.push(`
         <div class="planning-cell ${meta.weekend ? "weekend" : ""} ${meta.holiday ? "holiday" : ""} ${meta.weekStart ? "week-start" : ""} ${meta.outsideMonth ? "outside-month" : ""} ${isSelected ? "cell-selected" : ""}"
           style="--row-height:${rowHeight}px" data-room="${room.id}" data-date="${meta.iso}">
           ${isSelected ? '<span class="cell-selection-dot" aria-hidden="true"></span>' : ""}
-          ${dayShifts.map(renderCard).join("")}
+          ${alignedCards}
           ${dayShifts.length ? "" : '<span class="cell-add-hint">+ turno</span>'}
         </div>`);
     }

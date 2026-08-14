@@ -527,6 +527,20 @@ button { -webkit-tap-highlight-color: transparent; }
 
 .planning-cell:hover .cell-add-hint { opacity: 1; }
 
+.shift-time-slot {
+  flex:0 0 auto;
+  width:100%;
+}
+
+.shift-time-slot.is-empty {
+  visibility:hidden;
+  pointer-events:none;
+}
+
+.shift-time-slot > .shift-card {
+  width:100%;
+}
+
 .shift-card {
   --accent-rgb: 76, 139, 245;
   height: var(--card-height);
