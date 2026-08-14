@@ -399,8 +399,8 @@ button { -webkit-tap-highlight-color: transparent; }
   backdrop-filter: blur(18px);
 }
 
-.day-head .dow { font-weight: 820; }
-.day-head .num { color: #707983; font-weight: 700; }
+.day-head .dow { font-style:italic; font-weight:400; }
+.day-head .num { color:#111419; font-weight:700; }
 
 .day-head.weekend,
 .day-head.holiday {
@@ -1020,7 +1020,7 @@ input,textarea,select,.app-dialog{-webkit-user-select:text;user-select:text}
 .option-card small { color:#7a838c; font-size:9px; font-weight:500; }
 .disabled-field { opacity:.45; }
 .day-head.outside-month,.planning-cell.outside-month { background-color:rgba(220,224,229,.48); }
-.day-head.outside-month .num { color:#8d959d; }
+.day-head.outside-month .num { color:#111419; }
 .month-mini { display:block; margin-top:1px; color:#9199a1; font-size:7px; font-weight:800; }
 .shift-card.confirmed { cursor:default; filter:saturate(2.35) contrast(1.10) brightness(.98); border-width:1.5px; box-shadow:0 10px 24px rgba(var(--accent-rgb),.34),inset 0 1px 0 rgba(255,255,255,.92); }
 .shift-card.confirmed:hover { animation:none; transform:none; }

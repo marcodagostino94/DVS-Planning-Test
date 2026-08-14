@@ -16,3 +16,5 @@ Release: agosto 2026
   azioni dei turni su iPhone e iPad.
 - Aumentata la dimensione dei nomi dei giorni e delle sale nel Planning su Mac,
   iPad e iPhone, con un incremento ulteriore sui dispositivi touch.
+- I numeri delle date sono ora neri; le abbreviazioni dei giorni sono in corsivo
+  con peso normale per distinguerle senza appesantire l'intestazione.
