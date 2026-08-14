@@ -1,7 +1,7 @@
-# DVS Planning v25
+# DVS Planning v26
 
-Versione pronta per il collaudo. La v25 mantiene l'identità grafica della v24
-con bagliore rosso perimetrale e i riferimenti visibili della versione.
+Versione pronta per il collaudo definitivo. La v26 migliora la leggibilità del
+Planning e consolida l'assegnazione dei montatori su Mac, iPad e iPhone.
 
 ## Funzioni Mac
 

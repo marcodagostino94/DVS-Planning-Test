@@ -1,7 +1,0 @@
-CORREZIONE IDENTITA PWA — DVS PLANNING V24
-
-- Rimosso l'identificatore generico ./ che collideva con DVS Workspace.
-- L'identità deriva ora dallo start_url della cartella di pubblicazione.
-- Su /DVS-Planning-Test/ l'app resta Planning Test.
-- Su /DVS-Planning/ l'app resta Planning ufficiale.
-- Nessuna modifica a codice, icona, database o layout.

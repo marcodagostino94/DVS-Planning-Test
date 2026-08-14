@@ -1,0 +1,17 @@
+DVS Planning v26
+Release: agosto 2026
+
+- Nuova etichetta delle postazioni nel Planning: "SALA" o "REMOTO" in alto
+  e numero molto più grande nella parte centrale e inferiore della cella.
+- Barra dei giorni più alta e caratteri maggiorati per la leggibilità al 50%.
+- Numero della data nero e abbreviazione del giorno in corsivo non grassetto.
+- Assegna/Modifica montatore disponibile su Mac, iPad e iPhone.
+- Possibilità di rimuovere il montatore lasciando vuoto il campo di modifica.
+- Accesso al Planning sempre posizionato sul mese della data odierna.
+- Versione aggiornata a v26 in titolo, manifest, badge, Informazioni e stampe.
+- Nessuna modifica SQL richiesta. Backup Agent 2.0.2 invariato.
+
+Pulizia archivio:
+- rimossi changelog delle versioni precedenti e note tecniche temporanee;
+- mantenuti codice applicativo, asset usati, database, documentazione e installer
+  del Backup Agent necessari per conservazione e ripristino del progetto.
