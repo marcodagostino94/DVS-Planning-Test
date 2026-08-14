@@ -18,3 +18,5 @@ Release: agosto 2026
   iPad e iPhone, con un incremento ulteriore sui dispositivi touch.
 - I numeri delle date sono ora neri; le abbreviazioni dei giorni sono in corsivo
   con peso normale per distinguerle senza appesantire l'intestazione.
+- Aumentate ulteriormente l'altezza della barra dei giorni, la larghezza della
+  colonna sale e le relative dimensioni del testo per restare leggibili al 50%.

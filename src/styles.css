@@ -1,9 +1,9 @@
 
 :root {
   --sidebar-width: 220px;
-  --room-width: 96px;
+  --room-width: 108px;
   --day-width: 122px;
-  --header-height: 38px;
+  --header-height: 54px;
   --card-height: 88px;
   --week-divider: 6px;
   --planning-scale: 1;
@@ -376,7 +376,7 @@ button { -webkit-tap-highlight-color: transparent; }
   place-items: center;
   color: #646d76;
   background: var(--header-bg);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 820;
   letter-spacing: .06em;
   backdrop-filter: blur(18px);
@@ -393,7 +393,7 @@ button { -webkit-tap-highlight-color: transparent; }
   gap: 4px;
   color: #34383d;
   background: var(--header-bg);
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 700;
   white-space: nowrap;
   backdrop-filter: blur(18px);
@@ -446,7 +446,7 @@ button { -webkit-tap-highlight-color: transparent; }
   text-align:center;
   color:#30353a;
   background: var(--room-bg);
-  font-size: 15px;
+  font-size: 18px;
   font-weight: 750;
   backdrop-filter: blur(16px);
 }
@@ -892,7 +892,7 @@ button { -webkit-tap-highlight-color: transparent; }
 @media (max-width: 840px) {
   :root {
     --sidebar-width: 0px;
-    --room-width: 82px;
+    --room-width: 96px;
     --day-width: 110px;
   }
 
@@ -1830,8 +1830,8 @@ html.is-ipad .iphone-shift-menu {
   box-shadow:0 1px 5px rgba(0,0,0,.12);
   touch-action:manipulation;
 }
-html.is-ipad .day-head { font-size:16px; }
-html.is-ipad .room-label { font-size:17px; }
+html.is-ipad .day-head { font-size:20px; }
+html.is-ipad .room-label { font-size:20px; }
 
 
 /* Versione 17.2 — interfaccia esclusiva iPhone. Mac e iPad invariati. */
@@ -1874,8 +1874,8 @@ html.is-ipad .room-label { font-size:17px; }
   html.is-iphone .editor-name { font-size:13px; }
   html.is-iphone .shift-card { box-shadow:0 3px 8px rgba(44,54,65,.10); transition:none; animation:none !important; }
   html.is-iphone .shift-card:hover { transform:none; animation:none !important; }
-  html.is-iphone .day-head { font-size:16px; }
-  html.is-iphone .room-label { font-size:17px; }
+  html.is-iphone .day-head { font-size:20px; }
+  html.is-iphone .room-label { font-size:20px; }
   html.is-iphone dialog { max-width:calc(100vw - 16px); width:calc(100vw - 16px); max-height:calc(100dvh - 24px); }
 }
 
