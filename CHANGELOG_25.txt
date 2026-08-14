@@ -12,3 +12,7 @@ Release: agosto 2026
 - iPhone, iPad, database e Backup Agent 2.0.2 restano invariati.
 - In "Modifica montatore", lasciando vuoto il campo, il montatore viene rimosso
   da tutti i turni selezionati; l'operazione è annullabile con Cmd-Z.
+- "Assegna montatore" e "Modifica montatore" sono disponibili anche dal menu
+  azioni dei turni su iPhone e iPad.
+- Aumentata la dimensione dei nomi dei giorni e delle sale nel Planning su Mac,
+  iPad e iPhone, con un incremento ulteriore sui dispositivi touch.

@@ -1379,7 +1379,7 @@ function sortedActiveEditors() {
 
 function selectedShiftsEligibleForEditorChange() {
   const selected = selectedShiftList();
-  return IS_MAC_APP && selected.length > 0
+  return selected.length > 0
     && selected.every(shift => !shift.isClient && !shift.confirmed);
 }
 
