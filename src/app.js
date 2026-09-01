@@ -834,6 +834,7 @@ function startMarquee(event, cell) {
     currentX: event.clientX,
     currentY: event.clientY,
     additive: event.metaKey || event.ctrlKey,
+    baseSelection: new Set(event.metaKey || event.ctrlKey ? selectedShiftIds : []),
     active: false
   };
 }
@@ -860,11 +861,15 @@ function updateMarquee(event) {
   const top = Math.min(marqueeState.startY, marqueeState.currentY);
   const bottom = Math.max(marqueeState.startY, marqueeState.currentY);
   Object.assign(marqueeElement.style, {left:`${left}px`, top:`${top}px`, width:`${Math.max(1,right-left)}px`, height:`${Math.max(1,bottom-top)}px`});
+  const nextSelection = new Set(marqueeState.baseSelection);
   document.querySelectorAll('.planning-cell .shift-card').forEach(card => {
     const r = card.getBoundingClientRect();
-    if (!(r.right < left || r.left > right || r.bottom < top || r.top > bottom)) selectedShiftIds.add(card.dataset.shiftId);
+    if (!(r.right < left || r.left > right || r.bottom < top || r.top > bottom)) nextSelection.add(card.dataset.shiftId);
   });
-  if (!selectionAnchorId) selectionAnchorId = [...selectedShiftIds][0] || null;
+  selectedShiftIds = nextSelection;
+  if (!selectionAnchorId || !selectedShiftIds.has(selectionAnchorId)) {
+    selectionAnchorId = [...selectedShiftIds][0] || null;
+  }
   document.querySelectorAll('.shift-card').forEach(card => card.classList.toggle('selected', selectedShiftIds.has(card.dataset.shiftId)));
   updateSelectionBadge();
 }
@@ -990,6 +995,8 @@ function escapeHtml(value) {
 
 function renderCard(shift) {
   const color = FILM_COLORS[shift.color] || FILM_COLORS.blue;
+  const workType = String(shift.workType || "").toUpperCase();
+  const isHighlightedWork = ["GRAFICA", "SOUND", "COLOR"].includes(workType);
   const editor = getEditor(shift.editorId);
   const warning = editorConflict(shift);
   const assignment = shift.isClient ? "CLIENTE" : editorDisplay(editor);
@@ -999,7 +1006,8 @@ function renderCard(shift) {
     shift.isDoubleStation ? "double-station" : "",
     selectedShiftIds.has(shift.id) ? "selected" : "",
     cutShiftIds.has(shift.id) ? "cut-pending" : "",
-    shift.notes ? "has-note" : ""
+    shift.notes ? "has-note" : "",
+    isHighlightedWork ? "highlighted-work" : ""
   ].filter(Boolean).join(" ");
 
   return `
@@ -1013,7 +1021,7 @@ function renderCard(shift) {
         <button class="iphone-shift-menu" type="button" aria-label="Azioni turno" title="Azioni turno">•••</button>
         <div class="shift-time">${escapeHtml(shift.start)} – ${escapeHtml(shift.end)}</div>
         <div class="shift-film">${escapeHtml(shift.film)}</div>
-        <div class="shift-type${["GRAFICA", "COLOR"].includes(String(shift.workType || "").toUpperCase()) ? " shift-type-red" : ""}">${escapeHtml(shift.workType)}${shift.isVariable ? '<span class="variable-label"> - VARIABILE</span>' : ""}${shift.isDoubleStation ? '<span class="double-station-label">DOPPIA POSTAZIONE</span>' : ""}</div>
+        <div class="shift-type${isHighlightedWork ? " shift-type-red" : ""}">${escapeHtml(shift.workType)}${shift.isVariable ? '<span class="variable-label"> - VARIABILE</span>' : ""}${shift.isDoubleStation ? '<span class="double-station-label">DOPPIA POSTAZIONE</span>' : ""}</div>
         ${shift.notes ? `<div class="shift-note">${escapeHtml(shift.notes)}</div>` : ""}
       </div>
       <div class="shift-editor">
@@ -1975,19 +1983,42 @@ function nearestZoomOption(value) {
   return options.reduce((best, option) => Math.abs(option - value) < Math.abs(best - value) ? option : best, 1);
 }
 
+function updateZoomSelectDisplay(forceFit = false) {
+  if (!zoomSelect) return;
+  zoomSelect.querySelector('option[data-custom-zoom]')?.remove();
+  if (forceFit) {
+    zoomSelect.value = "fit";
+    return;
+  }
+  const rounded = Math.round(planningZoom * 100) / 100;
+  const preset = [...zoomSelect.options].find(option =>
+    option.value !== "fit" && Math.abs(Number(option.value) - rounded) < .001
+  );
+  if (preset) {
+    zoomSelect.value = preset.value;
+    return;
+  }
+  const customOption = document.createElement("option");
+  customOption.dataset.customZoom = "true";
+  customOption.value = String(rounded);
+  customOption.textContent = `${Math.round(rounded * 100)}%`;
+  zoomSelect.insertBefore(customOption, zoomSelect.options[1] || null);
+  zoomSelect.value = customOption.value;
+}
+
 function fitPlanningToWindow() {
   planningCanvas.style.zoom = 1;
   const naturalWidth = planningCanvas.scrollWidth || 1;
   const availableWidth = Math.max(1, planningScroller.clientWidth - 4);
   planningZoom = clampZoom(availableWidth / naturalWidth);
   applyPlanningZoom();
-  zoomSelect.value = "fit";
+  updateZoomSelectDisplay(true);
 }
 
-function applyPlanningZoom(save = true) {
+function applyPlanningZoom(save = true, preserveFitLabel = zoomSelect?.value === "fit") {
   planningZoom = clampZoom(planningZoom);
   planningCanvas.style.zoom = planningZoom;
-  if (zoomSelect && zoomSelect.value !== "fit") zoomSelect.value = String(nearestZoomOption(planningZoom));
+  updateZoomSelectDisplay(preserveFitLabel);
   if (save) localStorage.setItem(ZOOM_STORAGE, String(planningZoom));
 }
 
@@ -1999,10 +2030,11 @@ planningScroller.addEventListener("wheel", event => {
   const mouseX = event.clientX - rect.left + planningScroller.scrollLeft;
   const mouseY = event.clientY - rect.top + planningScroller.scrollTop;
   const previous = planningZoom;
-  planningZoom = clampZoom(planningZoom + (event.deltaY < 0 ? .08 : -.08));
+  const continuousDelta = Math.max(-20, Math.min(20, event.deltaY));
+  planningZoom = clampZoom(planningZoom * Math.exp(-continuousDelta * .003));
 
   const ratio = planningZoom / previous;
-  applyPlanningZoom();
+  applyPlanningZoom(true, false);
 
   planningScroller.scrollLeft = mouseX * ratio - (event.clientX - rect.left);
   planningScroller.scrollTop = mouseY * ratio - (event.clientY - rect.top);
@@ -2017,7 +2049,7 @@ planningScroller.addEventListener("gesturestart", event => {
 planningScroller.addEventListener("gesturechange", event => {
   event.preventDefault();
   planningZoom = clampZoom(gestureStartZoom * event.scale);
-  applyPlanningZoom();
+  applyPlanningZoom(true, false);
 }, { passive: false });
 
 document.addEventListener("keydown", event => {

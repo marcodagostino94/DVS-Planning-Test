@@ -609,6 +609,29 @@ button { -webkit-tap-highlight-color: transparent; }
   filter: saturate(.18);
 }
 
+.shift-card.highlighted-work {
+  border-color:rgba(var(--accent-rgb),.52);
+  background:
+    linear-gradient(145deg,
+      rgba(255,255,255,.66),
+      rgba(var(--accent-rgb),.38) 52%,
+      rgba(var(--accent-rgb),.27));
+  box-shadow:
+    0 8px 19px rgba(44,54,65,.15),
+    inset 0 1px 0 rgba(255,255,255,.76);
+}
+
+.shift-card.highlighted-work.provvisorio {
+  filter:saturate(.58) brightness(.96);
+}
+
+.shift-card.highlighted-work.selected {
+  border-color:rgba(10,132,255,.92);
+  box-shadow:
+    0 0 0 2px rgba(10,132,255,.2),
+    0 13px 27px rgba(44,54,65,.16);
+}
+
 .shift-main {
   min-height: 0;
   flex: 1;

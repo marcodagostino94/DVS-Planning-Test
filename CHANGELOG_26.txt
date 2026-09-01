@@ -13,6 +13,15 @@ Release: agosto 2026
 - I turni della stessa sala vengono allineati per fascia oraria tra giorni
   diversi: un 16:00–24:00 rimane nella seconda posizione anche quando il turno
   08:00–16:00 di quella singola giornata è stato spostato o eliminato.
+- Corretto il riquadro di selezione su Mac: durante il trascinamento la selezione
+  viene ricalcolata e al rilascio comprende soltanto i turni realmente inclusi
+  nel rettangolo finale, anche quando il riquadro viene ristretto.
+- Lo zoom con trackpad e Magic Mouse è ora continuo e può fermarsi su valori
+  intermedi come 63%; il menu continua a offrire i valori rapidi predefiniti e
+  mostra anche la percentuale effettivamente raggiunta.
+- Le lavorazioni GRAFICA, SOUND e COLOR mantengono la tinta scelta per il turno,
+  ma nel Planning usano una variante leggermente più scura e marcata; anche la
+  dicitura SOUND è ora rossa come GRAFICA e COLOR.
 
 Pulizia archivio:
 - rimossi changelog delle versioni precedenti e note tecniche temporanee;
