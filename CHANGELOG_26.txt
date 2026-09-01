@@ -22,6 +22,11 @@ Release: agosto 2026
 - Le lavorazioni GRAFICA, SOUND e COLOR mantengono la tinta scelta per il turno,
   ma nel Planning usano una variante leggermente più scura e marcata; anche la
   dicitura SOUND è ora rossa come GRAFICA e COLOR.
+- Aumentato il contrasto della variante scura delle lavorazioni speciali per
+  renderla chiaramente distinguibile da EDIT anche con colori chiari e zoom basso.
+- Il nome di film o programma non viene più troncato: va su più righe e la card
+  cresce automaticamente; le fasce della stessa sala vengono riallineate usando
+  l'altezza maggiore necessaria tra i giorni visualizzati.
 
 Pulizia archivio:
 - rimossi changelog delle versioni precedenti e note tecniche temporanee;

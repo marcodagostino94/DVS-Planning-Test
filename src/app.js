@@ -963,7 +963,7 @@ function fitAllCardText(immediate = false) {
     });
 
     const selectors = [
-      [".shift-production", 5.5], [".shift-time", 6], [".shift-film", 6],
+      [".shift-production", 5.5], [".shift-time", 6],
       [".shift-type", 6], [".shift-note", 8.5], [".editor-name", 6.5]
     ];
     for (const card of visibleCards) {
@@ -982,6 +982,24 @@ function fitAllCardText(immediate = false) {
   fitTextJob = typeof requestIdleCallback === "function"
     ? requestIdleCallback(run, { timeout: 250 })
     : requestAnimationFrame(run);
+}
+
+function normalizePlanningSlotHeights() {
+  for (const room of ROOMS) {
+    const roomCells = [...planningGrid.querySelectorAll(`.planning-cell[data-room="${room.id}"]`)];
+    const slotCount = Math.max(0, ...roomCells.map(cell => cell.querySelectorAll(".shift-time-slot").length));
+    for (let slotIndex = 0; slotIndex < slotCount; slotIndex += 1) {
+      const slots = roomCells
+        .map(cell => cell.querySelector(`.shift-time-slot[data-slot-index="${slotIndex}"]`))
+        .filter(Boolean);
+      slots.forEach(slot => { slot.style.height = "auto"; });
+      const requiredHeight = Math.max(88, ...slots.map(slot => {
+        const card = slot.querySelector(".shift-card");
+        return card ? Math.ceil(card.scrollHeight) : Number(slot.dataset.baseHeight || 88);
+      }));
+      slots.forEach(slot => { slot.style.height = `${requiredHeight}px`; });
+    }
+  }
 }
 
 function escapeHtml(value) {
@@ -1179,7 +1197,7 @@ function renderPlanning() {
       const dayShifts = shiftIndex.get(`${room.id}|${meta.iso}`) || [];
       const alignedShifts = alignDayShiftsToSlots(dayShifts, timeSlots);
       const alignedCards = dayShifts.length ? alignedShifts.map((shift, slotIndex) =>
-        `<div class="shift-time-slot${shift ? "" : " is-empty"}" style="height:${timeSlots[slotIndex].height}px">${shift ? renderCard(shift) : ""}</div>`
+        `<div class="shift-time-slot${shift ? "" : " is-empty"}" data-slot-index="${slotIndex}" data-base-height="${timeSlots[slotIndex].height}" style="min-height:${timeSlots[slotIndex].height}px">${shift ? renderCard(shift) : ""}</div>`
       ).join("") : "";
 
       html.push(`
@@ -1194,6 +1212,7 @@ function renderPlanning() {
 
   // Un'unica scrittura DOM evita centinaia di insertAdjacentHTML e relativi reflow.
   planningGrid.innerHTML = html.join("");
+  normalizePlanningSlotHeights();
 
   bindPlanningEvents();
   updateSelectionBadge();

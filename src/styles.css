@@ -530,6 +530,8 @@ button { -webkit-tap-highlight-color: transparent; }
 .shift-time-slot {
   flex:0 0 auto;
   width:100%;
+  display:flex;
+  align-items:flex-start;
 }
 
 .shift-time-slot.is-empty {
@@ -539,6 +541,8 @@ button { -webkit-tap-highlight-color: transparent; }
 
 .shift-time-slot > .shift-card {
   width:100%;
+  height:auto;
+  min-height:var(--card-height);
 }
 
 .shift-card {
@@ -610,19 +614,20 @@ button { -webkit-tap-highlight-color: transparent; }
 }
 
 .shift-card.highlighted-work {
-  border-color:rgba(var(--accent-rgb),.52);
+  border-color:rgba(var(--accent-rgb),.78);
   background:
     linear-gradient(145deg,
-      rgba(255,255,255,.66),
-      rgba(var(--accent-rgb),.38) 52%,
-      rgba(var(--accent-rgb),.27));
+      rgba(255,255,255,.42),
+      rgba(var(--accent-rgb),.58) 52%,
+      rgba(var(--accent-rgb),.46));
   box-shadow:
-    0 8px 19px rgba(44,54,65,.15),
-    inset 0 1px 0 rgba(255,255,255,.76);
+    0 9px 21px rgba(44,54,65,.20),
+    inset 0 1px 0 rgba(255,255,255,.62),
+    inset 0 0 0 1px rgba(var(--accent-rgb),.14);
 }
 
 .shift-card.highlighted-work.provvisorio {
-  filter:saturate(.58) brightness(.96);
+  filter:saturate(.82) brightness(.93);
 }
 
 .shift-card.highlighted-work.selected {
@@ -670,6 +675,8 @@ button { -webkit-tap-highlight-color: transparent; }
   font-size: 10px;
   font-weight: 690;
   line-height: 1.05;
+  white-space:normal;
+  overflow-wrap:anywhere;
 }
 
 .shift-type {
@@ -701,6 +708,14 @@ button { -webkit-tap-highlight-color: transparent; }
   color: #626c76;
   background: rgba(165,172,180,.35);
   border-top-color: rgba(91,101,112,.17);
+}
+
+.shift-card.highlighted-work .shift-editor {
+  background:
+    linear-gradient(180deg,
+      rgba(var(--accent-rgb),.48),
+      rgba(var(--accent-rgb),.68));
+  border-top-color:rgba(var(--accent-rgb),.55);
 }
 
 .editor-name {
@@ -2520,4 +2535,20 @@ html.is-iphone-landscape .summary-shift-list{padding:6px 9px 10px}
 .is-ipad .multi-room-assignments,
 .is-iphone-landscape .multi-room-assignments{
   max-height:42dvh;
+}
+
+/* v26 — titolo film sempre completo e altezza card adattiva. */
+.shift-card,
+.shift-card.has-note {
+  height:auto;
+}
+.shift-card.has-note { min-height:102px; }
+.shift-main { overflow:visible; }
+.shift-film,
+html.is-ipad .shift-film,
+html.is-iphone .shift-film {
+  white-space:normal;
+  overflow:visible;
+  text-overflow:clip;
+  overflow-wrap:anywhere;
 }
