@@ -1,4 +1,4 @@
-// DVS Planning v26
+// DVS Planning v27.5
 
 const ROOMS = [
   ...Array.from({ length: 15 }, (_, index) => ({
@@ -65,7 +65,7 @@ const db = hasSupabaseConfig
   : null;
 
 let currentMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
-let summaryMonth = new Date(2026, 6, 1);
+let summaryMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
 let selectedSummaryEditorId = null;
 let editingShiftId = null;
 let editingEditorId = null;
@@ -1025,7 +1025,8 @@ function renderCard(shift) {
     selectedShiftIds.has(shift.id) ? "selected" : "",
     cutShiftIds.has(shift.id) ? "cut-pending" : "",
     shift.notes ? "has-note" : "",
-    isHighlightedWork ? "highlighted-work" : ""
+    isHighlightedWork ? "highlighted-work" : "",
+    shift.isVariable ? "variable-shift" : ""
   ].filter(Boolean).join(" ");
 
   return `
@@ -2741,7 +2742,7 @@ function openPrintPreview() {
       });
     });
     const weekLabel=`${shortPrintDate(week.start)} – ${shortPrintDate(week.end)}`;
-    return `<main class="paper"><header class="head"><div><h1>Digital Video Service</h1><p>PLANNING · ${escapeHtml(monthName(printMonth))}</p><small>Settimana ${escapeHtml(weekLabel)}</small></div><strong>${selectedRooms.length===ROOMS.length?'Tutte le sale':`${selectedRooms.length} sale selezionate`}</strong></header><section class="grid">${cells.join('')}</section><footer class="page-footer"><span>DVS Planning · v26</span><span>Pagina ${pageIndex+1} di ${selectedWeeks.length}</span></footer></main>`;
+    return `<main class="paper"><header class="head"><div><h1>Digital Video Service</h1><p>PLANNING · ${escapeHtml(monthName(printMonth))}</p><small>Settimana ${escapeHtml(weekLabel)}</small></div><strong>${selectedRooms.length===ROOMS.length?'Tutte le sale':`${selectedRooms.length} sale selezionate`}</strong></header><section class="grid">${cells.join('')}</section><footer class="page-footer"><span>DVS Planning · v27.5</span><span>Pagina ${pageIndex+1} di ${selectedWeeks.length}</span></footer></main>`;
   }).join('');
   const popup=window.open('','_blank');
   if(!popup)return showToast('Consenti l’apertura della finestra di anteprima');
@@ -2889,6 +2890,11 @@ function openView(viewName, keepPlanningMonth = false) {
     currentMonth = new Date(now.getFullYear(), now.getMonth(), 1);
     clearSelection();
   }
+  if (viewName === "summaries") {
+    const now = new Date();
+    summaryMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    selectedSummaryEditorId = null;
+  }
   document.querySelectorAll(".nav-item[data-view]").forEach(item => item.classList.toggle("active", item.dataset.view === viewName));
   updateIPhoneChrome(viewName);
   document.querySelectorAll(".app-view").forEach(view => view.classList.remove("active"));
@@ -2946,7 +2952,7 @@ document.querySelectorAll("[data-settings-section]").forEach(button => button.ad
   const sections = {
     backup: { title:"Backup", subtitle:"Stato e autorizzazione", html:backupSettingsHtml() },
     print: { title:"Stampa", subtitle:"Centro Stampa", html:printSettingsHtml() },
-    info: { title:"Informazioni", subtitle:"DVS Planning", html:`<img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video"><h2>DVS Planning</h2><p>Applicazione collaborativa per la gestione del Planning di Digital Video Service.</p><div class="settings-info-meta"><div><span>Versione</span><strong>v26</strong></div><div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div><div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div></div><p class="settings-info-copyright"><strong>Copyright © 2026 Marco D'Agostino per Digital Video Service</strong><br>Tutti i diritti riservati.</p>` }
+    info: { title:"Informazioni", subtitle:"DVS Planning", html:`<img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video"><h2>DVS Planning</h2><p>Applicazione collaborativa per la gestione del Planning di Digital Video Service.</p><div class="settings-info-meta"><div><span>Versione</span><strong>v27.5</strong></div><div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div><div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div></div><p class="settings-info-copyright"><strong>Copyright © 2026 Marco D'Agostino per Digital Video Service</strong><br>Tutti i diritti riservati.</p>` }
   };
   const selected = sections[section];
   if (!selected) return;

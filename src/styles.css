@@ -1100,6 +1100,16 @@ input,textarea,select,.app-dialog{-webkit-user-select:text;user-select:text}
 .shift-card.confirmed.provvisorio { filter:saturate(.35) contrast(1.05); }
 .confirmed-lock { margin-left:auto; color:rgba(var(--accent-rgb),.95); font-size:8px; text-shadow:0 0 5px rgba(var(--accent-rgb),.5); }
 .variable-label { color:#d22334; font-weight:900; white-space:nowrap; }
+.shift-card.variable-shift::after {
+  content:"";
+  position:absolute;
+  z-index:7;
+  inset:0;
+  border:3px solid #e1192d;
+  border-radius:inherit;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.42),0 0 0 1px rgba(185,10,29,.18);
+  pointer-events:none;
+}
 .double-station-label { margin-left:4px; color:#d22334; font-size:6px; font-weight:900; letter-spacing:.035em; white-space:nowrap; }
 .shift-card { position:relative; }
 .context-menu button[hidden] { display:none; }
@@ -2537,7 +2547,7 @@ html.is-iphone-landscape .summary-shift-list{padding:6px 9px 10px}
   max-height:42dvh;
 }
 
-/* v26 — titolo film sempre completo e altezza card adattiva. */
+/* v27.5 — titolo film sempre completo e altezza card adattiva. */
 .shift-card,
 .shift-card.has-note {
   height:auto;
