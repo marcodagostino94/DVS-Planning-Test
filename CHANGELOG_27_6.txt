@@ -33,6 +33,9 @@ Release: agosto 2026
 - Orari delle card del Planning ingranditi per una lettura più immediata.
 - Nelle sale già disposte su due righe, un unico turno con fascia diversa da
   08:00–16:00 e 16:00–24:00 occupa visivamente l'altezza di entrambe le righe.
+- La doppia altezza viene ora valutata settimana per settimana: un turno
+  intermedio si estende soltanto se, nella stessa sala e nella stessa settimana,
+  esiste almeno una giornata con due o più turni.
 
 Pulizia archivio:
 - rimossi changelog delle versioni precedenti e note tecniche temporanee;

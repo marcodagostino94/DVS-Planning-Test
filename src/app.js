@@ -1158,8 +1158,9 @@ function isStandardSplitShift(shift) {
   return range === "08:00-16:00" || range === "16:00-24:00";
 }
 
-function shouldSpanTwoPlanningSlots(dayShifts, timeSlots) {
+function shouldSpanTwoPlanningSlots(dayShifts, timeSlots, weekHasDoubleShift) {
   return timeSlots.length === 2
+    && weekHasDoubleShift
     && dayShifts.length === 1
     && !isStandardSplitShift(dayShifts[0]);
 }
@@ -1206,6 +1207,11 @@ function renderPlanning() {
     if (GROUPS[roomIndex]) html.push(`<div class="group-row">${GROUPS[roomIndex]}</div>`);
 
     const timeSlots = buildRoomTimeSlots(room.id, dateMeta, shiftIndex);
+    const doubleShiftWeeks = new Set();
+    dateMeta.forEach((meta, dateIndex) => {
+      const shiftsInDay = shiftIndex.get(`${room.id}|${meta.iso}`) || [];
+      if (shiftsInDay.length >= 2) doubleShiftWeeks.add(Math.floor(dateIndex / 7));
+    });
     const rowHeight = Math.max(98,
       timeSlots.reduce((total, slot) => total + slot.height, 0)
       + Math.max(0, timeSlots.length - 1) * 5
@@ -1214,10 +1220,11 @@ function renderPlanning() {
     const roomKind = room.id.startsWith("remoto-") ? "REMOTO" : "SALA";
     html.push(`<div class="room-label" style="--row-height:${rowHeight}px"><span class="room-label-kind">${roomKind}</span><strong class="room-label-number">${escapeHtml(roomNumber)}</strong></div>`);
 
-    for (const meta of dateMeta) {
+    for (const [dateIndex, meta] of dateMeta.entries()) {
       const isSelected = selectedCell?.room === room.id && selectedCell?.date === meta.iso;
       const dayShifts = shiftIndex.get(`${room.id}|${meta.iso}`) || [];
-      const spansTwoSlots = shouldSpanTwoPlanningSlots(dayShifts, timeSlots);
+      const weekHasDoubleShift = doubleShiftWeeks.has(Math.floor(dateIndex / 7));
+      const spansTwoSlots = shouldSpanTwoPlanningSlots(dayShifts, timeSlots, weekHasDoubleShift);
       const alignedShifts = spansTwoSlots ? [] : alignDayShiftsToSlots(dayShifts, timeSlots);
       const spanningHeight = spansTwoSlots
         ? timeSlots[0].height + timeSlots[1].height + 5
