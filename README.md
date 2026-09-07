@@ -1,6 +1,6 @@
-# DVS Planning v27.5
+# DVS Planning v27.6
 
-Versione di test. La v27.5 migliora la leggibilità del
+Versione di test. La v27.6 migliora la leggibilità del
 Planning e consolida l'assegnazione dei montatori su Mac, iPad e iPhone.
 
 ## Funzioni Mac

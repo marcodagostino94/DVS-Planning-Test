@@ -1,4 +1,4 @@
-// DVS Planning v27.5
+// DVS Planning v27.6
 
 const ROOMS = [
   ...Array.from({ length: 15 }, (_, index) => ({
@@ -999,6 +999,17 @@ function normalizePlanningSlotHeights() {
       }));
       slots.forEach(slot => { slot.style.height = `${requiredHeight}px`; });
     }
+    roomCells.forEach(cell => {
+      const spanningSlot = cell.querySelector(".shift-time-slot.spans-two");
+      if (!spanningSlot) return;
+      const referenceCell = roomCells.find(candidate =>
+        candidate.querySelector('.shift-time-slot[data-slot-index="0"]')
+        && candidate.querySelector('.shift-time-slot[data-slot-index="1"]')
+      );
+      const firstHeight = Number.parseFloat(referenceCell?.querySelector('.shift-time-slot[data-slot-index="0"]')?.style.height) || 88;
+      const secondHeight = Number.parseFloat(referenceCell?.querySelector('.shift-time-slot[data-slot-index="1"]')?.style.height) || 88;
+      spanningSlot.style.height = `${firstHeight + secondHeight + 5}px`;
+    });
   }
 }
 
@@ -1025,8 +1036,7 @@ function renderCard(shift) {
     selectedShiftIds.has(shift.id) ? "selected" : "",
     cutShiftIds.has(shift.id) ? "cut-pending" : "",
     shift.notes ? "has-note" : "",
-    isHighlightedWork ? "highlighted-work" : "",
-    shift.isVariable ? "variable-shift" : ""
+    isHighlightedWork ? "highlighted-work" : ""
   ].filter(Boolean).join(" ");
 
   return `
@@ -1143,6 +1153,17 @@ function alignDayShiftsToSlots(dayShifts, timeSlots) {
   return aligned;
 }
 
+function isStandardSplitShift(shift) {
+  const range = `${String(shift.start || "").trim()}-${String(shift.end || "").trim()}`;
+  return range === "08:00-16:00" || range === "16:00-24:00";
+}
+
+function shouldSpanTwoPlanningSlots(dayShifts, timeSlots) {
+  return timeSlots.length === 2
+    && dayShifts.length === 1
+    && !isStandardSplitShift(dayShifts[0]);
+}
+
 function renderPlanning() {
   const dates = planningDates(currentMonth);
   const activeMonth = currentMonth.getMonth();
@@ -1196,10 +1217,16 @@ function renderPlanning() {
     for (const meta of dateMeta) {
       const isSelected = selectedCell?.room === room.id && selectedCell?.date === meta.iso;
       const dayShifts = shiftIndex.get(`${room.id}|${meta.iso}`) || [];
-      const alignedShifts = alignDayShiftsToSlots(dayShifts, timeSlots);
-      const alignedCards = dayShifts.length ? alignedShifts.map((shift, slotIndex) =>
-        `<div class="shift-time-slot${shift ? "" : " is-empty"}" data-slot-index="${slotIndex}" data-base-height="${timeSlots[slotIndex].height}" style="min-height:${timeSlots[slotIndex].height}px">${shift ? renderCard(shift) : ""}</div>`
-      ).join("") : "";
+      const spansTwoSlots = shouldSpanTwoPlanningSlots(dayShifts, timeSlots);
+      const alignedShifts = spansTwoSlots ? [] : alignDayShiftsToSlots(dayShifts, timeSlots);
+      const spanningHeight = spansTwoSlots
+        ? timeSlots[0].height + timeSlots[1].height + 5
+        : 0;
+      const alignedCards = spansTwoSlots
+        ? `<div class="shift-time-slot spans-two" data-span-slots="2" data-base-height="${spanningHeight}" style="min-height:${spanningHeight}px">${renderCard(dayShifts[0])}</div>`
+        : dayShifts.length ? alignedShifts.map((shift, slotIndex) =>
+          `<div class="shift-time-slot${shift ? "" : " is-empty"}" data-slot-index="${slotIndex}" data-base-height="${timeSlots[slotIndex].height}" style="min-height:${timeSlots[slotIndex].height}px">${shift ? renderCard(shift) : ""}</div>`
+        ).join("") : "";
 
       html.push(`
         <div class="planning-cell ${meta.weekend ? "weekend" : ""} ${meta.holiday ? "holiday" : ""} ${meta.weekStart ? "week-start" : ""} ${meta.outsideMonth ? "outside-month" : ""} ${isSelected ? "cell-selected" : ""}"
@@ -2742,7 +2769,7 @@ function openPrintPreview() {
       });
     });
     const weekLabel=`${shortPrintDate(week.start)} – ${shortPrintDate(week.end)}`;
-    return `<main class="paper"><header class="head"><div><h1>Digital Video Service</h1><p>PLANNING · ${escapeHtml(monthName(printMonth))}</p><small>Settimana ${escapeHtml(weekLabel)}</small></div><strong>${selectedRooms.length===ROOMS.length?'Tutte le sale':`${selectedRooms.length} sale selezionate`}</strong></header><section class="grid">${cells.join('')}</section><footer class="page-footer"><span>DVS Planning · v27.5</span><span>Pagina ${pageIndex+1} di ${selectedWeeks.length}</span></footer></main>`;
+    return `<main class="paper"><header class="head"><div><h1>Digital Video Service</h1><p>PLANNING · ${escapeHtml(monthName(printMonth))}</p><small>Settimana ${escapeHtml(weekLabel)}</small></div><strong>${selectedRooms.length===ROOMS.length?'Tutte le sale':`${selectedRooms.length} sale selezionate`}</strong></header><section class="grid">${cells.join('')}</section><footer class="page-footer"><span>DVS Planning · v27.6</span><span>Pagina ${pageIndex+1} di ${selectedWeeks.length}</span></footer></main>`;
   }).join('');
   const popup=window.open('','_blank');
   if(!popup)return showToast('Consenti l’apertura della finestra di anteprima');
@@ -2952,7 +2979,7 @@ document.querySelectorAll("[data-settings-section]").forEach(button => button.ad
   const sections = {
     backup: { title:"Backup", subtitle:"Stato e autorizzazione", html:backupSettingsHtml() },
     print: { title:"Stampa", subtitle:"Centro Stampa", html:printSettingsHtml() },
-    info: { title:"Informazioni", subtitle:"DVS Planning", html:`<img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video"><h2>DVS Planning</h2><p>Applicazione collaborativa per la gestione del Planning di Digital Video Service.</p><div class="settings-info-meta"><div><span>Versione</span><strong>v27.5</strong></div><div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div><div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div></div><p class="settings-info-copyright"><strong>Copyright © 2026 Marco D'Agostino per Digital Video Service</strong><br>Tutti i diritti riservati.</p>` }
+    info: { title:"Informazioni", subtitle:"DVS Planning", html:`<img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video"><h2>DVS Planning</h2><p>Applicazione collaborativa per la gestione del Planning di Digital Video Service.</p><div class="settings-info-meta"><div><span>Versione</span><strong>v27.6</strong></div><div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div><div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div></div><p class="settings-info-copyright"><strong>Copyright © 2026 Marco D'Agostino per Digital Video Service</strong><br>Tutti i diritti riservati.</p>` }
   };
   const selected = sections[section];
   if (!selected) return;
