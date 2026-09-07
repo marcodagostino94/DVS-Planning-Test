@@ -671,8 +671,8 @@ button { -webkit-tap-highlight-color: transparent; }
 .shift-time {
   margin-top: 2px;
   color: #59636e;
-  font-size: 10px;
-  font-weight: 560;
+  font-size: 12px;
+  font-weight: 620;
 }
 
 .shift-film {
@@ -1878,7 +1878,7 @@ html.is-ipad .shift-film, html.is-ipad .shift-type, html.is-ipad .editor-name {
   white-space: nowrap;
 }
 html.is-ipad .shift-production { font-size: 13px; }
-html.is-ipad .shift-time { font-size: 14px; }
+html.is-ipad .shift-time { font-size: 16px; }
 html.is-ipad .shift-film { font-size: 15px; line-height: 1.05; }
 html.is-ipad .shift-type { font-size: 12px; }
 html.is-ipad .editor-name { font-size: 13px; }
@@ -1947,7 +1947,7 @@ html.is-ipad .room-label-kind { font-size:11px; }
   html.is-iphone .planning-canvas, html.is-iphone .planning-grid { transform:translateZ(0); backface-visibility:hidden; }
   html.is-iphone .shift-production, html.is-iphone .shift-time, html.is-iphone .shift-film, html.is-iphone .shift-type, html.is-iphone .editor-name { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   html.is-iphone .shift-production { font-size:13px; }
-  html.is-iphone .shift-time { font-size:14px; }
+  html.is-iphone .shift-time { font-size:16px; }
   html.is-iphone .shift-film { font-size:15px; line-height:1.05; }
   html.is-iphone .shift-type { font-size:12px; }
   html.is-iphone .editor-name { font-size:13px; }
@@ -2542,7 +2542,7 @@ html.is-iphone-landscape .summary-shift-list{padding:6px 9px 10px}
   max-height:42dvh;
 }
 
-/* v27.6 — titolo film sempre completo e altezza card adattiva. */
+/* v28 — titolo film sempre completo e altezza card adattiva. */
 .shift-card,
 .shift-card.has-note {
   height:auto;

@@ -1,4 +1,4 @@
-DVS Planning v27.6 · TEST
+DVS Planning v28
 Release: agosto 2026
 
 - Nuova etichetta delle postazioni nel Planning: "SALA" o "REMOTO" in alto
@@ -8,7 +8,7 @@ Release: agosto 2026
 - Assegna/Modifica montatore disponibile su Mac, iPad e iPhone.
 - Possibilità di rimuovere il montatore lasciando vuoto il campo di modifica.
 - Accesso al Planning sempre posizionato sul mese della data odierna.
-- Versione aggiornata a v27.6 in titolo, manifest, badge, Informazioni e stampe.
+- Versione aggiornata a v28 in titolo, manifest, badge, Informazioni e stampe.
 - Contenuti e comportamento applicativo invariati rispetto alla build confermata.
 - Nessuna modifica SQL richiesta. Backup Agent 2.0.2 invariato.
 - I turni della stessa sala vengono allineati per fascia oraria tra giorni
@@ -30,12 +30,13 @@ Release: agosto 2026
   l'altezza maggiore necessaria tra i giorni visualizzati.
 - Aprendo la sezione Riepiloghi viene ora selezionato automaticamente il mese
   corrente, senza ritornare a luglio 2026.
-- Orari delle card del Planning ingranditi per una lettura più immediata.
+- Orari delle card del Planning ulteriormente ingranditi e resi più marcati per
+  una lettura immediata anche con livelli di zoom ridotti.
 - Nelle sale già disposte su due righe, un unico turno con fascia diversa da
   08:00–16:00 e 16:00–24:00 occupa visivamente l'altezza di entrambe le righe.
-- La doppia altezza viene ora valutata settimana per settimana: un turno
-  intermedio si estende soltanto se, nella stessa sala e nella stessa settimana,
-  esiste almeno una giornata con due o più turni.
+- La doppia altezza viene valutata sull'intero periodo visibile: quando una sala
+  usa due righe, i suoi turni intermedi occupano entrambe le righe in tutte le
+  settimane mostrate.
 
 Pulizia archivio:
 - rimossi changelog delle versioni precedenti e note tecniche temporanee;
