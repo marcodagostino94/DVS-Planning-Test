@@ -1,0 +1,5 @@
+DVS Planning v32 TEST
+Base v31. Solo iPhone: note esistenti visibili in rosso sotto orario e programma, con testo su più righe. Nessuna nota mostrata quando assente.
+Restano colonne larghe, cognome su una riga, orari compatti, zoom e griglia.
+Mac/iPad invariati. Nessuna pubblicazione. Configurazione Supabase originale mantenuta.
+Verifica statica effettuata; resa visiva da provare su iPhone.

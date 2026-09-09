@@ -2579,3 +2579,6 @@ html.is-iphone-device .planning-scroller {padding-bottom:100px;scroll-padding-bo
 /* v31 TEST — iPhone: wider columns and surname on one line. */
 html.is-iphone-device .planning-grid {--day-width:var(--iphone-card-column,178px);}
 html.is-iphone-device .editor-name {white-space:nowrap!important;overflow-wrap:normal!important;word-break:normal!important;}
+
+/* v32 — show existing notes in red on iPhone cards. */
+html.is-iphone-device .shift-note {display:block!important;order:2;color:#b11122!important;font-size:15px!important;font-weight:700;line-height:1.25!important;margin:3px 0 0!important;white-space:normal!important;word-break:normal!important;overflow-wrap:break-word!important;overflow:visible!important;text-overflow:clip!important;max-height:none!important;}
