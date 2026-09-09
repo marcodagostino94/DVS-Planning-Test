@@ -2575,3 +2575,7 @@ html.is-iphone-device .shift-card.selected .shift-film {padding-right:28px;}
 html.is-iphone-device .room-label {padding:8px 3px;}
 html.is-iphone-device .room-label-number {font-size:28px;}
 html.is-iphone-device .planning-scroller {padding-bottom:100px;scroll-padding-bottom:100px;}
+
+/* v31 TEST — iPhone: wider columns and surname on one line. */
+html.is-iphone-device .planning-grid {--day-width:var(--iphone-card-column,178px);}
+html.is-iphone-device .editor-name {white-space:nowrap!important;overflow-wrap:normal!important;word-break:normal!important;}

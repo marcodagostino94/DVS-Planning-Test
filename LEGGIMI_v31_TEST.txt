@@ -1,0 +1,5 @@
+DVS Planning v31 TEST
+Solo iPhone: colonne più larghe, adattate al cognome più lungo dei turni del mese; solo cognome su una riga; orari compatti 10–18, mantenendo minuti non zero.
+Base v30: griglia panoramica, zoom e scorrimento conservati. Mac e iPad mantengono formattazione e layout precedenti.
+Nessuna pubblicazione. Configurazione Supabase originale: il test usa i dati del database configurato.
+Verifica visiva su iPhone ancora da effettuare.
