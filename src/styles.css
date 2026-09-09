@@ -2558,48 +2558,20 @@ html.is-iphone .shift-film {
   overflow-wrap:anywhere;
 }
 
-/* v29 test: every override is restricted to the existing iPhone device flag. */
-html.is-iphone-device #planningView > .topbar {min-width:0!important;padding:8px!important;}
-html.is-iphone-device #planningView .toolbar {width:100%!important;min-width:0!important;gap:6px;}
-html.is-iphone-device #planningView .page-title,
-html.is-iphone-device #planningView .zoom-control,
-html.is-iphone-device #planningView #newShiftBtn {display:none!important;}
-html.is-iphone-device .month-switcher {flex:1;min-width:0;}
-html.is-iphone-device .month-label {min-width:0!important;font-size:15px!important;padding:0 6px!important;flex:1;}
-html.is-iphone-device #phonePlanningControls {padding:4px 10px 10px;background:#f4f5f8;}
-html.is-iphone-device .phone-view-switch {display:flex;gap:6px;margin-bottom:8px;}
-html.is-iphone-device .phone-view-switch button {padding:8px 12px;min-height:40px;border:0;border-radius:10px;font-weight:700;background:#e5e7ec;}
-html.is-iphone-device .phone-view-switch input {margin-left:auto;min-width:0;width:142px;font:inherit;font-size:13px;border:1px solid #d8dbe2;border-radius:10px;padding:4px;background:white;}
-html.is-iphone-device .phone-week {display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;}
-html.is-iphone-device .phone-week button {display:grid;gap:3px;border:0;border-radius:10px;padding:6px 0;background:white;min-height:48px;}
-html.is-iphone-device .phone-week span {font-size:11px;}
-html.is-iphone-device .phone-week strong {font-size:16px;}
-html.is-iphone-device #phonePlanningControls button[aria-pressed="true"] {background:#cf1236;color:white;}
-html.is-iphone-device .planning-grid {--room-width:58px;--day-width:260px;}
-html.is-iphone-device.phone-day-view .planning-canvas {width:100%;}
-html.is-iphone-device.phone-day-view .planning-grid {min-width:0;width:100%;grid-template-columns:58px minmax(0,1fr);}
-html.is-iphone-device .planning-cell {min-width:0;padding:8px;}
-html.is-iphone-device.phone-day-view .planning-cell,
-html.is-iphone-device.phone-day-view .room-label {min-height:88px;}
-html.is-iphone-device .shift-time-slot {height:auto!important;min-height:0!important;}
-html.is-iphone-device .shift-time-slot.is-empty {display:none;}
-html.is-iphone-device .shift-card {height:auto!important;min-height:0!important;border-radius:12px;margin-bottom:6px;}
-html.is-iphone-device .shift-main {padding:10px!important;overflow:visible;}
+/* v30 TEST — panoramic planning, strictly iPhone only. */
+html.is-iphone-device .planning-grid {--room-width:88px;--day-width:138px;}
 html.is-iphone-device .shift-production,
-html.is-iphone-device .shift-film,
-html.is-iphone-device .shift-time,
 html.is-iphone-device .shift-type,
-html.is-iphone-device .shift-note,
-html.is-iphone-device .editor-name {white-space:normal!important;overflow:visible!important;text-overflow:clip!important;word-break:normal!important;overflow-wrap:break-word!important;max-height:none!important;line-height:1.35!important;}
-html.is-iphone-device .shift-production {font-size:13px!important;padding-right:38px!important;}
-html.is-iphone-device .shift-time {font-size:15px!important;margin:4px 0;}
-html.is-iphone-device .shift-film {font-size:17px!important;font-weight:750;}
-html.is-iphone-device .shift-type,html.is-iphone-device .shift-note {font-size:12px!important;margin-top:5px;}
-html.is-iphone-device .shift-editor {height:auto!important;min-height:32px;padding:6px 10px!important;}
-html.is-iphone-device .editor-name {font-size:14px!important;}
-html.is-iphone-device .iphone-shift-menu {display:grid!important;place-items:center;position:absolute;right:5px;top:5px;width:36px!important;height:36px!important;border:0;border-radius:9px;background:#ffffffc9;}
-html.is-iphone-device .room-label-number {font-size:24px;}
-html.is-iphone-device .planning-scroller {height:calc(100dvh - 310px - env(safe-area-inset-top) - env(safe-area-inset-bottom))!important;min-height:120px;padding-bottom:24px;scroll-padding-bottom:24px;}
-@media (orientation:landscape) {
- html.is-iphone-device .planning-scroller {height:calc(100dvh - 225px)!important;}
-}
+html.is-iphone-device .shift-note {display:none!important;}
+html.is-iphone-device .shift-main {display:flex;flex-direction:column;padding:6px!important;gap:5px;overflow:visible!important;}
+html.is-iphone-device .shift-film {order:0;margin:0!important;font-size:18px!important;font-weight:750;line-height:1.18!important;white-space:normal!important;word-break:normal!important;overflow-wrap:break-word!important;overflow:visible!important;text-overflow:clip!important;}
+html.is-iphone-device .shift-time {order:1;margin:0!important;font-size:15px!important;font-weight:650;line-height:1.25!important;letter-spacing:-.3px;white-space:nowrap!important;overflow:visible!important;text-overflow:clip!important;}
+html.is-iphone-device .shift-editor {height:auto!important;min-height:28px;padding:5px 6px!important;gap:3px;align-items:flex-start;}
+html.is-iphone-device .editor-name {font-size:16px!important;line-height:1.2!important;white-space:normal!important;word-break:normal!important;overflow-wrap:break-word!important;overflow:visible!important;text-overflow:clip!important;}
+html.is-iphone-device .shift-card,html.is-iphone-device .shift-card.has-note {min-height:88px;border-radius:8px;box-shadow:none!important;}
+html.is-iphone-device .iphone-shift-menu {display:none!important;}
+html.is-iphone-device .shift-card.selected .iphone-shift-menu {display:grid!important;position:absolute;top:2px;right:2px;width:30px;height:28px;place-items:center;border:0;border-radius:6px;background:#fff;color:#343a42;z-index:8;}
+html.is-iphone-device .shift-card.selected .shift-film {padding-right:28px;}
+html.is-iphone-device .room-label {padding:8px 3px;}
+html.is-iphone-device .room-label-number {font-size:28px;}
+html.is-iphone-device .planning-scroller {padding-bottom:100px;scroll-padding-bottom:100px;}
