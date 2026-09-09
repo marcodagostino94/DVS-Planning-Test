@@ -947,6 +947,7 @@ function fitText(element, minSize) {
 }
 
 function fitAllCardText(immediate = false) {
+  if (IS_IPHONE) return;
   if (fitTextJob) {
     if (typeof cancelIdleCallback === "function") cancelIdleCallback(fitTextJob);
     else cancelAnimationFrame(fitTextJob);
@@ -1164,8 +1165,46 @@ function shouldSpanTwoPlanningSlots(dayShifts, timeSlots) {
     && !isStandardSplitShift(dayShifts[0]);
 }
 
+let phonePlanningMode = "day";
+let phonePlanningDate = new Date();
+function renderPhoneControls() {
+  if (!IS_IPHONE) return;
+  let controls = document.getElementById("phonePlanningControls");
+  if (!controls) {
+    controls = document.createElement("div");
+    controls.id = "phonePlanningControls";
+    document.querySelector("#planningView > .topbar").after(controls);
+    controls.addEventListener("click", event => {
+      const mode = event.target.closest("[data-phone-mode]");
+      const day = event.target.closest("[data-phone-date]");
+      if (mode) phonePlanningMode = mode.dataset.phoneMode;
+      else if (day) { phonePlanningDate = new Date(day.dataset.phoneDate + "T12:00:00"); currentMonth = new Date(phonePlanningDate.getFullYear(), phonePlanningDate.getMonth(), 1); }
+      else return;
+      clearSelection(); renderPlanning(); planningScroller.scrollTo(0, 0);
+    });
+  }
+  if (phonePlanningDate.getMonth() !== currentMonth.getMonth() || phonePlanningDate.getFullYear() !== currentMonth.getFullYear()) {
+    phonePlanningDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
+  }
+  const monday = new Date(phonePlanningDate);
+  monday.setDate(monday.getDate() - (monday.getDay() + 6) % 7);
+  const week = Array.from({length: 7}, (_, i) => {
+    const day = new Date(monday); day.setDate(day.getDate() + i);
+    const iso = isoFromDate(day);
+    return `<button type="button" data-phone-date="${iso}" aria-pressed="${iso === isoFromDate(phonePlanningDate)}"><span>${day.toLocaleDateString("it-IT", {weekday:"short"})}</span><strong>${day.getDate()}</strong></button>`;
+  }).join("");
+  controls.innerHTML = `<div class="phone-view-switch"><button type="button" data-phone-mode="day" aria-pressed="${phonePlanningMode === "day"}">Giorno</button><button type="button" data-phone-mode="grid" aria-pressed="${phonePlanningMode === "grid"}">Griglia</button><input type="date" aria-label="Scegli giorno" value="${isoFromDate(phonePlanningDate)}"></div><div class="phone-week">${week}</div>`;
+  controls.querySelector("input").onchange = event => {
+    if (!event.target.value) return;
+    phonePlanningDate = new Date(event.target.value + "T12:00:00");
+    currentMonth = new Date(phonePlanningDate.getFullYear(), phonePlanningDate.getMonth(), 1);
+    clearSelection(); renderPlanning(); planningScroller.scrollTo(0, 0);
+  };
+  document.documentElement.classList.toggle("phone-day-view", phonePlanningMode === "day");
+}
 function renderPlanning() {
-  const dates = planningDates(currentMonth);
+  if (IS_IPHONE) renderPhoneControls();
+  const dates = IS_IPHONE && phonePlanningMode === "day" ? [phonePlanningDate] : planningDates(currentMonth);
   const activeMonth = currentMonth.getMonth();
   const now = new Date();
   const shiftIndex = buildPlanningShiftIndex();
@@ -1240,7 +1279,7 @@ function renderPlanning() {
 
   // Un'unica scrittura DOM evita centinaia di insertAdjacentHTML e relativi reflow.
   planningGrid.innerHTML = html.join("");
-  normalizePlanningSlotHeights();
+  if (!IS_IPHONE) normalizePlanningSlotHeights();
 
   bindPlanningEvents();
   updateSelectionBadge();
@@ -2007,6 +2046,7 @@ document.getElementById("nextMonth").addEventListener("click", () => {
 
 document.getElementById("todayBtn").addEventListener("click", () => {
   const now = new Date();
+  if (IS_IPHONE) phonePlanningDate = new Date(now);
   currentMonth = new Date(now.getFullYear(), now.getMonth(), 1);
   clearSelection();
   renderPlanning();
@@ -2063,6 +2103,7 @@ function fitPlanningToWindow() {
 }
 
 function applyPlanningZoom(save = true, preserveFitLabel = zoomSelect?.value === "fit") {
+  if (IS_IPHONE) { planningCanvas.style.zoom = 1; return; }
   planningZoom = clampZoom(planningZoom);
   planningCanvas.style.zoom = planningZoom;
   updateZoomSelectDisplay(preserveFitLabel);
