@@ -1,0 +1,6 @@
+DVS Planning v33
+- iPhone: etichette rosse VARIABILE e DOPPIA POSTAZIONE quando attivate.
+- iPhone: lavorazioni GRAFICA, COLOR, SOUND visibili; combinabili con le etichette e le note.
+- Conservate le migliorie v32: note rosse, cognomi su una riga, orari compatti, griglia e zoom.
+- Versione aggiornata in titolo, badge, Informazioni, manifest e piè di pagina stampa.
+- ZIP ripulito da istruzioni e changelog obsoleti. File operativi e installazione conservati.

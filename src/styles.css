@@ -2582,3 +2582,9 @@ html.is-iphone-device .editor-name {white-space:nowrap!important;overflow-wrap:n
 
 /* v32 — show existing notes in red on iPhone cards. */
 html.is-iphone-device .shift-note {display:block!important;order:2;color:#b11122!important;font-size:15px!important;font-weight:700;line-height:1.25!important;margin:3px 0 0!important;white-space:normal!important;word-break:normal!important;overflow-wrap:break-word!important;overflow:visible!important;text-overflow:clip!important;max-height:none!important;}
+
+/* v33 — iPhone work labels, independent of notes. */
+.iphone-work-flags {display:none;}
+html.is-iphone-device .iphone-work-flags {display:flex;flex-direction:column;align-items:flex-start;gap:3px;order:2;margin-top:2px;color:#b11122;font-size:14px;font-weight:750;line-height:1.25;white-space:normal;overflow-wrap:break-word;}
+html.is-iphone-device .iphone-work-flags span {display:block;max-width:100%;}
+html.is-iphone-device .shift-note {order:3;}

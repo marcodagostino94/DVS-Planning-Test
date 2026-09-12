@@ -1,5 +1,0 @@
-DVS Planning v29 — TEST iPhone
-Base: v28. Nessuna distribuzione effettuata.
-Solo iPhone: vista Giorno predefinita, selettore settimana e data, Griglia con colonne leggibili, testi completi e zoom fisso per evitare troncamenti.
-Viste Mac e iPad: nessuna modifica alle regole esistenti; nuovi comportamenti protetti dal riconoscimento IS_IPHONE.
-Per il test usare una copia separata del sito. La configurazione Supabase originale è mantenuta: eventuali modifiche ai turni usano il database configurato.

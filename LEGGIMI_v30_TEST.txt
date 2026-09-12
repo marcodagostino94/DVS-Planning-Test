@@ -1,7 +1,0 @@
-DVS Planning v30 TEST — iPhone panoramico
-Base originale v28; rimossa la proposta v29 Giorno/Griglia.
-Solo iPhone: programma, orario completo e montatore nelle card; produzione, tipo e note restano nella finestra di modifica. Montatore: iniziale nome e cognome, come nella v28.
-Toccare un turno per selezionarlo e mostrare il pulsante azioni. Restano zoom e scorrimento della v28.
-Mac/iPad: JavaScript identico alla v28, CSS originale intatto con sole aggiunte limitate a is-iphone-device.
-Controlli statici effettuati; resa su iPhone da verificare nel test. Nessuna pubblicazione effettuata.
-La configurazione Supabase originale è mantenuta: il test può scrivere sul database condiviso.
