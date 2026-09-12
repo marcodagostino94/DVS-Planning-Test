@@ -1,0 +1,7 @@
+DVS Planning v34 TEST
+- Corretti clic ignorati dopo il trascinamento e timer di selezione delle celle vuote.
+- Fine selezione rettangolare senza ricostruzione completa della griglia.
+- Realtime differito durante interazioni e scritture; risposte superate scartate.
+- Scritture sullo stesso turno ordinate; errori segnalati e stato locale mantenuto nella sessione.
+- Suggerimenti aggiornati dal salvataggio del modulo, non da ogni spostamento.
+- Grafica v33 invariata. Nessuna migrazione database richiesta.

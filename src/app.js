@@ -1,4 +1,4 @@
-// DVS Planning v33
+// DVS Planning v34
 
 const ROOMS = [
   ...Array.from({ length: 15 }, (_, index) => ({
@@ -84,6 +84,38 @@ let dragGhost = null;
 let activeDragGroup = [];
 let activeDragSource = null;
 let suppressNextClick = false;
+let localMutationRevision = 0;
+let pendingShiftWrites = 0;
+let dataReadSequence = 0;
+let planningPointerDown = false;
+let planningInteractionUntil = 0;
+const shiftWriteQueues = new Map();
+const unsavedShiftOverrides = new Map();
+function planningInteractionBusy() {
+  return planningPointerDown || Boolean(marqueeState) || Boolean(dragSourceShiftId)
+    || Date.now() < planningInteractionUntil;
+}
+async function runShiftWrite(id, snapshot, operation) {
+  localMutationRevision += 1;
+  pendingShiftWrites += 1;
+  const previous = shiftWriteQueues.get(id) || Promise.resolve();
+  const task = previous.catch(() => {}).then(operation);
+  shiftWriteQueues.set(id, task);
+  try {
+    const succeeded = await task;
+    if (succeeded) unsavedShiftOverrides.delete(id);
+    else unsavedShiftOverrides.set(id, snapshot);
+    return succeeded;
+  } catch (error) {
+    unsavedShiftOverrides.set(id, snapshot);
+    showToast(`Salvataggio non riuscito: ${error.message || "connessione interrotta"}. Modifica conservata in questa sessione; riprovare il salvataggio.`);
+    return false;
+  } finally {
+    pendingShiftWrites -= 1;
+    if (shiftWriteQueues.get(id) === task) shiftWriteQueues.delete(id);
+    scheduleRealtimeDataRefresh();
+  }
+}
 let emptyCellClickTimer = null;
 let highlightedDropCells = new Set();
 let planningZoom = Number(localStorage.getItem(ZOOM_STORAGE)) || 1;
@@ -240,6 +272,7 @@ function loadLocal(key, fallback) {
 }
 
 function saveLocal() {
+  localMutationRevision += 1;
   localStorage.setItem(SHIFT_STORAGE, JSON.stringify(shifts));
   localStorage.setItem(EDITOR_STORAGE, JSON.stringify(editors));
 }
@@ -821,6 +854,7 @@ function groupHasConflict(candidates) {
 }
 
 function clearActiveDrag() {
+  dragSourceShiftId = null;
   activeDragGroup = [];
   activeDragSource = null;
 }
@@ -880,7 +914,7 @@ function finishMarquee() {
   marqueeElement?.remove();
   marqueeElement = null;
   marqueeState = null;
-  if (wasActive) renderPlanning();
+  if (wasActive) { suppressNextClick = true; syncPlanningSelectionUI(); }
 }
 
 function createDragGhost(group) {
@@ -1285,6 +1319,10 @@ function bindPlanningEvents() {
   planningEventsBound = true;
 
   planningGrid.addEventListener('click', event => {
+    clearTimeout(emptyCellClickTimer);
+    emptyCellClickTimer = null;
+    planningInteractionUntil = Date.now() + 220;
+    if (suppressNextClick) { suppressNextClick = false; return; }
     const menuButton = event.target.closest('.iphone-shift-menu');
     const card = event.target.closest('.shift-card');
     const cell = event.target.closest('.planning-cell');
@@ -1305,7 +1343,7 @@ function bindPlanningEvents() {
     }
     if (card) {
       event.stopPropagation();
-      if (suppressNextClick) { suppressNextClick = false; return; }
+
       hideContextMenu();
       const id = card.dataset.shiftId;
       if (IS_MAC_APP && (event.metaKey || event.ctrlKey)) toggleCommandSelection(id);
@@ -1344,6 +1382,9 @@ function bindPlanningEvents() {
   });
 
   planningGrid.addEventListener('mousedown', event => {
+    suppressNextClick = false;
+    clearTimeout(emptyCellClickTimer);
+    emptyCellClickTimer = null;
     const cell = event.target.closest('.planning-cell');
     if (cell && !event.target.closest('.shift-card')) startMarquee(event, cell);
   });
@@ -1362,6 +1403,8 @@ function bindPlanningEvents() {
   });
 
   planningGrid.addEventListener('dragstart', event => {
+    clearTimeout(emptyCellClickTimer);
+    emptyCellClickTimer = null;
     if (event.target.closest('.iphone-shift-menu')) { event.preventDefault(); return; }
     const card = event.target.closest('.shift-card');
     if (!card) return;
@@ -1387,6 +1430,9 @@ function bindPlanningEvents() {
   });
 
   planningGrid.addEventListener('dragend', event => {
+    planningPointerDown = false;
+    planningInteractionUntil = Date.now() + 220;
+    setTimeout(() => { suppressNextClick = false; }, 0);
     if (!event.target.closest('.shift-card')) return;
     planningGrid.querySelectorAll('.shift-card.dragging').forEach(item => item.classList.remove('dragging'));
     dragSourceShiftId = null;
@@ -1420,6 +1466,9 @@ function bindPlanningEvents() {
     const cell = event.target.closest('.planning-cell');
     if (!cell) return;
     event.preventDefault(); clearDropHighlights();
+    planningPointerDown = false;
+    planningInteractionUntil = Date.now() + 220;
+    setTimeout(() => { suppressNextClick = false; }, 0);
     document.body.classList.remove("dvs-drag-active");
     const sourceId = dragSourceShiftId || event.dataTransfer.getData('text/plain');
     if (!activeDragGroup.length) captureDragGroup(sourceId);
@@ -1443,6 +1492,23 @@ function bindPlanningEvents() {
   });
 }
 
+planningGrid.addEventListener('pointerdown', () => {
+  planningPointerDown = true;
+  clearTimeout(emptyCellClickTimer);
+});
+document.addEventListener('pointerup', () => {
+  planningPointerDown = false;
+  planningInteractionUntil = Date.now() + 220;
+});
+document.addEventListener('pointercancel', () => { planningPointerDown = false; });
+window.addEventListener('blur', () => {
+  planningPointerDown = false;
+  finishMarquee();
+  clearActiveDrag();
+  removeDragGhost();
+  document.body.classList.remove('dvs-drag-active');
+  suppressNextClick = false;
+});
 document.addEventListener('mousemove',event=>{ if (marqueeState) updateMarquee(event); if (dragGhost) moveDragGhost(event); });
 document.addEventListener('mouseup',()=>{ if (marqueeState) finishMarquee(); });
 document.addEventListener('click',event=>{ if (!contextMenu.contains(event.target)) hideContextMenu(); });
@@ -1937,7 +2003,7 @@ shiftForm.addEventListener("submit", event => {
     shifts.push(...candidates.filter(item => item.id !== editingShiftId));
   } else shifts.push(...candidates);
 
-  saveLocal(); candidates.forEach(syncShiftToSupabase);
+  saveLocal(); candidates.forEach(syncShiftToSupabase); candidates.forEach(syncShiftSuggestions);
   selectedShiftIds = new Set(candidates.map(candidate => candidate.id)); selectionAnchorId = candidates[0].id; selectedCell = null;
   closeShiftDialog(); renderPlanning();
   showToast(candidates.length === 1
@@ -2782,7 +2848,7 @@ function openPrintPreview() {
       });
     });
     const weekLabel=`${shortPrintDate(week.start)} – ${shortPrintDate(week.end)}`;
-    return `<main class="paper"><header class="head"><div><h1>Digital Video Service</h1><p>PLANNING · ${escapeHtml(monthName(printMonth))}</p><small>Settimana ${escapeHtml(weekLabel)}</small></div><strong>${selectedRooms.length===ROOMS.length?'Tutte le sale':`${selectedRooms.length} sale selezionate`}</strong></header><section class="grid">${cells.join('')}</section><footer class="page-footer"><span>DVS Planning · v33</span><span>Pagina ${pageIndex+1} di ${selectedWeeks.length}</span></footer></main>`;
+    return `<main class="paper"><header class="head"><div><h1>Digital Video Service</h1><p>PLANNING · ${escapeHtml(monthName(printMonth))}</p><small>Settimana ${escapeHtml(weekLabel)}</small></div><strong>${selectedRooms.length===ROOMS.length?'Tutte le sale':`${selectedRooms.length} sale selezionate`}</strong></header><section class="grid">${cells.join('')}</section><footer class="page-footer"><span>DVS Planning · v34</span><span>Pagina ${pageIndex+1} di ${selectedWeeks.length}</span></footer></main>`;
   }).join('');
   const popup=window.open('','_blank');
   if(!popup)return showToast('Consenti l’apertura della finestra di anteprima');
@@ -2992,7 +3058,7 @@ document.querySelectorAll("[data-settings-section]").forEach(button => button.ad
   const sections = {
     backup: { title:"Backup", subtitle:"Stato e autorizzazione", html:backupSettingsHtml() },
     print: { title:"Stampa", subtitle:"Centro Stampa", html:printSettingsHtml() },
-    info: { title:"Informazioni", subtitle:"DVS Planning", html:`<img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video"><h2>DVS Planning</h2><p>Applicazione collaborativa per la gestione del Planning di Digital Video Service.</p><div class="settings-info-meta"><div><span>Versione</span><strong>v33</strong></div><div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div><div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div></div><p class="settings-info-copyright"><strong>Copyright © 2026 Marco D'Agostino per Digital Video Service</strong><br>Tutti i diritti riservati.</p>` }
+    info: { title:"Informazioni", subtitle:"DVS Planning", html:`<img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video"><h2>DVS Planning</h2><p>Applicazione collaborativa per la gestione del Planning di Digital Video Service.</p><div class="settings-info-meta"><div><span>Versione</span><strong>v34</strong></div><div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div><div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div></div><p class="settings-info-copyright"><strong>Copyright © 2026 Marco D'Agostino per Digital Video Service</strong><br>Tutti i diritti riservati.</p>` }
   };
   const selected = sections[section];
   if (!selected) return;
@@ -3199,7 +3265,12 @@ async function syncShiftSuggestions(shift) {
   if (failed?.error) console.warn("Suggerimenti non sincronizzati:", failed.error.message);
 }
 
-async function syncShiftToSupabase(shift) {
+function syncShiftToSupabase(shift) {
+  if (!db) return Promise.resolve(true);
+  const snapshot = structuredClone(shift);
+  return runShiftWrite(snapshot.id, snapshot, () => persistShiftToSupabase(snapshot));
+}
+async function persistShiftToSupabase(shift) {
   if (!db) return;
   const row = {
     id: shift.id,
@@ -3223,14 +3294,19 @@ async function syncShiftToSupabase(shift) {
     color_key: shift.color
   };
   const { error } = await db.from("shifts").upsert(row);
-  if (error) showToast(`Supabase: ${error.message}`);
-  else syncShiftSuggestions(shift);
+  if (error) { showToast(`Salvataggio turno non riuscito: ${error.message}. Riprovare il salvataggio.`); return false; }
+  return true;
 }
 
-async function deleteShiftFromSupabase(id) {
+function deleteShiftFromSupabase(id) {
+  if (!db) return Promise.resolve(true);
+  return runShiftWrite(id, null, () => persistShiftDeletion(id));
+}
+async function persistShiftDeletion(id) {
   if (!db) return;
   const { error } = await db.from("shifts").delete().eq("id", id);
-  if (error) showToast(`Supabase: ${error.message}`);
+  if (error) { showToast(`Eliminazione non riuscita: ${error.message}`); return false; }
+  return true;
 }
 
 async function syncEditorToSupabase(editor) {
@@ -3279,6 +3355,9 @@ async function fetchAllSupabaseRows(table, configureQuery, pageSize = 1000) {
 
 async function loadSupabaseData() {
   if (!db) return;
+  if (pendingShiftWrites || planningInteractionBusy()) { scheduleRealtimeDataRefresh(); return; }
+  const readSequence = ++dataReadSequence;
+  const readRevision = localMutationRevision;
 
   const [staffResult, shiftsResult] = await Promise.all([
     fetchAllSupabaseRows("staff", query => query.order("first_name").order("last_name").order("id")),
@@ -3297,6 +3376,10 @@ async function loadSupabaseData() {
     return;
   }
 
+  if (readSequence !== dataReadSequence) return;
+  if (pendingShiftWrites || readRevision !== localMutationRevision || planningInteractionBusy()) {
+    scheduleRealtimeDataRefresh(); return;
+  }
   editors = (staffResult.data || []).map(row => ({
     id: String(row.id),
     firstName: row.first_name,
@@ -3327,6 +3410,10 @@ async function loadSupabaseData() {
     confirmedAt: row.confirmed_at || null
   }));
 
+  for (const [id, snapshot] of unsavedShiftOverrides) {
+    shifts = shifts.filter(shift => shift.id !== id);
+    if (snapshot) shifts.push(snapshot);
+  }
   saveLocal();
   renderEditors();
   renderPlanning();
@@ -3338,8 +3425,8 @@ let realtimeDataRefreshTimer = null;
 function scheduleRealtimeDataRefresh() {
   clearTimeout(realtimeDataRefreshTimer);
   realtimeDataRefreshTimer = setTimeout(() => {
-    loadSupabaseData();
-  }, 140);
+    loadSupabaseData().catch(error => showToast(`Aggiornamento non riuscito: ${error.message || "connessione interrotta"}`));
+  }, 250);
 }
 
 function enableRealtime() {
