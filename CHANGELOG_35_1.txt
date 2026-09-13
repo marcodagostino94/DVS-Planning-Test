@@ -1,0 +1,1 @@
+v35.1: Variazione spostata prima di Rendi definitivo. Filtro sale disponibili per data e fascia oraria; aggiornato cambiando campi o ricevendo dati realtime. Ricontrollo locale alla conferma. Il turno originale resta occupante come concordato. Nessuna modifica database.

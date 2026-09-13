@@ -1,4 +1,4 @@
-// DVS Planning v35
+// DVS Planning v35.1
 
 const ROOMS = [
   ...Array.from({ length: 15 }, (_, index) => ({
@@ -1298,6 +1298,7 @@ function renderPlanning() {
   if (!IS_TOUCH_APPLE) fitAllCardText(true);
   applyPlanningZoom(false);
   planningRenderSignature = currentPlanningSignature();
+  if (document.getElementById("variationDialog")?.open) updateVariationRooms();
 
 }
 
@@ -2854,7 +2855,7 @@ function openPrintPreview() {
       });
     });
     const weekLabel=`${shortPrintDate(week.start)} – ${shortPrintDate(week.end)}`;
-    return `<main class="paper"><header class="head"><div><h1>Digital Video Service</h1><p>PLANNING · ${escapeHtml(monthName(printMonth))}</p><small>Settimana ${escapeHtml(weekLabel)}</small></div><strong>${selectedRooms.length===ROOMS.length?'Tutte le sale':`${selectedRooms.length} sale selezionate`}</strong></header><section class="grid">${cells.join('')}</section><footer class="page-footer"><span>DVS Planning · v35</span><span>Pagina ${pageIndex+1} di ${selectedWeeks.length}</span></footer></main>`;
+    return `<main class="paper"><header class="head"><div><h1>Digital Video Service</h1><p>PLANNING · ${escapeHtml(monthName(printMonth))}</p><small>Settimana ${escapeHtml(weekLabel)}</small></div><strong>${selectedRooms.length===ROOMS.length?'Tutte le sale':`${selectedRooms.length} sale selezionate`}</strong></header><section class="grid">${cells.join('')}</section><footer class="page-footer"><span>DVS Planning · v35.1</span><span>Pagina ${pageIndex+1} di ${selectedWeeks.length}</span></footer></main>`;
   }).join('');
   const popup=window.open('','_blank');
   if(!popup)return showToast('Consenti l’apertura della finestra di anteprima');
@@ -3064,7 +3065,7 @@ document.querySelectorAll("[data-settings-section]").forEach(button => button.ad
   const sections = {
     backup: { title:"Backup", subtitle:"Stato e autorizzazione", html:backupSettingsHtml() },
     print: { title:"Stampa", subtitle:"Centro Stampa", html:printSettingsHtml() },
-    info: { title:"Informazioni", subtitle:"DVS Planning", html:`<img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video"><h2>DVS Planning</h2><p>Applicazione collaborativa per la gestione del Planning di Digital Video Service.</p><div class="settings-info-meta"><div><span>Versione</span><strong>v35</strong></div><div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div><div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div></div><p class="settings-info-copyright"><strong>Copyright © 2026 Marco D'Agostino per Digital Video Service</strong><br>Tutti i diritti riservati.</p>` }
+    info: { title:"Informazioni", subtitle:"DVS Planning", html:`<img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video"><h2>DVS Planning</h2><p>Applicazione collaborativa per la gestione del Planning di Digital Video Service.</p><div class="settings-info-meta"><div><span>Versione</span><strong>v35.1</strong></div><div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div><div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div></div><p class="settings-info-copyright"><strong>Copyright © 2026 Marco D'Agostino per Digital Video Service</strong><br>Tutti i diritti riservati.</p>` }
   };
   const selected = sections[section];
   if (!selected) return;
@@ -3634,7 +3635,7 @@ loadBackupStatus();
 backupStatusTimer = setInterval(loadBackupStatus, 60000);
 enableRealtime();
 
-// v35 — variation uses existing notes and one atomic multi-row upsert.
+// v35.1 — variation uses existing notes and one atomic multi-row upsert.
 let variationSourceSnapshot = null;
 let variationSaving = false;
 const variationDialog = document.getElementById("variationDialog");
@@ -3653,6 +3654,24 @@ function createVariationPair(source, date, start, end, room, id) {
     {...source,id,date,start,end,room,confirmed:false,confirmedAt:null,notes:variationNotes(source.notes,"DAL",source.date)}
   ];
 }
+function availableVariationRooms(date, start, end) {
+  if (!date || !/^([01]\d|2[0-3]):[0-5]\d$/.test(start) || !/^(([01]\d|2[0-3]):[0-5]\d|24:00)$/.test(end)) return [];
+  if (end === "00:00" && start !== "00:00") end = "24:00";
+  if (timeToMinutes(end) <= timeToMinutes(start)) return [];
+  return ROOMS.filter(room => !roomConflict({date,start,end,room:room.id}));
+}
+function updateVariationRooms() {
+  if (variationSaving) return;
+  const select = document.getElementById("variationRoom");
+  const previous = select.value;
+  const rooms = availableVariationRooms(document.getElementById("variationDate").value, document.getElementById("variationStart").value, document.getElementById("variationEnd").value);
+  select.innerHTML = rooms.length ? rooms.map(room=>`<option value="${escapeHtml(room.id)}">${escapeHtml(room.label)}</option>`).join("") : '<option value="">Nessuna sala disponibile</option>';
+  if (rooms.some(room=>room.id===previous)) select.value=previous;
+  select.disabled = !rooms.length;
+  document.querySelector('#variationForm button[type="submit"]').disabled = !rooms.length;
+  document.getElementById("variationAvailability").textContent = rooms.length ? "Sale libere nella data e nella fascia oraria scelte." : "Controlla gli orari oppure scegli un’altra data o fascia oraria.";
+}
+["variationDate","variationStart","variationEnd"].forEach(id=>document.getElementById(id).addEventListener("input",updateVariationRooms));
 function openVariationDialog(id) {
   const source = shifts.find(item => item.id === id);
   if (!source || source.confirmed || isVariedShift(source)) return;
@@ -3661,8 +3680,7 @@ function openVariationDialog(id) {
   document.getElementById("variationDate").value = source.date;
   document.getElementById("variationStart").value = source.start;
   document.getElementById("variationEnd").value = source.end;
-  document.getElementById("variationRoom").innerHTML = ROOMS.map(room => `<option value="${escapeHtml(room.id)}">${escapeHtml(room.label)}</option>`).join("");
-  document.getElementById("variationRoom").value = source.room;
+  updateVariationRooms();
   document.getElementById("variationError").textContent = "";
   variationDialog.showModal();
 }
@@ -3685,6 +3703,7 @@ document.getElementById("variationForm").addEventListener("submit", async event 
   if(end==="00:00" && start!=="00:00")end="24:00";
   if(!date || !/^([01]\d|2[0-3]):[0-5]\d$/.test(start) || !/^(([01]\d|2[0-3]):[0-5]\d|24:00)$/.test(end) || end<=start || !ROOMS.some(r=>r.id===room)) {errorBox.textContent="Controlla data, sala e orari. La fine deve essere successiva all’inizio.";return;}
   if(date===source.date && room===source.room && start===source.start && end===source.end) {errorBox.textContent="Scegli una data, una sala o un orario diverso.";return;}
+  if (!availableVariationRooms(date,start,end).some(item=>item.id===room)) { updateVariationRooms(); errorBox.textContent="La sala non è più disponibile. Scegli un’altra sala."; return; }
   let pair;
   try {pair=createVariationPair(source,date,start,end,room,crypto.randomUUID());} catch(error) {errorBox.textContent=error.message;return;}
   variationSaving=true;
@@ -3701,6 +3720,7 @@ document.getElementById("variationForm").addEventListener("submit", async event 
   finally {
     pendingShiftWrites--; variationSaving=false;
     document.querySelectorAll("#variationForm button, #variationForm input, #variationForm select").forEach(el=>el.disabled=false);
+    updateVariationRooms();
     scheduleRealtimeDataRefresh();
   }
 });
