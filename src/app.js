@@ -1,4 +1,4 @@
-// DVS Planning v34
+// DVS Planning v35
 
 const ROOMS = [
   ...Array.from({ length: 15 }, (_, index) => ({
@@ -672,6 +672,7 @@ function showContextMenu(event, targetCell) {
   const hasUnconfirmed = selected.some(shift => !shift.confirmed);
   const exactlyOne = selected.length === 1;
   contextMenu.querySelector('[data-action="edit"]').disabled = !exactlyOne || hasConfirmed;
+  contextMenu.querySelector('[data-action="variation"]').disabled = !exactlyOne || hasConfirmed || selected.some(isVariedShift);
   contextMenu.querySelector('[data-action="confirm"]').hidden = !hasUnconfirmed;
   contextMenu.querySelector('[data-action="confirm"]').disabled = !hasUnconfirmed;
   contextMenu.querySelector('[data-action="unconfirm"]').hidden = !hasConfirmed;
@@ -1056,6 +1057,7 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
+function isVariedShift(shift) { return /^SPOSTATO AL \d{1,2} /m.test(shift.notes || ""); }
 function renderCard(shift) {
   const color = FILM_COLORS[shift.color] || FILM_COLORS.blue;
   const workType = String(shift.workType || "").toUpperCase();
@@ -1065,7 +1067,7 @@ function renderCard(shift) {
   const assignment = shift.isClient ? "CLIENTE" : (IS_IPHONE ? String(editor?.lastName || "").trim().toUpperCase() : editorDisplay(editor));
   const displayTime = value => IS_IPHONE ? String(value).replace(/:00$/, "") : value;
   const cardClasses = [
-    "shift-card", shift.status,
+    "shift-card", shift.status, isVariedShift(shift) ? "varied-shift" : "",
     shift.confirmed ? "confirmed" : "",
     shift.isDoubleStation ? "double-station" : "",
     selectedShiftIds.has(shift.id) ? "selected" : "",
@@ -1080,6 +1082,7 @@ function renderCard(shift) {
       data-shift-id="${shift.id}"
       draggable="${shift.confirmed ? "false" : "true"}"
       style="--accent-rgb:${color.rgb}">
+      ${isVariedShift(shift) ? '<svg class="variation-cross" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M4 4L96 96M96 4L4 96"/></svg>' : ""}
       <div class="shift-main">
         <div class="shift-production">${escapeHtml(shift.production)}</div>
         <button class="iphone-shift-menu" type="button" aria-label="Azioni turno" title="Azioni turno">•••</button>
@@ -1517,6 +1520,7 @@ contextMenu.addEventListener('click',event=>{
   const button=event.target.closest('button[data-action]'); if (!button||button.disabled) return;
   const action=button.dataset.action, targetCell=contextTargetCell; hideContextMenu();
   if (action==='edit') { const s=selectedShiftList(); if (s.length===1) openEditShift(s[0].id); }
+  else if (action==='variation') { const list=selectedShiftList(); if(list.length===1) openVariationDialog(list[0].id); }
   else if (action==='confirm') confirmSelectedShift();
   else if (action==='unconfirm') unconfirmSelectedShift();
   else if (action==='assign-editor') openAssignEditorDialog();
@@ -2179,6 +2183,7 @@ planningScroller.addEventListener("gesturechange", event => {
 }, { passive: false });
 
 document.addEventListener("keydown", event => {
+  if (document.getElementById("variationDialog")?.open) return;
   const target = event.target;
   const isTyping = Boolean(target.closest?.("input, select, textarea, [contenteditable='true']"));
 
@@ -2192,6 +2197,7 @@ document.addEventListener("keydown", event => {
   if (
     IS_MAC_APP
     && !isTyping
+    && !variationDialog.open
     && !shiftDialog.open
     && !editorDialog.open
     && document.getElementById("planningView")?.classList.contains("active")
@@ -2848,7 +2854,7 @@ function openPrintPreview() {
       });
     });
     const weekLabel=`${shortPrintDate(week.start)} – ${shortPrintDate(week.end)}`;
-    return `<main class="paper"><header class="head"><div><h1>Digital Video Service</h1><p>PLANNING · ${escapeHtml(monthName(printMonth))}</p><small>Settimana ${escapeHtml(weekLabel)}</small></div><strong>${selectedRooms.length===ROOMS.length?'Tutte le sale':`${selectedRooms.length} sale selezionate`}</strong></header><section class="grid">${cells.join('')}</section><footer class="page-footer"><span>DVS Planning · v34</span><span>Pagina ${pageIndex+1} di ${selectedWeeks.length}</span></footer></main>`;
+    return `<main class="paper"><header class="head"><div><h1>Digital Video Service</h1><p>PLANNING · ${escapeHtml(monthName(printMonth))}</p><small>Settimana ${escapeHtml(weekLabel)}</small></div><strong>${selectedRooms.length===ROOMS.length?'Tutte le sale':`${selectedRooms.length} sale selezionate`}</strong></header><section class="grid">${cells.join('')}</section><footer class="page-footer"><span>DVS Planning · v35</span><span>Pagina ${pageIndex+1} di ${selectedWeeks.length}</span></footer></main>`;
   }).join('');
   const popup=window.open('','_blank');
   if(!popup)return showToast('Consenti l’apertura della finestra di anteprima');
@@ -3058,7 +3064,7 @@ document.querySelectorAll("[data-settings-section]").forEach(button => button.ad
   const sections = {
     backup: { title:"Backup", subtitle:"Stato e autorizzazione", html:backupSettingsHtml() },
     print: { title:"Stampa", subtitle:"Centro Stampa", html:printSettingsHtml() },
-    info: { title:"Informazioni", subtitle:"DVS Planning", html:`<img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video"><h2>DVS Planning</h2><p>Applicazione collaborativa per la gestione del Planning di Digital Video Service.</p><div class="settings-info-meta"><div><span>Versione</span><strong>v34</strong></div><div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div><div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div></div><p class="settings-info-copyright"><strong>Copyright © 2026 Marco D'Agostino per Digital Video Service</strong><br>Tutti i diritti riservati.</p>` }
+    info: { title:"Informazioni", subtitle:"DVS Planning", html:`<img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video"><h2>DVS Planning</h2><p>Applicazione collaborativa per la gestione del Planning di Digital Video Service.</p><div class="settings-info-meta"><div><span>Versione</span><strong>v35</strong></div><div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div><div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div></div><p class="settings-info-copyright"><strong>Copyright © 2026 Marco D'Agostino per Digital Video Service</strong><br>Tutti i diritti riservati.</p>` }
   };
   const selected = sections[section];
   if (!selected) return;
@@ -3270,9 +3276,8 @@ function syncShiftToSupabase(shift) {
   const snapshot = structuredClone(shift);
   return runShiftWrite(snapshot.id, snapshot, () => persistShiftToSupabase(snapshot));
 }
-async function persistShiftToSupabase(shift) {
-  if (!db) return;
-  const row = {
+function shiftDatabaseRow(shift) {
+  return {
     id: shift.id,
     room_code: shift.room,
     shift_date: shift.date,
@@ -3293,7 +3298,10 @@ async function persistShiftToSupabase(shift) {
     confirmed_at: shift.confirmed ? (shift.confirmedAt || new Date().toISOString()) : null,
     color_key: shift.color
   };
-  const { error } = await db.from("shifts").upsert(row);
+}
+async function persistShiftToSupabase(shift) {
+  if (!db) return;
+  const { error } = await db.from("shifts").upsert(shiftDatabaseRow(shift));
   if (error) { showToast(`Salvataggio turno non riuscito: ${error.message}. Riprovare il salvataggio.`); return false; }
   return true;
 }
@@ -3625,3 +3633,74 @@ loadOnlineProfiles();
 loadBackupStatus();
 backupStatusTimer = setInterval(loadBackupStatus, 60000);
 enableRealtime();
+
+// v35 — variation uses existing notes and one atomic multi-row upsert.
+let variationSourceSnapshot = null;
+let variationSaving = false;
+const variationDialog = document.getElementById("variationDialog");
+function variationDateLabel(iso) {
+  return new Date(iso + "T12:00:00").toLocaleDateString("it-IT", {day:"numeric",month:"long",year:"numeric"}).toUpperCase();
+}
+function variationNotes(notes, direction, date) {
+  const existing = String(notes || "").split("\n").filter(line => !/^SPOSTATO (AL|DAL) \d{1,2} /.test(line)).join("\n").trim();
+  const result = [existing, `SPOSTATO ${direction} ${variationDateLabel(date)}`].filter(Boolean).join("\n");
+  if (result.length > 100) throw new Error("La nota con la variazione supera 100 caratteri. Accorcia prima la nota del turno e riprova.");
+  return result;
+}
+function createVariationPair(source, date, start, end, room, id) {
+  return [
+    {...source, editorId:null, notes:variationNotes(source.notes,"AL",date)},
+    {...source,id,date,start,end,room,confirmed:false,confirmedAt:null,notes:variationNotes(source.notes,"DAL",source.date)}
+  ];
+}
+function openVariationDialog(id) {
+  const source = shifts.find(item => item.id === id);
+  if (!source || source.confirmed || isVariedShift(source)) return;
+  variationSourceSnapshot = structuredClone(source);
+  document.getElementById("variationSummary").textContent = `${source.production} · ${source.film}`;
+  document.getElementById("variationDate").value = source.date;
+  document.getElementById("variationStart").value = source.start;
+  document.getElementById("variationEnd").value = source.end;
+  document.getElementById("variationRoom").innerHTML = ROOMS.map(room => `<option value="${escapeHtml(room.id)}">${escapeHtml(room.label)}</option>`).join("");
+  document.getElementById("variationRoom").value = source.room;
+  document.getElementById("variationError").textContent = "";
+  variationDialog.showModal();
+}
+function closeVariationDialog() { if (!variationSaving) variationDialog.close(); }
+document.getElementById("cancelVariation").onclick = closeVariationDialog;
+document.getElementById("closeVariation").onclick = closeVariationDialog;
+variationDialog.addEventListener("cancel",event=>{if(variationSaving)event.preventDefault();});
+document.getElementById("variationForm").addEventListener("submit", async event => {
+  event.preventDefault();
+  if (variationSaving) return;
+  const errorBox = document.getElementById("variationError");
+  errorBox.textContent = "";
+  const source = shifts.find(item => item.id === variationSourceSnapshot?.id);
+  if (!source || JSON.stringify(source)!==JSON.stringify(variationSourceSnapshot)) { errorBox.textContent="Il turno è cambiato. Chiudi e riapri Variazione."; return; }
+  if (pendingShiftWrites || unsavedShiftOverrides.size) { errorBox.textContent="Attendi il completamento dei salvataggi e risolvi eventuali errori prima di variare."; return; }
+  const date=document.getElementById("variationDate").value;
+  const start=document.getElementById("variationStart").value;
+  let end=document.getElementById("variationEnd").value;
+  const room=document.getElementById("variationRoom").value;
+  if(end==="00:00" && start!=="00:00")end="24:00";
+  if(!date || !/^([01]\d|2[0-3]):[0-5]\d$/.test(start) || !/^(([01]\d|2[0-3]):[0-5]\d|24:00)$/.test(end) || end<=start || !ROOMS.some(r=>r.id===room)) {errorBox.textContent="Controlla data, sala e orari. La fine deve essere successiva all’inizio.";return;}
+  if(date===source.date && room===source.room && start===source.start && end===source.end) {errorBox.textContent="Scegli una data, una sala o un orario diverso.";return;}
+  let pair;
+  try {pair=createVariationPair(source,date,start,end,room,crypto.randomUUID());} catch(error) {errorBox.textContent=error.message;return;}
+  variationSaving=true;
+  document.querySelectorAll("#variationForm button, #variationForm input, #variationForm select").forEach(el=>el.disabled=true);
+  pendingShiftWrites++; localMutationRevision++;
+  try {
+    if(db) { const result=await db.from("shifts").upsert(pair.map(shiftDatabaseRow)); if(result.error)throw result.error; }
+    recordShiftUndo("variazione turno");
+    shifts=shifts.map(item=>item.id===source.id?pair[0]:item);
+    shifts.push(pair[1]); saveLocal();
+    selectedShiftIds=new Set([pair[1].id]); selectionAnchorId=pair[1].id;
+    renderPlanning(); variationDialog.close(); showToast("Variazione salvata");
+  } catch(error) {errorBox.textContent=`Variazione non confermata: ${error.message || "errore di connessione"}. Verifica i turni prima di riprovare.`;}
+  finally {
+    pendingShiftWrites--; variationSaving=false;
+    document.querySelectorAll("#variationForm button, #variationForm input, #variationForm select").forEach(el=>el.disabled=false);
+    scheduleRealtimeDataRefresh();
+  }
+});

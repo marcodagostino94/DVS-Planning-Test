@@ -2588,3 +2588,7 @@ html.is-iphone-device .shift-note {display:block!important;order:2;color:#b11122
 html.is-iphone-device .iphone-work-flags {display:flex;flex-direction:column;align-items:flex-start;gap:3px;order:2;margin-top:2px;color:#b11122;font-size:14px;font-weight:750;line-height:1.25;white-space:normal;overflow-wrap:break-word;}
 html.is-iphone-device .iphone-work-flags span {display:block;max-width:100%;}
 html.is-iphone-device .shift-note {order:3;}
+
+/* v35: original variation marker; never intercepts card interactions. */
+.variation-cross{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:9;overflow:visible}.variation-cross path{stroke:#b11122;stroke-width:5;stroke-opacity:.65;fill:none;vector-effect:non-scaling-stroke}
+#variationDialog{width:min(560px,94vw)}#variationSummary{padding:0 2px;color:var(--muted);overflow-wrap:anywhere}
