@@ -2626,3 +2626,9 @@ html.is-iphone-device .variation-content {display:flex;flex-direction:column;gap
 html.is-iphone .iphone-bottom-nav{grid-template-columns:repeat(6,1fr)}
 html.is-iphone .iphone-nav-indicator{width:calc((100% - 10px) / 6)}
 @media(max-width:700px){.variables-page{padding:0 12px 24px}.variables-view .topbar{flex-wrap:wrap;gap:12px}.variable-program{padding:15px 12px 0}.variable-production>h2{padding:16px 12px}.variable-totals{padding:16px 12px}.variable-totals>div{flex-direction:column;gap:3px}.variable-table td,.variable-table th{padding:10px 6px}}
+
+/* v37.1 — elenco Variabili scorrevole e indicatori identici al backup */
+#variablesView{overflow:hidden;min-height:0}
+#variablesView>.topbar{flex:0 0 auto}
+#variablesView>.variables-page{flex:1 1 0;min-height:0;width:100%;margin:0 auto;overflow-y:auto;overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch;padding-top:18px}
+.variable-status{display:inline-flex;align-items:center;gap:8px}

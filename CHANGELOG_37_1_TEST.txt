@@ -1,0 +1,4 @@
+v37.1 TEST
+- Scorrimento verticale della sezione Variabili, con selezione mese sempre visibile.
+- Semaforo del backup accanto allo stato: verde definitivo, rosso provvisorio.
+- Nessuna nuova modifica SQL rispetto alla v37.0.

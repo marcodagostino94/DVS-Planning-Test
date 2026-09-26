@@ -1,4 +1,4 @@
-# DVS Planning v37.0 TEST
+# DVS Planning v37.1 TEST
 
 Versione di prova basata sulla v36.0 definitiva, con nuova sezione Variabili e ID richiesta facoltativo.
 
@@ -9,3 +9,5 @@ La sezione raggruppa i variabili per produzione e programma, in ordine di data e
 ID richiesta facoltativo in inserimento/modifica; al passaggio da provvisorio a definitivo viene richiesto nuovamente, anche per selezioni multiple. OK con campo vuoto è valido.
 
 Grafica del Planning e backup agent conservati. Nessuna pubblicazione o migrazione automatica.
+
+Aggiornamento v37.1: elenco Variabili scorrevole e semafori di stato. Se lo SQL 014 è già stato eseguito per la v37.0, non occorrono altre modifiche al database.
