@@ -1,6 +1,11 @@
-# DVS Planning v35.3 TEST
-Base v34. Variazione: tasto destro su un turno → Variazione → nuova data, orari HH:MM e sala → VARIA. Annulla non modifica dati.
-L’originale rimane con X e senza montatore. Il nuovo mantiene programma, produzione, montatore e caratteristiche. Le nuove note usano il formato SPOSTATO AL 18 SET - MAIL / SPOSTATO DAL 15 SET - MAIL. Le note dei turni già salvati restano invariate. La X dipende dalla riga SPOSTATO AL: cancellarla rimuove la X. Le note precedenti vengono conservate; oltre 100 caratteri l’app chiede di accorciarle. In variazioni successive viene aggiornata l’indicazione automatica.
-Turni confermati: annullare prima la conferma. Un originale già barrato non può essere variato nuovamente; si varia il nuovo turno. Sale filtrate per data e fascia oraria, considerando occupanti anche i turni barrati. Conteggi e backup invariati. Nessuna migrazione SQL richiesta. Configurazione Supabase originale conservata: provare sul sito di test e verificare il database configurato. Nessuna pubblicazione automatica.
+# DVS Planning v37.0 TEST
 
-Icone aggiornate dal PNG Planning originale fornito, senza ritocchi.
+Versione di prova basata sulla v36.0 definitiva, con nuova sezione Variabili e ID richiesta facoltativo.
+
+Prima dell’uso leggere LEGGIMI_TEST_v37.txt ed eseguire database/014_variable_request_id_v37.sql **sul progetto Supabase di test**. Non rieseguire SQL storici o seed. Verificare la configurazione in src/config.js: un sito di test collegato al database condiviso modifica i dati condivisi.
+
+La sezione raggruppa i variabili per produzione e programma, in ordine di data e ora, con totali mensili per programma. Comprende i provvisori, identificati come tali. Considera la data e l’orario attuali; esclude le copie barrate dei turni spostati da capitolato.
+
+ID richiesta facoltativo in inserimento/modifica; al passaggio da provvisorio a definitivo viene richiesto nuovamente, anche per selezioni multiple. OK con campo vuoto è valido.
+
+Grafica del Planning e backup agent conservati. Nessuna pubblicazione o migrazione automatica.

@@ -1,0 +1,30 @@
+DVS PLANNING v37.0 TEST — base v36.0 definitiva
+
+1. Usare una copia di test e un progetto Supabase di test; controllare src/config.js.
+   Un sito di test collegato al database di produzione modifica comunque i dati di tutti.
+2. Sul SOLO progetto di test, eseguire database/014_variable_request_id_v37.sql
+   nell'editor SQL di Supabase prima di usare questa versione. Non rieseguire seed o SQL storici.
+3. Avviare l'app con le modalita gia usate per la v36 e ricaricare la pagina.
+4. Provare: Variabile con ID vuoto; ID con zeri iniziali; modifica ID; provvisorio ->
+   definitivo da menu contestuale e da modifica turno; selezione multipla; cambio mese.
+5. Verificare anche su secondo browser/ricaricamento la persistenza dell'ID.
+
+VARIABILI
+Elenco raggruppato per produzione e programma e ordinato per data e ora.
+I totali per programma comprendono provvisori e definitivi (provvisori indicati).
+I turni da capitolato e le copie barrate SPOSTATO AL non entrano in elenco.
+Per un variabile modificato si considera solo la data e l’orario attuale.
+Durata = fine meno inizio, senza raddoppio per doppia postazione.
+ID facoltativo (testo, max 100 caratteri). Deselezionare Variabile e salvare cancella l'ID.
+Quando si rendono definitivi piu turni variabili, compare un campo per ogni turno.
+Annulla interrompe il cambio di stato. OK accetta anche campi vuoti.
+L'ID si modifica riaprendo il turno nel Planning; i turni confermati restano bloccati.
+
+DATABASE E MAIL SUPABASE
+Unica aggiunta: public.shifts.request_id, nullable, senza valore obbligatorio.
+La mail allegata riguarda i grant automatici sulle NUOVE tabelle: qui non se ne creano.
+Nessun cambio a RLS, permessi, backup agent, tabelle o dati esistenti.
+La v36 puo continuare a funzionare dopo la migrazione. Non eliminare la colonna
+per tornare alla v36, altrimenti si perdono gli ID inseriti.
+Lo ZIP conserva la configurazione della v36: non e un ambiente di test isolato.
+Nessuna migrazione o pubblicazione e stata eseguita automaticamente.

@@ -1,2 +1,0 @@
-v35.3 — Icona Planning coordinata
-PNG 1024 originale conservato. Dimensioni 16, 32, 64, 180, 192 e 512 ricavate esclusivamente tramite ridimensionamento proporzionale. Favicon ICO, icona iPhone e manifest PWA aggiornati con nuovi riferimenti cache. Nessuna modifica alla grafica dell’icona o al funzionamento della v35.2.

@@ -1,0 +1,4 @@
+DVS Planning v36.0 — DEFINITIVA
+Consolidamento della v35.6 approvata, senza ulteriori modifiche funzionali o grafiche.
+Comprende: correzioni selezione e realtime; vista iPhone compatta; Variazione con sale disponibili e note SPOSTATO AL/DAL GG MESE - MAIL; icone coordinate; logo laterale senza bordo; apertura Planning sul giorno corrente; X limitata al blocco principale con note libere.
+Nessuna migrazione database richiesta.

@@ -1,0 +1,6 @@
+v37.0 TEST
+- Nuova sezione Variabili, mese, produzioni/programmi e totali.
+- ID richiesta facoltativo con persistenza SQL.
+- Richiesta ID al passaggio provvisorio -> definitivo, anche multiplo.
+- Turni da capitolato e spostati esclusi dalla sezione Variabili.
+- Nessuna modifica alla grafica delle card o alla X della v36.

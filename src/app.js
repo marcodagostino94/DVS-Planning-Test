@@ -1,4 +1,4 @@
-// DVS Planning v35.3
+// DVS Planning v37.0 TEST
 
 const ROOMS = [
   ...Array.from({ length: 15 }, (_, index) => ({
@@ -163,6 +163,7 @@ let shifts = loadLocal(SHIFT_STORAGE, seedShifts).map(shift => ({
   isClient: Boolean(shift.isClient),
   isDoubleStation: Boolean(shift.isDoubleStation),
   isVariable: Boolean(shift.isVariable),
+  requestId: String(shift.requestId || ""),
   notes: String(shift.notes || "").slice(0, 100),
   confirmed: Boolean(shift.confirmed)
 }));
@@ -708,11 +709,19 @@ function deleteSelectedShifts() {
   saveLocal(); clearSelection(); renderPlanning();
 }
 
-function setSelectedStatus(status) {
-  const selected = selectedShiftList();
+async function setSelectedStatus(status) {
+  let selected = selectedShiftList();
   if (selected.some(shift => shift.confirmed)) return showToast("Il turno confermato è bloccato");
+  const snapshots = selected.map(s => JSON.stringify(s));
+  const variableShifts = status === "definitivo" ? selected.filter(s => s.isVariable && s.status === "provvisorio") : [];
+  const ids = variableShifts.length ? await askRequestIds(variableShifts) : {};
+  if (ids === null) return;
+  if (selected.some((s, i) => JSON.stringify(shifts.find(item => item.id === s.id)) !== snapshots[i])) {
+    return showToast("I turni sono cambiati: selezionali di nuovo.");
+  }
+  selected = selected.map(s => shifts.find(item => item.id === s.id));
   recordShiftUndo(selected.length === 1 ? `cambio stato in ${status}` : `cambio stato di ${selected.length} turni`);
-  selected.forEach(s=>{ s.status=status; syncShiftToSupabase(s); });
+  selected.forEach(s=>{ s.status=status; if (Object.hasOwn(ids, s.id)) s.requestId=ids[s.id]; syncShiftToSupabase(s); });
   saveLocal(); renderPlanning();
   showToast(selected.length === 1 ? `Turno reso ${status}` : `${selected.length} turni aggiornati`);
 }
@@ -1082,14 +1091,16 @@ function renderCard(shift) {
       data-shift-id="${shift.id}"
       draggable="${shift.confirmed ? "false" : "true"}"
       style="--accent-rgb:${color.rgb}">
-      ${isVariedShift(shift) ? '<svg class="variation-cross" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M4 4L96 96M96 4L4 96"/></svg>' : ""}
       <div class="shift-main">
+        ${isVariedShift(shift) ? '<div class="variation-content">' : ""}
+      ${isVariedShift(shift) ? '<svg class="variation-cross" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M4 4L96 96M96 4L4 96"/></svg>' : ""}
         <div class="shift-production">${escapeHtml(shift.production)}</div>
         <button class="iphone-shift-menu" type="button" aria-label="Azioni turno" title="Azioni turno">•••</button>
         <div class="shift-time">${escapeHtml(displayTime(shift.start))}${IS_IPHONE ? "–" : " – "}${escapeHtml(displayTime(shift.end))}</div>
         <div class="shift-film">${escapeHtml(shift.film)}</div>
         <div class="shift-type${isHighlightedWork ? " shift-type-red" : ""}">${escapeHtml(shift.workType)}${shift.isVariable ? '<span class="variable-label"> - VARIABILE</span>' : ""}${shift.isDoubleStation ? '<span class="double-station-label">DOPPIA POSTAZIONE</span>' : ""}</div>
         ${IS_IPHONE && (isHighlightedWork || shift.isVariable || shift.isDoubleStation) ? `<div class="iphone-work-flags">${isHighlightedWork ? `<span>${escapeHtml(workType)}</span>` : ""}${shift.isVariable ? '<span>VARIABILE</span>' : ""}${shift.isDoubleStation ? '<span>DOPPIA POSTAZIONE</span>' : ""}</div>` : ""}
+        ${isVariedShift(shift) ? '</div>' : ""}
         ${shift.notes ? `<div class="shift-note">${escapeHtml(shift.notes)}</div>` : ""}
       </div>
       <div class="shift-editor">
@@ -1204,6 +1215,7 @@ function shouldSpanTwoPlanningSlots(dayShifts, timeSlots) {
 }
 
 function renderPlanning() {
+  if (document.getElementById("variablesView")?.classList.contains("active")) renderVariables();
   const dates = planningDates(currentMonth);
   const activeMonth = currentMonth.getMonth();
   const now = new Date();
@@ -1863,6 +1875,89 @@ document.getElementById("hasShiftNotes")?.addEventListener("change", () => {
 });
 document.getElementById("shiftNotes")?.addEventListener("input", updateShiftNotesUI);
 
+
+function updateRequestIdUI() {
+  document.getElementById("requestIdField").classList.toggle("hidden", !document.getElementById("isVariable").checked);
+}
+document.getElementById("isVariable").addEventListener("change", updateRequestIdUI);
+
+function askRequestIds(items) {
+  const dialog = document.getElementById("requestIdDialog");
+  if (dialog.open) return Promise.resolve(null);
+  const rows = document.getElementById("requestIdRows");
+  rows.replaceChildren();
+  const inputs = items.map(shift => {
+    const label = document.createElement("label");
+    label.className = "form-wide";
+    const title = document.createElement("span");
+    title.textContent = `${shift.production} · ${shift.film} · ${shift.date.split("-").reverse().join("/")} · ${shift.start}–${shift.end}`;
+    const input = document.createElement("input");
+    input.type = "text"; input.maxLength = 100; input.value = shift.requestId || "";
+    input.placeholder = "ID richiesta (facoltativo)";
+    label.append(title, input); rows.append(label);
+    return { id: shift.id, input };
+  });
+  return new Promise(resolve => {
+    let result = null;
+    const form = document.getElementById("requestIdForm");
+    const submit = event => {
+      event.preventDefault();
+      result = Object.fromEntries(inputs.map(({id,input}) => [id, input.value.trim()]));
+      dialog.close();
+    };
+    form.addEventListener("submit", submit);
+    document.getElementById("cancelRequestId").onclick = () => dialog.close();
+    dialog.addEventListener("close", () => { form.removeEventListener("submit", submit); resolve(result); }, { once: true });
+    dialog.showModal();
+  });
+}
+
+function variableGroups(allShifts, month) {
+  const compare = (a,b) => String(a || "").localeCompare(String(b || ""), "it", { numeric:true, sensitivity:"base" });
+  const list = allShifts.filter(s => s.isVariable && !isVariedShift(s) && s.date?.slice(0,7) === month).slice().sort((a,b) =>
+    compare(a.production,b.production) || compare(a.film,b.film) || compare(a.date,b.date) || compare(a.start,b.start) || compare(a.room,b.room) || compare(a.id,b.id));
+  const productions = new Map();
+  for (const shift of list) {
+    const production = String(shift.production || "Senza produzione").trim();
+    const film = String(shift.film || "Senza programma").trim();
+    const pk = production.toLocaleUpperCase("it");
+    if (!productions.has(pk)) productions.set(pk, { name:production, programs:new Map() });
+    const programs = productions.get(pk).programs;
+    const fk = film.toLocaleUpperCase("it");
+    if (!programs.has(fk)) programs.set(fk, { name:film, shifts:[], count:0, minutes:0, provisional:0 });
+    const program = programs.get(fk);
+    program.shifts.push(shift);
+    if (!isVariedShift(shift)) {
+      program.count++;
+      program.minutes += Math.max(0, timeToMinutes(shift.end) - timeToMinutes(shift.start));
+      if (shift.status === "provvisorio") program.provisional++;
+    }
+  }
+  return [...productions.values()].map(p => ({ ...p, programs:[...p.programs.values()] }));
+}
+function variableDuration(minutes) {
+  return `${Math.floor(minutes / 60)} h${minutes % 60 ? ` ${minutes % 60} min` : ""}`;
+}
+function renderVariables() {
+  const picker = document.getElementById("variablesMonth");
+  if (!picker.value) { const now = new Date(); picker.value = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}`; }
+  const groups = variableGroups(shifts, picker.value);
+  document.getElementById("variablesList").innerHTML = groups.length ? groups.map(production => `
+    <section class="variable-production"><h2>${escapeHtml(production.name)}</h2>
+    ${production.programs.map(program => `<div class="variable-program"><h3>${escapeHtml(program.name)}</h3>
+      <div class="variable-table-wrap"><table class="variable-table"><thead><tr><th>Data</th><th>Orario</th><th>Sala</th><th>ID richiesta</th><th>Stato</th></tr></thead><tbody>
+      ${program.shifts.map(shift => `<tr>
+        <td>${escapeHtml(shift.date.split("-").reverse().join("/"))}</td><td>${escapeHtml(shift.start)}–${escapeHtml(shift.end)}</td>
+        <td>${escapeHtml(ROOMS.find(r => r.id === shift.room)?.label || shift.room)}</td>
+        <td class="variable-id">${escapeHtml(shift.requestId || "—")}</td>
+        <td>${shift.status === "provvisorio" ? "Provvisorio" : "Definitivo"}</td></tr>`).join("")}
+      </tbody></table></div></div>`).join("")}
+      <footer class="variable-totals"><h3>Totali · ${escapeHtml(production.name)} · ${production.programs.reduce((n,p) => n+p.count,0)} turni · ${variableDuration(production.programs.reduce((n,p) => n+p.minutes,0))}</h3>
+      ${production.programs.map(program => `<div><strong>${escapeHtml(program.name)}</strong><span>${program.count} turni · ${variableDuration(program.minutes)}${program.provisional ? ` · ${program.provisional} provvisori` : ""}</span></div>`).join("")}
+      </footer></section>`).join("") : '<p class="variable-empty">Nessun turno variabile in questo mese.</p>';
+}
+document.getElementById("variablesMonth").addEventListener("change", renderVariables);
+
 function resetShiftForm(shift = {}) {
   const date = shift.date || isoDate(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
   document.getElementById("shiftId").value = shift.id || "";
@@ -1882,6 +1977,8 @@ function resetShiftForm(shift = {}) {
   document.getElementById("isClient").checked = Boolean(shift.isClient);
   document.getElementById("isDoubleStation").checked = Boolean(shift.isDoubleStation);
   document.getElementById("isVariable").checked = Boolean(shift.isVariable);
+  document.getElementById("requestId").value = shift.requestId || "";
+  updateRequestIdUI();
   const noteValue = String(shift.notes || "").slice(0, 100);
   document.getElementById("hasShiftNotes").checked = Boolean(noteValue);
   document.getElementById("shiftNotes").value = noteValue;
@@ -1936,7 +2033,7 @@ function datesForFormRange() {
   return values;
 }
 
-shiftForm.addEventListener("submit", event => {
+shiftForm.addEventListener("submit", async event => {
   event.preventDefault();
   const start = normalizeTime(document.getElementById("start").value);
   const rawEnd = document.getElementById("end").value.trim();
@@ -1964,6 +2061,7 @@ shiftForm.addEventListener("submit", event => {
     isClient: document.getElementById("isClient").checked,
     isDoubleStation: document.getElementById("isDoubleStation").checked,
     isVariable: document.getElementById("isVariable").checked,
+    requestId: document.getElementById("isVariable").checked ? document.getElementById("requestId").value.trim() : "",
     notes: document.getElementById("hasShiftNotes").checked
       ? document.getElementById("shiftNotes").value.trim().replace(/\s+/g, " ").slice(0, 100)
       : "",
@@ -1995,6 +2093,19 @@ shiftForm.addEventListener("submit", event => {
   }
   const conflict = candidates.find(candidate => roomConflict(candidate, editingShiftId));
   if (conflict) { error.textContent = `La sala contiene già un turno sovrapposto il ${new Date(conflict.date+"T12:00:00").toLocaleDateString("it-IT")}.`; return; }
+
+  if (original?.status === "provvisorio" && common.status === "definitivo" && common.isVariable) {
+    const snapshot = JSON.stringify(original);
+    const ids = await askRequestIds([{ ...original, requestId: common.requestId }]);
+    if (ids === null) return;
+    if (JSON.stringify(shifts.find(s => s.id === original.id)) !== snapshot) {
+      error.textContent = "Il turno è cambiato. Chiudi e riapri la modifica."; return;
+    }
+    candidates.forEach(s => { s.requestId = ids[original.id]; });
+    if (candidates.some(candidate => roomConflict(candidate, editingShiftId))) {
+      error.textContent = "La sala è stata occupata nel frattempo. Controlla il turno."; return;
+    }
+  }
 
   recordShiftUndo(editingShiftId
     ? (candidates.length > 1 ? `modifica e prolungamento con ${candidates.length - 1} nuovi turni` : "modifica turno")
@@ -2095,15 +2206,22 @@ document.getElementById("todayBtn").addEventListener("click", () => {
   clearSelection();
   renderPlanning();
 
-  requestAnimationFrame(() => {
-    const dayHeader = planningGrid.querySelector(`[data-date="${isoFromDate(now)}"]`);
-    if (!dayHeader) return;
-    const target = dayHeader.offsetLeft * planningZoom
-      - planningScroller.clientWidth / 2
-      + dayHeader.offsetWidth * planningZoom / 2;
-    planningScroller.scrollTo({ left: Math.max(0, target), behavior: IS_TOUCH_APPLE ? "auto" : "smooth" });
-  });
+  scrollPlanningToToday(IS_TOUCH_APPLE ? "auto" : "smooth");
 });
+
+function scrollPlanningToToday(behavior = "auto") {
+  requestAnimationFrame(() => {
+    if (!document.getElementById("planningView").classList.contains("active")) return;
+    const dayHeader = planningGrid.querySelector(`.day-head[data-date="${isoFromDate(new Date())}"]`);
+    if (!dayHeader || !planningScroller.clientWidth) return;
+    const viewport = planningScroller.getBoundingClientRect();
+    const header = dayHeader.getBoundingClientRect();
+    const cornerWidth = planningGrid.querySelector(".corner")?.getBoundingClientRect().width || 0;
+    const target = planningScroller.scrollLeft + header.left - viewport.left + header.width / 2
+      - (planningScroller.clientWidth + cornerWidth) / 2;
+    planningScroller.scrollTo({left: Math.max(0, target), behavior});
+  });
+}
 
 function clampZoom(value) {
   return Math.min(2, Math.max(.5, value));
@@ -2855,7 +2973,7 @@ function openPrintPreview() {
       });
     });
     const weekLabel=`${shortPrintDate(week.start)} – ${shortPrintDate(week.end)}`;
-    return `<main class="paper"><header class="head"><div><h1>Digital Video Service</h1><p>PLANNING · ${escapeHtml(monthName(printMonth))}</p><small>Settimana ${escapeHtml(weekLabel)}</small></div><strong>${selectedRooms.length===ROOMS.length?'Tutte le sale':`${selectedRooms.length} sale selezionate`}</strong></header><section class="grid">${cells.join('')}</section><footer class="page-footer"><span>DVS Planning · v35.3</span><span>Pagina ${pageIndex+1} di ${selectedWeeks.length}</span></footer></main>`;
+    return `<main class="paper"><header class="head"><div><h1>Digital Video Service</h1><p>PLANNING · ${escapeHtml(monthName(printMonth))}</p><small>Settimana ${escapeHtml(weekLabel)}</small></div><strong>${selectedRooms.length===ROOMS.length?'Tutte le sale':`${selectedRooms.length} sale selezionate`}</strong></header><section class="grid">${cells.join('')}</section><footer class="page-footer"><span>DVS Planning · v37.0 TEST</span><span>Pagina ${pageIndex+1} di ${selectedWeeks.length}</span></footer></main>`;
   }).join('');
   const popup=window.open('','_blank');
   if(!popup)return showToast('Consenti l’apertura della finestra di anteprima');
@@ -2874,6 +2992,7 @@ const IPHONE_VIEW_TITLES = {
   planning: "Planning",
   editors: "Dipendenti",
   summaries: "Riepiloghi",
+  variables: "Variabili",
   settings: "Impostazioni",
   connected: "Utenti collegati"
 };
@@ -2902,7 +3021,7 @@ function updateIPhoneChrome(viewName) {
   }
 }
 
-const IPHONE_NAV_VIEWS = ["dashboard", "planning", "editors", "summaries", "settings"];
+const IPHONE_NAV_VIEWS = ["dashboard", "planning", "editors", "summaries", "variables", "settings"];
 function updateIPhoneNavIndicator(viewName, animate = true) {
   const indicator = document.getElementById("iphoneNavIndicator");
   const nav = document.getElementById("iphoneBottomNav");
@@ -3012,10 +3131,14 @@ function openView(viewName, keepPlanningMonth = false) {
   updateIPhoneChrome(viewName);
   document.querySelectorAll(".app-view").forEach(view => view.classList.remove("active"));
   document.getElementById(`${viewName}View`)?.classList.add("active");
+  if (viewName === "variables") renderVariables();
   if (viewName === "editors") renderEditors();
   if (viewName === "summaries") renderSummaries();
   if (viewName === "dashboard") renderDashboard();
-  if (viewName === "planning") renderPlanning();
+  if (viewName === "planning") {
+    renderPlanning();
+    if (!keepPlanningMonth) scrollPlanningToToday();
+  }
   if (viewName === "connected") renderConnectedUsers();
   if (viewName === "settings") { showSettingsHome(); }
 }
@@ -3065,7 +3188,7 @@ document.querySelectorAll("[data-settings-section]").forEach(button => button.ad
   const sections = {
     backup: { title:"Backup", subtitle:"Stato e autorizzazione", html:backupSettingsHtml() },
     print: { title:"Stampa", subtitle:"Centro Stampa", html:printSettingsHtml() },
-    info: { title:"Informazioni", subtitle:"DVS Planning", html:`<img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video"><h2>DVS Planning</h2><p>Applicazione collaborativa per la gestione del Planning di Digital Video Service.</p><div class="settings-info-meta"><div><span>Versione</span><strong>v35.3</strong></div><div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div><div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div></div><p class="settings-info-copyright"><strong>Copyright © 2026 Marco D'Agostino per Digital Video Service</strong><br>Tutti i diritti riservati.</p>` }
+    info: { title:"Informazioni", subtitle:"DVS Planning", html:`<img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video"><h2>DVS Planning</h2><p>Applicazione collaborativa per la gestione del Planning di Digital Video Service.</p><div class="settings-info-meta"><div><span>Versione</span><strong>v37.0 TEST</strong></div><div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div><div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div></div><p class="settings-info-copyright"><strong>Copyright © 2026 Marco D'Agostino per Digital Video Service</strong><br>Tutti i diritti riservati.</p>` }
   };
   const selected = sections[section];
   if (!selected) return;
@@ -3293,6 +3416,7 @@ function shiftDatabaseRow(shift) {
     is_client: Boolean(shift.isClient),
     is_double_station: Boolean(shift.isDoubleStation),
     is_variable: Boolean(shift.isVariable),
+    request_id: shift.isVariable ? (String(shift.requestId || "").trim() || null) : null,
     notes: shift.notes || null,
     status: shift.status,
     confirmed: Boolean(shift.confirmed),
@@ -3412,6 +3536,7 @@ async function loadSupabaseData() {
     isClient: Boolean(row.is_client),
     isDoubleStation: Boolean(row.is_double_station),
     isVariable: Boolean(row.is_variable),
+    requestId: String(row.request_id || ""),
     notes: String(row.notes || "").slice(0, 100),
     status: row.status,
     color: row.color_key,
@@ -3428,6 +3553,7 @@ async function loadSupabaseData() {
   renderPlanning();
   renderDashboard();
   renderSummaries();
+  if (document.getElementById("variablesView")?.classList.contains("active")) renderVariables();
 }
 
 let realtimeDataRefreshTimer = null;
@@ -3635,7 +3761,7 @@ loadBackupStatus();
 backupStatusTimer = setInterval(loadBackupStatus, 60000);
 enableRealtime();
 
-// v35.3 — variation uses existing notes and one atomic multi-row upsert.
+// v37.0 TEST — variation uses existing notes and one atomic multi-row upsert.
 let variationSourceSnapshot = null;
 let variationSaving = false;
 const variationDialog = document.getElementById("variationDialog");
