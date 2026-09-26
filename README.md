@@ -1,13 +1,11 @@
-# DVS Planning v37.1 TEST
+# DVS Planning v38.0 TEST
 
-Versione di prova basata sulla v36.0 definitiva, con nuova sezione Variabili e ID richiesta facoltativo.
+Base v37.1. Nuova sezione Schema turni e allineamento colonne Variabili.
+Nessun nuovo SQL se è già stato applicato database/014_variable_request_id_v37.sql.
+La configurazione Supabase è quella della versione precedente: verificare di usare l’ambiente di test desiderato prima di modificare dati. Nessuna pubblicazione automatica.
 
-Prima dell’uso leggere LEGGIMI_TEST_v37.txt ed eseguire database/014_variable_request_id_v37.sql **sul progetto Supabase di test**. Non rieseguire SQL storici o seed. Verificare la configurazione in src/config.js: un sito di test collegato al database condiviso modifica i dati condivisi.
+Schema turni è una vista in sola lettura. Mese selezionabile, programmi in ordine alfabetico, tabelle per Montaggio (EDIT e ASSISTENTE), Grafica, Color e Sound. Ogni cella contiene le ore di un solo turno. Le righe sono distinte per ora iniziale e standard/variabile e ripetute secondo il massimo numero giornaliero di ciascun gruppo. Turni CLIENTE e originali barrati esclusi, destinazioni degli spostamenti incluse. Provvisori arancioni, inclusi nei totali. Le ore sono decimali; doppia postazione non raddoppia la durata.
 
-La sezione raggruppa i variabili per produzione e programma, in ordine di data e ora, con totali mensili per programma. Comprende i provvisori, identificati come tali. Considera la data e l’orario attuali; esclude le copie barrate dei turni spostati da capitolato.
+Le note con parole che iniziano per UFFICI (UFFICIAL., UFFICI, UFFICIALMENTE, UFFICIALE) seguite da intervalli come 10-18, 10:00–18:00 o dalle 10 alle 18 sostituiscono soltanto l’orario nello schema. La data resta quella del Planning. Una stella segnala le celle con orario ufficiale. Intervalli incompleti, multipli o non validi sono mostrati in Da verificare e non conteggiati: i totali sono indicati come parziali. Correggere la nota nel Planning e lo schema si aggiorna. Nessuna nota o turno viene riscritto dalla vista.
 
-ID richiesta facoltativo in inserimento/modifica; al passaggio da provvisorio a definitivo viene richiesto nuovamente, anche per selezioni multiple. OK con campo vuoto è valido.
-
-Grafica del Planning e backup agent conservati. Nessuna pubblicazione o migrazione automatica.
-
-Aggiornamento v37.1: elenco Variabili scorrevole e semafori di stato. Se lo SQL 014 è già stato eseguito per la v37.0, non occorrono altre modifiche al database.
+Nessuna stampa, intestazione amministrativa o totale per produzione.

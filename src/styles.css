@@ -2632,3 +2632,27 @@ html.is-iphone .iphone-nav-indicator{width:calc((100% - 10px) / 6)}
 #variablesView>.topbar{flex:0 0 auto}
 #variablesView>.variables-page{flex:1 1 0;min-height:0;width:100%;margin:0 auto;overflow-y:auto;overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch;padding-top:18px}
 .variable-status{display:inline-flex;align-items:center;gap:8px}
+
+/* v38 — Schema turni e colonne Variabili allineate */
+.variable-table{table-layout:fixed;min-width:660px}
+#schemaView{overflow:hidden;min-height:0}
+#schemaView>.topbar{flex:0 0 auto}
+.schema-page{flex:1 1 0;min-height:0;width:100%;overflow-y:auto;padding:18px 22px 30px;overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch}
+.schema-legend{font-size:12px;color:var(--muted);line-height:1.5;margin:0 0 18px}
+.schema-program{margin-bottom:24px;border:1px solid #dfe3e8;border-radius:16px;background:#fff;overflow:hidden}
+.schema-program-header{padding:18px 20px;background:#f6f7f9;border-bottom:1px solid #e2e5e9}
+.schema-program h2{font-size:19px;margin:0 0 10px}.schema-work-totals{display:flex;flex-wrap:wrap;gap:10px 24px;font-size:13px}.schema-work-totals strong{margin-left:8px}
+.schema-work{padding:16px 18px 20px}.schema-work h3{font-size:14px;margin:0 0 10px}
+.schema-table-scroll{overflow-x:auto;max-width:100%;padding-bottom:6px;-webkit-overflow-scrolling:touch}
+.schema-table{border-collapse:separate;border-spacing:0;width:100%;table-layout:fixed;min-width:1390px;font-size:12px;font-variant-numeric:tabular-nums;border-top:1px solid #cbd1d8;border-left:1px solid #cbd1d8}
+.schema-table th,.schema-table td{border-right:1px solid #cbd1d8;border-bottom:1px solid #cbd1d8;padding:7px 2px;text-align:center;height:31px}
+.schema-table thead th{background:#eef1f4;font-weight:700}.schema-table thead tr:nth-child(2) th{background:#e3e7ec}
+.schema-table .schema-row-label{width:190px;text-align:left;padding-left:9px;position:sticky;left:0;background:#fff;z-index:1;font-weight:600}
+.schema-table thead .schema-row-label{background:#eef1f4}.schema-table .schema-row-total{width:72px;font-weight:700;background:#f6f7f9}
+.schema-table tfoot th{text-align:right;padding-right:12px;background:#eef1f4}.schema-table tfoot td{font-weight:800;background:#eef1f4}
+.schema-variable{color:#b11122}.schema-provisional{color:#ad5500;font-weight:750}.schema-table td.schema-provisional{background:#fff4e5}
+.schema-table sup{font-size:9px;margin-left:1px}.schema-warning{color:#974700;font-size:13px;margin:12px 0 0}
+.schema-issues{padding:14px 20px;background:#fff4e5;font-size:13px}.schema-issues p{margin:10px 0}.schema-issues span{overflow-wrap:anywhere}
+html.is-iphone .iphone-bottom-nav{grid-template-columns:repeat(7,1fr)}
+html.is-iphone .iphone-nav-indicator{width:calc((100% - 10px) / 7)}
+@media(max-width:700px){.schema-page{padding:14px 10px 24px}.schema-work{padding:14px 10px}.schema-program-header{padding:16px 12px}.schema-view .topbar{flex-wrap:wrap;gap:10px}}

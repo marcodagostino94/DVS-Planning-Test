@@ -1,0 +1,8 @@
+v38.0 TEST
+- Schema turni mensile per programma e lavorazione. ASSISTENTE incluso in EDIT.
+- Una cella per turno, righe per orario iniziale e standard/variabile.
+- Esclusi CLIENTE e originali barrati; inclusi provvisori in arancione.
+- Orario ufficiale riconosciuto nelle note UFFICI..., solo nello Schema turni.
+- Note non interpretabili evidenziate e turni esclusi da totali dichiarati parziali.
+- Colonne Variabili allineate con larghezze comuni.
+- Nessuna nuova migrazione SQL rispetto alla v37.

@@ -1,4 +1,4 @@
-DVS PLANNING v37.1 TEST — base v36.0 definitiva
+DVS PLANNING v38.0 TEST — base v36.0 definitiva
 
 1. Usare una copia di test e un progetto Supabase di test; controllare src/config.js.
    Un sito di test collegato al database di produzione modifica comunque i dati di tutti.
