@@ -1,4 +1,4 @@
-// DVS Planning v41 TEST SAFARI
+// DVS Planning v41 DIAGNOSTICA
 
 const ROOMS = [
   ...Array.from({ length: 15 }, (_, index) => ({
@@ -986,8 +986,6 @@ function isHoliday(date) {
 }
 
 function fitText(element, minSize) {
-  // Diagnostica: esclude solo il fit dei testi su WebKit desktop Mac.
-  if (!IS_TOUCH_APPLE && /Macintosh/.test(navigator.userAgent) && /AppleWebKit/.test(navigator.userAgent) && !/Chrome|Chromium|Edg|OPR|Firefox/.test(navigator.userAgent)) return;
   const original = Number(getComputedStyle(element).fontSize.replace("px", ""));
   let size = original;
   element.style.fontSize = `${size}px`;
@@ -3108,7 +3106,7 @@ function openPrintPreview() {
       });
     });
     const weekLabel=`${shortPrintDate(week.start)} – ${shortPrintDate(week.end)}`;
-    return `<main class="paper"><header class="head"><div><h1>Digital Video Service</h1><p>PLANNING · ${escapeHtml(monthName(printMonth))}</p><small>Settimana ${escapeHtml(weekLabel)}</small></div><strong>${selectedRooms.length===ROOMS.length?'Tutte le sale':`${selectedRooms.length} sale selezionate`}</strong></header><section class="grid">${cells.join('')}</section><footer class="page-footer"><span>DVS Planning · v41 TEST SAFARI</span><span>Pagina ${pageIndex+1} di ${selectedWeeks.length}</span></footer></main>`;
+    return `<main class="paper"><header class="head"><div><h1>Digital Video Service</h1><p>PLANNING · ${escapeHtml(monthName(printMonth))}</p><small>Settimana ${escapeHtml(weekLabel)}</small></div><strong>${selectedRooms.length===ROOMS.length?'Tutte le sale':`${selectedRooms.length} sale selezionate`}</strong></header><section class="grid">${cells.join('')}</section><footer class="page-footer"><span>DVS Planning · v41 DIAGNOSTICA</span><span>Pagina ${pageIndex+1} di ${selectedWeeks.length}</span></footer></main>`;
   }).join('');
   const popup=window.open('','_blank');
   if(!popup)return showToast('Consenti l’apertura della finestra di anteprima');
@@ -3326,7 +3324,7 @@ document.querySelectorAll("[data-settings-section]").forEach(button => button.ad
   const sections = {
     backup: { title:"Backup", subtitle:"Stato e autorizzazione", html:backupSettingsHtml() },
     print: { title:"Stampa", subtitle:"Centro Stampa", html:printSettingsHtml() },
-    info: { title:"Informazioni", subtitle:"DVS Planning", html:`<img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video"><h2>DVS Planning</h2><p>Applicazione collaborativa per la gestione del Planning di Digital Video Service. Include blocchi sala, modifica multipla, palette a sette colori, Variabili con ID richiesta e Schema turni mensile riservato alla produzione RAI.</p><div class="settings-info-meta"><div><span>Versione</span><strong>v41 TEST SAFARI</strong></div><div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div><div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div></div><p class="settings-info-copyright"><strong>Copyright © 2026 Marco D'Agostino per Digital Video Service</strong><br>Tutti i diritti riservati.</p>` }
+    info: { title:"Informazioni", subtitle:"DVS Planning", html:`<img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video"><h2>DVS Planning</h2><p>Applicazione collaborativa per la gestione del Planning di Digital Video Service. Include blocchi sala, modifica multipla, palette a sette colori, Variabili con ID richiesta e Schema turni mensile riservato alla produzione RAI.</p><div class="settings-info-meta"><div><span>Versione</span><strong>v41 DIAGNOSTICA</strong></div><div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div><div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div></div><p class="settings-info-copyright"><strong>Copyright © 2026 Marco D'Agostino per Digital Video Service</strong><br>Tutti i diritti riservati.</p>` }
   };
   const selected = sections[section];
   if (!selected) return;
@@ -3903,7 +3901,7 @@ loadBackupStatus();
 backupStatusTimer = setInterval(loadBackupStatus, 60000);
 enableRealtime();
 
-// v41 TEST SAFARI — variation uses existing notes and one atomic multi-row upsert.
+// v41 DIAGNOSTICA — variation uses existing notes and one atomic multi-row upsert.
 let variationSourceSnapshot = null;
 let variationSaving = false;
 const variationDialog = document.getElementById("variationDialog");
@@ -3996,7 +3994,7 @@ document.getElementById("variationForm").addEventListener("submit", async event 
   }
 });
 
-// v41 TEST SAFARI — palette, blocchi sala separati, modifica multipla esplicita.
+// v41 DIAGNOSTICA — palette, blocchi sala separati, modifica multipla esplicita.
 function renderColorSwatches() {
   const select=document.getElementById('color'), holder=document.getElementById('colorSwatches');
   if(!holder)return;
@@ -4022,12 +4020,12 @@ function bindRoomBlockEvents() {
 }
 function makeV41Dialog(id,title,body) {
   document.getElementById(id)?.remove();
-  const el=document.createElement('dialog');el.id=id;el.className='app-dialog v41 TEST SAFARI-dialog';
+  const el=document.createElement('dialog');el.id=id;el.className='app-dialog v41 DIAGNOSTICA-dialog';
   el.innerHTML=`<form><div class="dialog-header"><h2>${title}</h2><button type="button" class="dialog-close" data-close aria-label="Chiudi">×</button></div>${body}<div class="form-error" role="alert"></div><div class="dialog-actions"><button type="button" class="secondary-btn" data-close>Annulla</button><button type="submit" class="primary-btn">Salva</button></div></form>`;
   document.body.append(el);el.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>el.close());return el;
 }
 function openBlockDialog(id=null,room='sala-1',date=isoFromDate(new Date())) {
-  if(db && !roomBlocksReady) return showToast('Blocchi sala non disponibili. Esegui lo SQL v41 TEST SAFARI e ricarica; verifica la connessione.');
+  if(db && !roomBlocksReady) return showToast('Blocchi sala non disponibili. Esegui lo SQL v41 DIAGNOSTICA e ricarica; verifica la connessione.');
   const original=id?roomBlocks.find(b=>b.id===id):null;
   if(id&&!original)return;
   const b=original||{room,date,all_day:true,start:'10:00',end:'18:00',note:''};
@@ -4044,7 +4042,7 @@ function openBlockDialog(id=null,room='sala-1',date=isoFromDate(new Date())) {
     try {
       if(db){const result=remove?await db.from('room_blocks').delete().eq('id',id):await db.from('room_blocks').upsert(next);if(result.error)throw result.error;}
       roomBlocks=roomBlocks.filter(x=>x.id!==(id||next.id));if(!remove)roomBlocks.push(next);
-      if(!db)localStorage.setItem('dvs-room-blocks-v41 TEST SAFARI',JSON.stringify(roomBlocks));
+      if(!db)localStorage.setItem('dvs-room-blocks-v41 DIAGNOSTICA',JSON.stringify(roomBlocks));
       renderPlanning();d.close();showToast(remove?'Blocco eliminato':'Blocco sala salvato');
     }catch(e){error.textContent=`Operazione non confermata: ${e.message}. Verifica la connessione e riprova.`;}
     finally{busy=false;blockWriteBusy=false;pendingShiftWrites--;d.querySelectorAll('button').forEach(x=>x.disabled=false);if(db)scheduleRealtimeDataRefresh();}
@@ -4128,4 +4126,4 @@ function openBulkEdit() {
     finally{pendingShiftWrites--;busy=false;d.querySelectorAll('button').forEach(b=>b.disabled=false);sync();if(db)scheduleRealtimeDataRefresh();}
   };d.showModal();
 }
-if(!db){roomBlocks=loadLocal('dvs-room-blocks-v41 TEST SAFARI',[]);roomBlocksReady=true;}
+if(!db){roomBlocks=loadLocal('dvs-room-blocks-v41 DIAGNOSTICA',[]);roomBlocksReady=true;}

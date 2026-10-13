@@ -1,11 +1,13 @@
-# DVS Planning v41 TEST SAFARI
+# v41 DIAGNOSTICA
+Base esatta: v41 ufficiale. Adattamento testi attivo anche su Safari, come nella v41 ufficiale. Nessuna correzione grafica applicata.
 
-Solo per il sito di test. Nessun SQL da eseguire.
-Unica modifica funzionale rispetto alla v41: fitText non modifica i caratteri su WebKit desktop Mac. Chrome, iPhone, iPad, CSS, zoom e calcolo delle altezze invariati.
-Questa è una prova diagnostica, non una correzione definitiva. I testi possono ancora risultare tagliati.
+Caricare SOLO nel sito di test. Non eseguire SQL.
+Il pulsante Diagnostica nel Planning scarica un JSON con misure di celle, card, testi e viewport. Nessuna richiesta al database aggiuntiva; nessuna modifica ai turni. La raccolta avviene solo al clic. Non vengono esportati nomi, programmi, note o credenziali; sono presenti date e codici sala per confrontare gli stessi elementi.
 
-Aprire il sito di test e verificare la scritta v41 TEST SAFARI. Confrontare lo stesso mese e le stesse sale al 100%, 63% e 50%, poi risalire al 100%. Fare una prova anche dopo aver ricaricato al 50%. Inviare screenshot di Safari e segnalare se i caratteri diventano uniformi, se restano tagli e se cambia la fluidità.
+1. Aprire il sito di test in Safari e Chrome, con finestre della stessa dimensione e zoom del browser al 100%.
+2. Aprire lo stesso mese, le stesse sale e gli stessi giorni.
+3. Impostare lo zoom interno al 100%, attendere che la griglia sia ferma, premere Diagnostica.
+4. Impostare il 50% e premere nuovamente Diagnostica.
+5. Ripetere nell’altro browser. Inviare i quattro JSON e, se possibile, screenshot corrispondenti.
 
-La configurazione è quella della v41: il sito di test condivide i dati con il sito principale. Per questa prova basta visualizzare, scorrere e cambiare zoom; non occorre modificare turni.
-Per tornare indietro ripubblicare la v41 originale nel sito di test.
-Verificati sintassi JavaScript, isolamento della modifica e identità dei CSS. Nessuna verifica visiva su Safari effettuata qui.
+Il sito di test condivide il database: per questa prova non occorre inserire/modificare turni. Per ripristinare basta ripubblicare la v41 ufficiale.
