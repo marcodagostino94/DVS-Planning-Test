@@ -1,0 +1,4 @@
+v41 TEST SAFARI 5 — 14 ottobre 2026
+Mantiene nome montatore 11 px, apertura Planning 80%, livelli sticky confermati.
+Safari: sotto 100% scala visiva; dal 100% zoom nativo senza transform di ingrandimento, anche sulle intestazioni.
+Obiettivo: recuperare nitidezza in ingrandimento. Da verificare sul Mac. Nessuno SQL.

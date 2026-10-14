@@ -1,5 +1,0 @@
-v41 TEST SAFARI 6 — alternativa sperimentale al TEST 5
-Safari Mac: zoom nativo a tutte le percentuali, intestazioni sticky originali.
-Programma e note: a capo tra parole; adattamento dimensione del testo alla larghezza.
-Altezze ricalcolate dopo il testo, includendo bordi e turni su due fasce.
-Nomi 11 px e apertura Planning 80% conservati. Nessuno SQL.

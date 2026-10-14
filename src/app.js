@@ -1,4 +1,4 @@
-// DVS Planning v41 TEST SAFARI 6
+// DVS Planning v41 TEST SAFARI 5
 
 const ROOMS = [
   ...Array.from({ length: 15 }, (_, index) => ({
@@ -1323,13 +1323,13 @@ function renderPlanning() {
 
   // Un'unica scrittura DOM evita centinaia di insertAdjacentHTML e relativi reflow.
   planningGrid.innerHTML = html.join("");
-  if (!window.DVSPlanningScale) normalizePlanningSlotHeights();
+  normalizePlanningSlotHeights();
 
   bindPlanningEvents();
   bindRoomBlockEvents();
   updateSelectionBadge();
   // Mac: comportamento stabile esistente. iPad: niente fit sincrono del testo.
-  if (!IS_TOUCH_APPLE && !window.DVSPlanningScale) fitAllCardText(true);
+  if (!IS_TOUCH_APPLE) fitAllCardText(true);
   applyPlanningZoom(false);
   planningRenderSignature = currentPlanningSignature();
   if (document.getElementById("variationDialog")?.open) updateVariationRooms();
@@ -3332,7 +3332,7 @@ document.querySelectorAll("[data-settings-section]").forEach(button => button.ad
   const sections = {
     backup: { title:"Backup", subtitle:"Stato e autorizzazione", html:backupSettingsHtml() },
     print: { title:"Stampa", subtitle:"Centro Stampa", html:printSettingsHtml() },
-    info: { title:"Informazioni", subtitle:"DVS Planning", html:`<img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video"><h2>DVS Planning</h2><p>Applicazione collaborativa per la gestione del Planning di Digital Video Service. Include blocchi sala, modifica multipla, palette a sette colori, Variabili con ID richiesta e Schema turni mensile riservato alla produzione RAI.</p><div class="settings-info-meta"><div><span>Versione</span><strong>v41 TEST SAFARI 6</strong></div><div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div><div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div></div><p class="settings-info-copyright"><strong>Copyright © 2026 Marco D'Agostino per Digital Video Service</strong><br>Tutti i diritti riservati.</p>` }
+    info: { title:"Informazioni", subtitle:"DVS Planning", html:`<img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video"><h2>DVS Planning</h2><p>Applicazione collaborativa per la gestione del Planning di Digital Video Service. Include blocchi sala, modifica multipla, palette a sette colori, Variabili con ID richiesta e Schema turni mensile riservato alla produzione RAI.</p><div class="settings-info-meta"><div><span>Versione</span><strong>v41 TEST SAFARI 5</strong></div><div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div><div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div></div><p class="settings-info-copyright"><strong>Copyright © 2026 Marco D'Agostino per Digital Video Service</strong><br>Tutti i diritti riservati.</p>` }
   };
   const selected = sections[section];
   if (!selected) return;
