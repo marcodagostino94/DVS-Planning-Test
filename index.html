@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-  <title>DVS Planning v38.0 TEST</title>
+  <title>DVS Planning v41 DIAGNOSTICA</title>
   <meta name="theme-color" content="#09090b">
-  <link rel="icon" href="./favicon.ico?v=38-0-schema-turni" sizes="any">
-  <link rel="icon" type="image/png" sizes="32x32" href="./assets/icons/dvs-planning-32.png?v=38-0-schema-turni">
-  <link rel="icon" type="image/png" sizes="16x16" href="./assets/icons/dvs-planning-16.png?v=38-0-schema-turni">
-  <link rel="icon" type="image/png" sizes="64x64" href="./assets/icons/dvs-planning-64.png?v=38-0-schema-turni">
-  <link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/dvs-planning-180.png?v=38-0-schema-turni">
-  <link rel="manifest" href="./manifest.webmanifest?v=38-0-schema-turni">
-  <link rel="stylesheet" href="./src/styles.css?v=38-0-schema-turni">
+  <link rel="icon" href="./favicon.ico?v=41-diagnostica-1" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/icons/dvs-planning-32.png?v=41-diagnostica-1">
+  <link rel="icon" type="image/png" sizes="16x16" href="./assets/icons/dvs-planning-16.png?v=41-diagnostica-1">
+  <link rel="icon" type="image/png" sizes="64x64" href="./assets/icons/dvs-planning-64.png?v=41-diagnostica-1">
+  <link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/dvs-planning-180.png?v=41-diagnostica-1">
+  <link rel="manifest" href="./manifest.webmanifest?v=41-diagnostica-1">
+  <link rel="stylesheet" href="./src/styles.css?v=41-diagnostica-1">
 </head>
 <body>
   <section id="profileGate" class="profile-gate" aria-label="Selezione profilo">
@@ -81,7 +81,7 @@
           <span class="nav-icon"><svg class="sf-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 5H5.5A2.5 2.5 0 0 0 3 7.5v9A2.5 2.5 0 0 0 5.5 19H10M14 8l4 4-4 4M8 12h10"/></svg></span><span>Esci</span>
         </button>
         <span id="activeProfileLabel" class="active-profile-label"></span>
-        <span class="build-pill">v38.0 TEST</span>
+        <span class="build-pill">v41 DIAGNOSTICA</span>
       </div>
     </aside>
 
@@ -216,13 +216,13 @@
       </section>
 
       <section id="schemaView" class="app-view schema-view">
-        <header class="topbar"><div class="page-title"><h1>Schema turni</h1><p>Ore mensili per programma e lavorazione</p></div><div class="toolbar"><label class="variable-month">Mese <input id="schemaMonth" type="month"></label></div></header>
+        <header class="topbar"><div class="page-title"><h1>Schema turni</h1><p>Produzione RAI · Ore mensili per programma e lavorazione</p></div><div class="toolbar"><div class="variable-month"><label for="schemaMonthSelect">Mese</label><select id="schemaMonthSelect" aria-label="Mese dello schema turni"><option value="01">Gennaio</option><option value="02">Febbraio</option><option value="03">Marzo</option><option value="04">Aprile</option><option value="05">Maggio</option><option value="06">Giugno</option><option value="07">Luglio</option><option value="08">Agosto</option><option value="09">Settembre</option><option value="10">Ottobre</option><option value="11">Novembre</option><option value="12">Dicembre</option></select><select id="schemaYearSelect" aria-label="Anno dello schema turni"></select><input id="schemaMonth" type="hidden"></div></div></header>
         <div class="schema-page"><p class="schema-legend"><span class="schema-provisional">Arancione: provvisorio (incluso nei totali).</span> * Orario ufficiale letto dalle note. Ore espresse in decimali: 7,5 = 7 ore e 30 minuti.</p><div id="schemaList" aria-live="polite"></div></div>
       </section>
       <section id="variablesView" class="app-view variables-view">
         <header class="topbar">
           <div class="page-title"><h1>Variabili</h1><p>Turni mensili per produzione e programma</p></div>
-          <div class="toolbar"><label class="variable-month">Mese <input id="variablesMonth" type="month"></label></div>
+          <div class="toolbar"><div class="variable-month"><label for="variablesMonthSelect">Mese</label><select id="variablesMonthSelect" aria-label="Mese dei variabili"><option value="01">Gennaio</option><option value="02">Febbraio</option><option value="03">Marzo</option><option value="04">Aprile</option><option value="05">Maggio</option><option value="06">Giugno</option><option value="07">Luglio</option><option value="08">Agosto</option><option value="09">Settembre</option><option value="10">Ottobre</option><option value="11">Novembre</option><option value="12">Dicembre</option></select><select id="variablesYearSelect" aria-label="Anno dei variabili"></select><input id="variablesMonth" type="hidden"></div></div>
         </header>
         <div class="variables-page">
           <p class="variables-help">Totali comprensivi dei provvisori. Data e orario corrispondono all’ultima modifica del turno. Le ore indicano la durata del turno, anche con doppia postazione.</p>
@@ -310,7 +310,7 @@
             <h2>DVS Planning</h2>
             <p>Applicazione collaborativa per la gestione del Planning di Digital Video Service.</p>
             <div class="settings-info-meta">
-              <div><span>Versione</span><strong>v38.0 TEST</strong></div>
+              <div><span>Versione</span><strong>v41 DIAGNOSTICA</strong></div>
               <div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div>
               <div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div>
             </div>
@@ -420,6 +420,20 @@
           </select>
         </label>
 
+        <fieldset class="status-field form-wide">
+          <legend>Stato</legend>
+          <div class="segmented-control">
+            <button type="button" data-status="definitivo" class="active">Definitivo</button>
+            <button type="button" data-status="provvisorio">Provvisorio</button>
+          </div>
+          <input id="status" type="hidden" value="definitivo">
+        </fieldset>
+
+        <label id="colorField" class="form-wide">
+          Colore turno
+          <select id="color" required hidden></select><div id="colorSwatches" class="color-swatches" role="group" aria-label="Colore turno"></div>
+        </label>
+
         <label class="form-wide">
           Dipendente
           <input id="editorSearchInput" list="editorSuggestions" placeholder="Cerca per nome o cognome" autocomplete="off">
@@ -450,14 +464,16 @@
           <span><strong>VARIABILE</strong><small>Mostra “- VARIABILE” in rosso accanto alla lavorazione</small></span>
         </label>
 
-        <label id="requestIdField" class="form-wide hidden">ID richiesta (facoltativo)
-          <input id="requestId" type="text" maxlength="100" autocomplete="off" placeholder="Numero di richiesta">
-          <small>Puoi lasciarlo vuoto e inserirlo in seguito.</small>
-        </label>
+
 
         <label class="checkbox-label option-card">
           <input id="hasShiftNotes" type="checkbox">
           <span><strong>NOTE</strong><small>Aggiunge una nota rossa sotto la lavorazione</small></span>
+        </label>
+
+        <label id="requestIdField" class="form-wide hidden">ID richiesta (facoltativo)
+          <input id="requestId" type="text" maxlength="100" autocomplete="off" placeholder="Numero di richiesta">
+          <small>Puoi lasciarlo vuoto e inserirlo in seguito.</small>
         </label>
 
         <label id="shiftNotesField" class="form-wide shift-notes-field hidden">
@@ -466,19 +482,7 @@
           <small class="shift-notes-counter"><span id="shiftNotesCount">0</span>/100</small>
         </label>
 
-        <fieldset class="status-field form-wide">
-          <legend>Stato</legend>
-          <div class="segmented-control">
-            <button type="button" data-status="definitivo" class="active">Definitivo</button>
-            <button type="button" data-status="provvisorio">Provvisorio</button>
-          </div>
-          <input id="status" type="hidden" value="definitivo">
-        </fieldset>
 
-        <label id="colorField" class="form-wide">
-          Colore turno
-          <select id="color" required></select>
-        </label>
       </div>
 
       <div id="shiftFormError" class="form-error" role="alert"></div>
@@ -631,6 +635,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="./src/config.js?v=11.0"></script>
-  <script src="./src/app.js?v=38-0-schema-turni"></script>
+  <script src="./src/app.js?v=41-diagnostica-1"></script>
+<script src="./src/diagnostica.js?v=41-diagnostica-1"></script>
 </body>
 </html>

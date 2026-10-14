@@ -1,11 +1,13 @@
-# DVS Planning v38.0 TEST
+# v41 DIAGNOSTICA
+Base esatta: v41 ufficiale. Adattamento testi attivo anche su Safari, come nella v41 ufficiale. Nessuna correzione grafica applicata.
 
-Base v37.1. Nuova sezione Schema turni e allineamento colonne Variabili.
-Nessun nuovo SQL se è già stato applicato database/014_variable_request_id_v37.sql.
-La configurazione Supabase è quella della versione precedente: verificare di usare l’ambiente di test desiderato prima di modificare dati. Nessuna pubblicazione automatica.
+Caricare SOLO nel sito di test. Non eseguire SQL.
+Il pulsante Diagnostica nel Planning scarica un JSON con misure di celle, card, testi e viewport. Nessuna richiesta al database aggiuntiva; nessuna modifica ai turni. La raccolta avviene solo al clic. Non vengono esportati nomi, programmi, note o credenziali; sono presenti date e codici sala per confrontare gli stessi elementi.
 
-Schema turni è una vista in sola lettura. Mese selezionabile, programmi in ordine alfabetico, tabelle per Montaggio (EDIT e ASSISTENTE), Grafica, Color e Sound. Ogni cella contiene le ore di un solo turno. Le righe sono distinte per ora iniziale e standard/variabile e ripetute secondo il massimo numero giornaliero di ciascun gruppo. Turni CLIENTE e originali barrati esclusi, destinazioni degli spostamenti incluse. Provvisori arancioni, inclusi nei totali. Le ore sono decimali; doppia postazione non raddoppia la durata.
+1. Aprire il sito di test in Safari e Chrome, con finestre della stessa dimensione e zoom del browser al 100%.
+2. Aprire lo stesso mese, le stesse sale e gli stessi giorni.
+3. Impostare lo zoom interno al 100%, attendere che la griglia sia ferma, premere Diagnostica.
+4. Impostare il 50% e premere nuovamente Diagnostica.
+5. Ripetere nell’altro browser. Inviare i quattro JSON e, se possibile, screenshot corrispondenti.
 
-Le note con parole che iniziano per UFFICI (UFFICIAL., UFFICI, UFFICIALMENTE, UFFICIALE) seguite da intervalli come 10-18, 10:00–18:00 o dalle 10 alle 18 sostituiscono soltanto l’orario nello schema. La data resta quella del Planning. Una stella segnala le celle con orario ufficiale. Intervalli incompleti, multipli o non validi sono mostrati in Da verificare e non conteggiati: i totali sono indicati come parziali. Correggere la nota nel Planning e lo schema si aggiorna. Nessuna nota o turno viene riscritto dalla vista.
-
-Nessuna stampa, intestazione amministrativa o totale per produzione.
+Il sito di test condivide il database: per questa prova non occorre inserire/modificare turni. Per ripristinare basta ripubblicare la v41 ufficiale.
