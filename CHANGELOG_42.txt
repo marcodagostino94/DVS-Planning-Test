@@ -4,3 +4,5 @@ Rimossa Diagnostica.
 Mac: card della stessa sala e fascia uniformate alla più alta, comprese le note; mantenuta la gestione delle card su due fasce.
 Conservati zoom Safari, intestazioni fisse, nome montatore a 11 px con adattamento e apertura Planning su oggi all’80%.
 iPhone e iPad invariati. Nessuna migrazione SQL.
+
+Aggiornamento grafico: GRAFICA, SOUND e COLOR in rosso con peso 900, come VARIABILE. Sfondi e fascia montatore delle sole card di queste lavorazioni leggermente più intensi; tonalità assegnata invariata.

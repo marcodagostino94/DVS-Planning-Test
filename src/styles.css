@@ -622,9 +622,9 @@ button { -webkit-tap-highlight-color: transparent; }
   border-color:rgba(var(--accent-rgb),.78);
   background:
     linear-gradient(145deg,
-      rgba(255,255,255,.42),
-      rgba(var(--accent-rgb),.58) 52%,
-      rgba(var(--accent-rgb),.46));
+      rgba(255,255,255,.34),
+      rgba(var(--accent-rgb),.66) 52%,
+      rgba(var(--accent-rgb),.54));
   box-shadow:
     0 9px 21px rgba(44,54,65,.20),
     inset 0 1px 0 rgba(255,255,255,.62),
@@ -690,7 +690,7 @@ button { -webkit-tap-highlight-color: transparent; }
   font-size: 8px;
   font-weight: 500;
 }
-.shift-type.shift-type-red { color: #d22334; }
+.shift-type.shift-type-red { color: #d22334; font-weight:900; }
 
 
 .shift-editor {
@@ -718,8 +718,8 @@ button { -webkit-tap-highlight-color: transparent; }
 .shift-card.highlighted-work .shift-editor {
   background:
     linear-gradient(180deg,
-      rgba(var(--accent-rgb),.48),
-      rgba(var(--accent-rgb),.68));
+      rgba(var(--accent-rgb),.54),
+      rgba(var(--accent-rgb),.74));
   border-top-color:rgba(var(--accent-rgb),.55);
 }
 

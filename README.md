@@ -25,3 +25,5 @@ Sintassi JavaScript, risorse locali, assenza Diagnostica, integrità ZIP.
 Test di logica sull’allineamento: altezza comune, nessuna crescita cumulativa, riduzione dopo rimozione nota, comportamento touch invariato. Confronto del modulo zoom con il TEST 5.
 Non eseguita una verifica grafica in Safari nell’ambiente di preparazione; necessaria la verifica sul Mac.
 Nessuna modifica al database durante la preparazione.
+
+Aggiornamento grafico: GRAFICA, SOUND e COLOR in rosso con peso 900, come VARIABILE. Sfondi e fascia montatore delle sole card di queste lavorazioni leggermente più intensi; tonalità assegnata invariata.
