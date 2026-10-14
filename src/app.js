@@ -1,4 +1,4 @@
-// DVS Planning v41 TEST SAFARI 5
+// DVS Planning v42
 
 const ROOMS = [
   ...Array.from({ length: 15 }, (_, index) => ({
@@ -1045,12 +1045,26 @@ function normalizePlanningSlotHeights() {
       const slots = roomCells
         .map(cell => cell.querySelector(`.shift-time-slot[data-slot-index="${slotIndex}"]`))
         .filter(Boolean);
-      slots.forEach(slot => { slot.style.height = "auto"; });
+      slots.forEach(slot => {
+        slot.style.height = "auto";
+        // Measure natural contents before stretching; never reuse a filled height.
+        if (IS_DESKTOP_MAC) {
+          const card = slot.querySelector(".shift-card, .room-block");
+          if (card) card.style.height = "auto";
+        }
+      });
       const requiredHeight = Math.max(88, ...slots.map(slot => {
         const card = slot.querySelector(".shift-card, .room-block");
+        if (IS_DESKTOP_MAC) return Math.max(Number(slot.dataset.baseHeight || 88), card ? card.offsetHeight : 0);
         return card ? Math.ceil(card.scrollHeight) : Number(slot.dataset.baseHeight || 88);
       }));
-      slots.forEach(slot => { slot.style.height = `${requiredHeight}px`; });
+      slots.forEach(slot => {
+        slot.style.height = `${requiredHeight}px`;
+        if (IS_DESKTOP_MAC) {
+          const card = slot.querySelector(".shift-card, .room-block");
+          if (card) card.style.height = "100%";
+        }
+      });
     }
     roomCells.forEach(cell => {
       const spanningSlot = cell.querySelector(".shift-time-slot.spans-two");
@@ -3332,7 +3346,7 @@ document.querySelectorAll("[data-settings-section]").forEach(button => button.ad
   const sections = {
     backup: { title:"Backup", subtitle:"Stato e autorizzazione", html:backupSettingsHtml() },
     print: { title:"Stampa", subtitle:"Centro Stampa", html:printSettingsHtml() },
-    info: { title:"Informazioni", subtitle:"DVS Planning", html:`<img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video"><h2>DVS Planning</h2><p>Applicazione collaborativa per la gestione del Planning di Digital Video Service. Include blocchi sala, modifica multipla, palette a sette colori, Variabili con ID richiesta e Schema turni mensile riservato alla produzione RAI.</p><div class="settings-info-meta"><div><span>Versione</span><strong>v41 TEST SAFARI 5</strong></div><div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div><div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div></div><p class="settings-info-copyright"><strong>Copyright © 2026 Marco D'Agostino per Digital Video Service</strong><br>Tutti i diritti riservati.</p>` }
+    info: { title:"Informazioni", subtitle:"DVS Planning", html:`<img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video"><h2>DVS Planning</h2><p>Applicazione collaborativa per la gestione del Planning di Digital Video Service. Include blocchi sala, modifica multipla, palette a sette colori, Variabili con ID richiesta e Schema turni mensile riservato alla produzione RAI.</p><div class="settings-info-meta"><div><span>Versione</span><strong>v42</strong></div><div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div><div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div></div><p class="settings-info-copyright"><strong>Copyright © 2026 Marco D'Agostino per Digital Video Service</strong><br>Tutti i diritti riservati.</p>` }
   };
   const selected = sections[section];
   if (!selected) return;

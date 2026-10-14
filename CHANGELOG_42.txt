@@ -1,0 +1,6 @@
+DVS Planning v42 — 14 ottobre 2026
+Base: v41 TEST SAFARI 5, senza le modifiche del TEST 6.
+Rimossa Diagnostica.
+Mac: card della stessa sala e fascia uniformate alla più alta, comprese le note; mantenuta la gestione delle card su due fasce.
+Conservati zoom Safari, intestazioni fisse, nome montatore a 11 px con adattamento e apertura Planning su oggi all’80%.
+iPhone e iPad invariati. Nessuna migrazione SQL.
