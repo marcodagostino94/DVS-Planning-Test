@@ -1,7 +1,7 @@
 {
-  "name": "DVS Planning v41 TEST SAFARI 3",
+  "name": "DVS Planning v41 TEST SAFARI 4",
   "short_name": "DVS Planning",
-  "description": "DVS Planning v41 TEST SAFARI 3",
+  "description": "DVS Planning v41 TEST SAFARI 4",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

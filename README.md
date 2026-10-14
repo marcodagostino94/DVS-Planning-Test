@@ -1,4 +1,4 @@
-# DVS Planning v41 TEST SAFARI 3
+# DVS Planning v41 TEST SAFARI 4
 
 Base: v41 ufficiale. Versione sperimentale per il sito di test.
 
@@ -10,11 +10,14 @@ La configurazione Supabase è quella della v41: le modifiche ai turni nel test a
 ## Modifica
 Solo Safari su Mac: impaginazione al 100% e riduzione visiva dell’intera griglia tramite transform.
 Area scorrevole coerente con la scala. Intestazioni visive separate dalla griglia trasformata e fissate con position:sticky nativo. Nessun riposizionamento JavaScript durante lo scorrimento.
-Chrome, iPhone e iPad mantengono il percorso di zoom originale.
+Chrome mantiene il percorso di zoom originale. Su Mac il nome montatore parte da 11 px nella fascia originale e l’apertura di Planning dal menu imposta 80% sulla data odierna. iPhone e iPad invariati.
+Safari: rimosse trasformazione 3D e animazione di movimento delle card per contrastare la sfocatura; il miglioramento della nitidezza va verificato sul Mac. Le ombre restano.
 Il pulsante Diagnostica esporta misure su richiesta, senza testi di programmi, nomi o note.
 Le percentuali indicate nei file diagnostici corrispondono allo zoom scelto anche con il nuovo sistema.
 
 ## Prova sul Mac
+Controllare al 200% la nitidezza rispetto al test precedente.
+Aprire Planning dal menu: deve tornare all’80% e alla data odierna. Verificare nomi brevi e lunghi nella fascia montatore.
 Confrontare 100%, 78%, 50%, 125% e ritorno a 100%, prima senza ricaricare e poi dopo la ricarica.
 Controllare che gli a capo del medesimo titolo rimangano uguali e che non compaiano sovrapposizioni.
 Scorrere in entrambe le direzioni: giorni e sale devono rimanere visibili.

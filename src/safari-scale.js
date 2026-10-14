@@ -1,4 +1,4 @@
-// v41 TEST SAFARI 3. Visual scaling with browser-managed sticky header layers.
+// v41 TEST SAFARI 4. Visual scaling with browser-managed sticky header layers.
 (() => {
   const ua = navigator.userAgent;
   const isDesktopSafari = /Macintosh/.test(ua) && /Version\/.*Safari\//.test(ua)

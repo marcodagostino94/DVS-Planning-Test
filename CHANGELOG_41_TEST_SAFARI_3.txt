@@ -1,5 +1,0 @@
-v41 TEST SAFARI 3 — 14 ottobre 2026
-Mantiene lo zoom visivo confermato nel TEST SAFARI 2.
-Rimuove la compensazione JavaScript delle intestazioni durante lo scorrimento.
-Giorni, sale e angolo SALE fissati tramite livelli sticky nativi esterni al canvas trasformato.
-Diagnostica estesa ai livelli delle intestazioni. Nessuno SQL.

@@ -1,0 +1,6 @@
+v41 TEST SAFARI 4 — 14 ottobre 2026
+Intestazioni native del TEST 3 confermate dall’utente, codice mantenuto.
+Safari Mac: rimozione della trasformazione 3D e dell’animazione di movimento delle card per provare a migliorare la nitidezza in ingrandimento.
+Mac: nome montatore da 9 a 11 px, con adattamento del testo; fascia invariata.
+Mac: apertura Planning dal menu sul giorno odierno con zoom 80%.
+Nessuno SQL. iPhone e iPad invariati.
