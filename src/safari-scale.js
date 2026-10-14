@@ -1,4 +1,4 @@
-// v41 TEST SAFARI 4. Visual scaling with browser-managed sticky header layers.
+// v41 TEST SAFARI 5. Visual scaling with browser-managed sticky header layers.
 (() => {
   const ua = navigator.userAgent;
   const isDesktopSafari = /Macintosh/.test(ua) && /Version\/.*Safari\//.test(ua)
@@ -47,9 +47,10 @@
     rooms.style.width = corner.style.width = `${roomWidth * scale}px`;
     for (const e of entries) {
       Object.assign(e.copy.style, {
-        left: `${e.x * scale}px`, top: `${e.y * scale}px`,
+        left: `${e.x * Math.min(scale, 1)}px`, top: `${e.y * Math.min(scale, 1)}px`,
         width: `${e.width}px`, height: `${e.height}px`,
-        minHeight: '0', transform: `scale(${scale})`
+        minHeight: '0', zoom: String(Math.max(1, scale)),
+        transform: scale < 1 ? `scale(${scale})` : 'none'
       });
     }
   }
@@ -72,8 +73,10 @@
   window.DVSPlanningScale = {
     apply(value) {
       scale = Number.isFinite(value) && value > 0 ? value : 1;
-      canvas.style.zoom = '1';
-      canvas.style.transform = `scale(${scale})`;
+      // Native enlargement redraws glyphs at the requested size instead of
+      // stretching a 100% raster layer. Below 100%, preserve stable line wraps.
+      canvas.style.zoom = String(Math.max(1, scale));
+      canvas.style.transform = scale < 1 ? `scale(${scale})` : 'none';
       // Render replaces grid children before the mutation observer's microtask.
       if (!entries.length || entries[0].source.parentElement !== grid) dirty = true;
       measure();

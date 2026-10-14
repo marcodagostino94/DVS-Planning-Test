@@ -1,4 +1,4 @@
-# DVS Planning v41 TEST SAFARI 4
+# DVS Planning v41 TEST SAFARI 5
 
 Base: v41 ufficiale. Versione sperimentale per il sito di test.
 
@@ -8,15 +8,15 @@ Nessuno SQL da eseguire. Non pubblicare ancora sul sito ufficiale.
 La configurazione Supabase è quella della v41: le modifiche ai turni nel test agiscono sugli stessi dati.
 
 ## Modifica
-Solo Safari su Mac: impaginazione al 100% e riduzione visiva dell’intera griglia tramite transform.
+Solo Safari su Mac: sotto il 100% riduzione visiva tramite transform; dal 100% in su zoom nativo senza trasformazione di ingrandimento. Anche le copie delle intestazioni usano la stessa modalità.
 Area scorrevole coerente con la scala. Intestazioni visive separate dalla griglia trasformata e fissate con position:sticky nativo. Nessun riposizionamento JavaScript durante lo scorrimento.
 Chrome mantiene il percorso di zoom originale. Su Mac il nome montatore parte da 11 px nella fascia originale e l’apertura di Planning dal menu imposta 80% sulla data odierna. iPhone e iPad invariati.
-Safari: rimosse trasformazione 3D e animazione di movimento delle card per contrastare la sfocatura; il miglioramento della nitidezza va verificato sul Mac. Le ombre restano.
+Il TEST 4 non ha risolto la sfocatura: questo test evita di ingrandire con transform, usando lo zoom nativo dal 100%. Il risultato grafico e il passaggio attraverso il 100% vanno verificati sul Mac. Rimane la rimozione delle trasformazioni 3D delle card.
 Il pulsante Diagnostica esporta misure su richiesta, senza testi di programmi, nomi o note.
 Le percentuali indicate nei file diagnostici corrispondono allo zoom scelto anche con il nuovo sistema.
 
 ## Prova sul Mac
-Controllare al 200% la nitidezza rispetto al test precedente.
+Controllare al 200% la nitidezza rispetto alla v41 ufficiale e al TEST 4. Provare 80% → 100% → 125% → 200% → 80%, anche dopo ricarica; verificare a capo, barre fisse e selezione.
 Aprire Planning dal menu: deve tornare all’80% e alla data odierna. Verificare nomi brevi e lunghi nella fascia montatore.
 Confrontare 100%, 78%, 50%, 125% e ritorno a 100%, prima senza ricaricare e poi dopo la ricarica.
 Controllare che gli a capo del medesimo titolo rimangano uguali e che non compaiano sovrapposizioni.
