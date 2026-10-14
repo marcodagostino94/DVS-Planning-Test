@@ -1,4 +1,0 @@
-v41 TEST SAFARI 2 — 14 ottobre 2026
-Base v41 ufficiale. Zoom visivo isolato a Safari desktop.
-Intestazioni e area scorrevole compensate rispetto alla scala.
-Diagnostica manuale inclusa. Nessuna migrazione database.

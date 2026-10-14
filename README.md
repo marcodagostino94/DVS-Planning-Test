@@ -1,4 +1,4 @@
-# DVS Planning v41 TEST SAFARI 2
+# DVS Planning v41 TEST SAFARI 3
 
 Base: v41 ufficiale. Versione sperimentale per il sito di test.
 
@@ -9,7 +9,7 @@ La configurazione Supabase è quella della v41: le modifiche ai turni nel test a
 
 ## Modifica
 Solo Safari su Mac: impaginazione al 100% e riduzione visiva dell’intera griglia tramite transform.
-Gestione dello spazio di scorrimento e delle intestazioni fisse coerente con la scala.
+Area scorrevole coerente con la scala. Intestazioni visive separate dalla griglia trasformata e fissate con position:sticky nativo. Nessun riposizionamento JavaScript durante lo scorrimento.
 Chrome, iPhone e iPad mantengono il percorso di zoom originale.
 Il pulsante Diagnostica esporta misure su richiesta, senza testi di programmi, nomi o note.
 Le percentuali indicate nei file diagnostici corrispondono allo zoom scelto anche con il nuovo sistema.
@@ -24,7 +24,7 @@ Esportare la diagnostica se persistono differenze; per tornare indietro ripubbli
 
 ## Verifiche
 Sintassi JavaScript, isolamento del nuovo codice a Safari desktop, sequenze di zoom,
-calcoli delle dimensioni di scorrimento e intestazioni, aggiornamento al cambio contenuto,
+geometria delle intestazioni al 50/78/100/125%, assenza di compensazione JavaScript dello scorrimento, aggiornamento al cambio contenuto,
 conservazione delle dimensioni quando la vista è nascosta, risorse locali e confronto con la base.
 Verifiche automatiche di logica con DOM simulato, non una certificazione grafica Safari.
 Browser WebKit non avviabile nell’ambiente di sviluppo per dipendenze di sistema mancanti.

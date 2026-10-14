@@ -1,4 +1,4 @@
-// DVS Planning v41 TEST SAFARI 2
+// DVS Planning v41 TEST SAFARI 3
 
 const ROOMS = [
   ...Array.from({ length: 15 }, (_, index) => ({
@@ -3325,7 +3325,7 @@ document.querySelectorAll("[data-settings-section]").forEach(button => button.ad
   const sections = {
     backup: { title:"Backup", subtitle:"Stato e autorizzazione", html:backupSettingsHtml() },
     print: { title:"Stampa", subtitle:"Centro Stampa", html:printSettingsHtml() },
-    info: { title:"Informazioni", subtitle:"DVS Planning", html:`<img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video"><h2>DVS Planning</h2><p>Applicazione collaborativa per la gestione del Planning di Digital Video Service. Include blocchi sala, modifica multipla, palette a sette colori, Variabili con ID richiesta e Schema turni mensile riservato alla produzione RAI.</p><div class="settings-info-meta"><div><span>Versione</span><strong>v41 TEST SAFARI 2</strong></div><div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div><div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div></div><p class="settings-info-copyright"><strong>Copyright © 2026 Marco D'Agostino per Digital Video Service</strong><br>Tutti i diritti riservati.</p>` }
+    info: { title:"Informazioni", subtitle:"DVS Planning", html:`<img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video"><h2>DVS Planning</h2><p>Applicazione collaborativa per la gestione del Planning di Digital Video Service. Include blocchi sala, modifica multipla, palette a sette colori, Variabili con ID richiesta e Schema turni mensile riservato alla produzione RAI.</p><div class="settings-info-meta"><div><span>Versione</span><strong>v41 TEST SAFARI 3</strong></div><div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div><div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div></div><p class="settings-info-copyright"><strong>Copyright © 2026 Marco D'Agostino per Digital Video Service</strong><br>Tutti i diritti riservati.</p>` }
   };
   const selected = sections[section];
   if (!selected) return;
