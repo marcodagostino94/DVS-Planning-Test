@@ -1,13 +1,32 @@
-# v41 DIAGNOSTICA
-Base esatta: v41 ufficiale. Adattamento testi attivo anche su Safari, come nella v41 ufficiale. Nessuna correzione grafica applicata.
+# DVS Planning v41 TEST SAFARI 2
 
-Caricare SOLO nel sito di test. Non eseguire SQL.
-Il pulsante Diagnostica nel Planning scarica un JSON con misure di celle, card, testi e viewport. Nessuna richiesta al database aggiuntiva; nessuna modifica ai turni. La raccolta avviene solo al clic. Non vengono esportati nomi, programmi, note o credenziali; sono presenti date e codici sala per confrontare gli stessi elementi.
+Base: v41 ufficiale. Versione sperimentale per il sito di test.
 
-1. Aprire il sito di test in Safari e Chrome, con finestre della stessa dimensione e zoom del browser al 100%.
-2. Aprire lo stesso mese, le stesse sale e gli stessi giorni.
-3. Impostare lo zoom interno al 100%, attendere che la griglia sia ferma, premere Diagnostica.
-4. Impostare il 50% e premere nuovamente Diagnostica.
-5. Ripetere nell’altro browser. Inviare i quattro JSON e, se possibile, screenshot corrispondenti.
+## Installazione
+Sostituire i file dell’app sul sito di test con il contenuto di questa cartella e ricaricare.
+Nessuno SQL da eseguire. Non pubblicare ancora sul sito ufficiale.
+La configurazione Supabase è quella della v41: le modifiche ai turni nel test agiscono sugli stessi dati.
 
-Il sito di test condivide il database: per questa prova non occorre inserire/modificare turni. Per ripristinare basta ripubblicare la v41 ufficiale.
+## Modifica
+Solo Safari su Mac: impaginazione al 100% e riduzione visiva dell’intera griglia tramite transform.
+Gestione dello spazio di scorrimento e delle intestazioni fisse coerente con la scala.
+Chrome, iPhone e iPad mantengono il percorso di zoom originale.
+Il pulsante Diagnostica esporta misure su richiesta, senza testi di programmi, nomi o note.
+Le percentuali indicate nei file diagnostici corrispondono allo zoom scelto anche con il nuovo sistema.
+
+## Prova sul Mac
+Confrontare 100%, 78%, 50%, 125% e ritorno a 100%, prima senza ricaricare e poi dopo la ricarica.
+Controllare che gli a capo del medesimo titolo rimangano uguali e che non compaiano sovrapposizioni.
+Scorrere in entrambe le direzioni: giorni e sale devono rimanere visibili.
+Controllare selezione singola e multipla, menu destro e pulsante Oggi.
+Per il trascinamento usare soltanto un turno di prova: il database è condiviso.
+Esportare la diagnostica se persistono differenze; per tornare indietro ripubblicare la v41 ufficiale.
+
+## Verifiche
+Sintassi JavaScript, isolamento del nuovo codice a Safari desktop, sequenze di zoom,
+calcoli delle dimensioni di scorrimento e intestazioni, aggiornamento al cambio contenuto,
+conservazione delle dimensioni quando la vista è nascosta, risorse locali e confronto con la base.
+Verifiche automatiche di logica con DOM simulato, non una certificazione grafica Safari.
+Browser WebKit non avviabile nell’ambiente di sviluppo per dipendenze di sistema mancanti.
+La verifica grafica e dei gesti sul Mac rimane necessaria.
+Nessuna connessione o modifica al database effettuata durante la preparazione.
