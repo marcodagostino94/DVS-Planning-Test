@@ -1,35 +1,25 @@
-# DVS Planning v41 TEST SAFARI 5
+# DVS Planning v41 TEST SAFARI 6
 
-Base: v41 ufficiale. Versione sperimentale per il sito di test.
+Alternativa sperimentale. Conservare il TEST 5 come riferimento funzionante.
 
 ## Installazione
-Sostituire i file dell’app sul sito di test con il contenuto di questa cartella e ricaricare.
-Nessuno SQL da eseguire. Non pubblicare ancora sul sito ufficiale.
-La configurazione Supabase è quella della v41: le modifiche ai turni nel test agiscono sugli stessi dati.
+Sostituire i file del solo sito di test e ricaricare. Nessuno SQL.
+La configurazione Supabase è invariata: i turni modificati sul sito di test appartengono allo stesso database.
 
-## Modifica
-Solo Safari su Mac: sotto il 100% riduzione visiva tramite transform; dal 100% in su zoom nativo senza trasformazione di ingrandimento. Anche le copie delle intestazioni usano la stessa modalità.
-Area scorrevole coerente con la scala. Intestazioni visive separate dalla griglia trasformata e fissate con position:sticky nativo. Nessun riposizionamento JavaScript durante lo scorrimento.
-Chrome mantiene il percorso di zoom originale. Su Mac il nome montatore parte da 11 px nella fascia originale e l’apertura di Planning dal menu imposta 80% sulla data odierna. iPhone e iPad invariati.
-Il TEST 4 non ha risolto la sfocatura: questo test evita di ingrandire con transform, usando lo zoom nativo dal 100%. Il risultato grafico e il passaggio attraverso il 100% vanno verificati sul Mac. Rimane la rimozione delle trasformazioni 3D delle card.
-Il pulsante Diagnostica esporta misure su richiesta, senza testi di programmi, nomi o note.
-Le percentuali indicate nei file diagnostici corrispondono allo zoom scelto anche con il nuovo sistema.
+## Modifiche
+Safari Mac usa lo zoom nativo a tutte le percentuali e le intestazioni sticky originali, senza copie e senza trasformare la griglia in scala.
+Programma e note vanno a capo tra parole. Il testo si riduce quando una parola non entra nella larghezza disponibile; limite di adattamento 5 px.
+Gli spazi delle righe vengono ricalcolati dopo il testo, includendo i bordi e le card a doppia altezza. Il ricalcolo è raggruppato a 100 ms dalla fine del cambio zoom per limitare il lavoro durante rotella e gesto.
+Lo spazio necessario alle card resta variabile secondo contenuti e numero di turni: non si eliminano le fasce vuote intenzionali di allineamento degli orari.
+Chrome conserva il comportamento precedente. Nomi più grandi (11 px di partenza) e apertura Planning all’80% restano attivi sui Mac. iPhone e iPad invariati.
 
-## Prova sul Mac
-Controllare al 200% la nitidezza rispetto alla v41 ufficiale e al TEST 4. Provare 80% → 100% → 125% → 200% → 80%, anche dopo ricarica; verificare a capo, barre fisse e selezione.
-Aprire Planning dal menu: deve tornare all’80% e alla data odierna. Verificare nomi brevi e lunghi nella fascia montatore.
-Confrontare 100%, 78%, 50%, 125% e ritorno a 100%, prima senza ricaricare e poi dopo la ricarica.
-Controllare che gli a capo del medesimo titolo rimangano uguali e che non compaiano sovrapposizioni.
-Scorrere in entrambe le direzioni: giorni e sale devono rimanere visibili.
-Controllare selezione singola e multipla, menu destro e pulsante Oggi.
-Per il trascinamento usare soltanto un turno di prova: il database è condiviso.
-Esportare la diagnostica se persistono differenze; per tornare indietro ripubblicare la v41 ufficiale.
+## Prova
+Confrontare Safari con Chrome a 50%, 80%, 100%, 125%, 200%, poi tornare all’80%, anche dopo ricarica.
+Controllare nitidezza, parole intere, nomi lunghi, note, doppia postazione, card singole e doppie, spazi tra righe.
+Scorrere in entrambe le direzioni e controllare le intestazioni. Verificare selezione e trascinamento solo su turni di prova.
+Usare Diagnostica in caso di problemi. Non pubblicare ancora a tutti.
 
-## Verifiche
-Sintassi JavaScript, isolamento del nuovo codice a Safari desktop, sequenze di zoom,
-geometria delle intestazioni al 50/78/100/125%, assenza di compensazione JavaScript dello scorrimento, aggiornamento al cambio contenuto,
-conservazione delle dimensioni quando la vista è nascosta, risorse locali e confronto con la base.
-Verifiche automatiche di logica con DOM simulato, non una certificazione grafica Safari.
-Browser WebKit non avviabile nell’ambiente di sviluppo per dipendenze di sistema mancanti.
-La verifica grafica e dei gesti sul Mac rimane necessaria.
-Nessuna connessione o modifica al database effettuata durante la preparazione.
+## Verifica effettuata
+Sintassi JavaScript, risorse locali, archivio ZIP. Test di logica con DOM simulato: esclusione altri browser/dispositivi, ciclo zoom 50/80/100/200, adattamento a una dimensione font sproporzionata, altezze normali e doppie.
+Non è stato possibile eseguire il browser Safari in questo ambiente: la resa grafica, la velocità e le interazioni vanno confermate sul Mac.
+Nessuna connessione o scrittura al database durante la preparazione.

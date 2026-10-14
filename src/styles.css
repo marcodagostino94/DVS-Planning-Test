@@ -2674,38 +2674,13 @@ html.is-iphone .iphone-nav-indicator{width:calc((100% - 10px) / 7)}
 .room-block strong{font-size:12px}.room-block-note{font-size:11px;font-weight:750;white-space:pre-wrap}
 .v41-dialog{max-height:90vh;overflow:auto}.v41-dialog p{font-size:12px;color:#58616a}.v41-dialog .bulk-field{display:grid;gap:7px;align-content:start}.bulk-field small{font-size:10px;color:#626c76}.bulk-field input:not([type=checkbox]),.bulk-field select{width:100%;min-width:0;padding:10px;border:1px solid #cdd1d6;border-radius:9px;font:inherit}.bulk-field .checkbox-label{font-size:11px}.bulk-field input:disabled,.bulk-field select:disabled{opacity:.5}
 
-/* v41 TEST SAFARI 5: visual scale and native sticky layers (desktop Safari only). */
-.safari-planning-extent { position:relative; overflow:clip; }
-.safari-planning-scale #planningCanvas {
-  position:absolute; left:0; top:0; min-height:0; transform-origin:0 0;
-}
-/* Originals retain their exact grid space and accessible text. */
-.safari-planning-scale #planningGrid > .corner,
-.safari-planning-scale #planningGrid > .day-head,
-.safari-planning-scale #planningGrid > .room-label,
-.safari-planning-scale #planningGrid > .group-row {
-  position:relative; top:auto; left:auto; opacity:0; pointer-events:none;
-}
-/* Sticky boxes are OUTSIDE the transformed canvas: browser scroll compositing
-   keeps them pinned without JavaScript scroll-event compensation. */
-.safari-sticky-layer { position:sticky; height:0; pointer-events:none; }
-.safari-days-layer { top:0; z-index:30; }
-.safari-rooms-layer { left:0; z-index:20; }
-.safari-corner-layer { top:0; left:0; z-index:40; }
-.safari-sticky-layer > .safari-header-copy {
-  position:absolute; margin:0; transform-origin:0 0; visibility:visible; pointer-events:auto;
-}
-
-/* TEST 4: larger editor text, same 24px footer and same card width. */
+/* TEST 6: desktop Safari uses native zoom and native sticky headers. */
 html.planning-desktop-mac #planningGrid .editor-name {font-size:11px;}
-/* Safari: avoid separately rasterized 3D card layers enlarged by the canvas.
-   Keep existing shadows and selection styles; remove only transform animation. */
-html.safari-planning-scale #planningGrid .shift-card,
-html.safari-planning-scale #planningGrid .shift-card:hover,
-html.safari-planning-scale body.dvs-drag-active #planningGrid .shift-card.dragging {
-  transform:none!important;
-  animation:none!important;
-  will-change:auto;
-  backface-visibility:visible;
-  transition:box-shadow .15s ease,border-color .15s ease;
+html.safari-planning-native #planningCanvas {transform:none;}
+html.safari-planning-native #planningGrid .shift-film,
+html.safari-planning-native #planningGrid .shift-note {
+  white-space:normal; overflow-wrap:normal; word-break:normal; hyphens:none;
+}
+html.safari-planning-native #planningGrid.native-measuring .shift-time-slot.spans-two > .shift-card {
+  height:auto; min-height:var(--card-height);
 }
