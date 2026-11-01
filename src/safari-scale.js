@@ -4,7 +4,12 @@
   const isDesktopSafari = /Macintosh/.test(ua) && /Version\/.*Safari\//.test(ua)
     && !/Chrome|Chromium|CriOS|Edg|OPR|Firefox|FxiOS/.test(ua)
     && !(navigator.maxTouchPoints > 1);
-  if (!isDesktopSafari) return;
+  const isPhone = /iPhone|iPod/.test(ua) || (navigator.maxTouchPoints > 1
+    && /Macintosh|MacIntel|iPhone|iPod/.test(`${ua} ${navigator.platform}`)
+    && Math.min(screen.width, screen.height) <= 500);
+  const isIPad = !isPhone && (/iPad/.test(ua)
+    || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1));
+  if (!isDesktopSafari && !isIPad) return;
   const canvas = document.getElementById('planningCanvas');
   const grid = document.getElementById('planningGrid');
   const scroller = document.getElementById('planningScroller');

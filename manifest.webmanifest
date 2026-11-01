@@ -1,7 +1,7 @@
 {
-  "name": "DVS Planning v42",
+  "name": "DVS Planning v43.3 TEST iPad",
   "short_name": "DVS Planning",
-  "description": "DVS Planning v42",
+  "description": "DVS Planning v43.3 TEST iPad",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
@@ -9,13 +9,13 @@
   "theme_color": "#09090b",
   "icons": [
     {
-      "src": "./assets/icons/dvs-planning-192.png?v=42",
+      "src": "./assets/icons/dvs-planning-192.png?v=43.3-ipad",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./assets/icons/dvs-planning-512.png?v=42",
+      "src": "./assets/icons/dvs-planning-512.png?v=43.3-ipad",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"

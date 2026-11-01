@@ -1,4 +1,4 @@
-// DVS Planning v42
+// DVS Planning v43.3 TEST iPad
 
 const ROOMS = [
   ...Array.from({ length: 15 }, (_, index) => ({
@@ -37,7 +37,7 @@ let bulkSnapshot = [];
 
 const ITALIAN_FIXED_HOLIDAYS = new Set([
   "01-01", "01-06", "04-25", "05-01", "06-02",
-  "08-15", "11-01", "12-08", "12-25", "12-26"
+  "06-29", "08-15", "11-01", "12-08", "12-25", "12-26"
 ]);
 
 const SHIFT_STORAGE = "dvs-planning-build-10-shifts";
@@ -66,7 +66,7 @@ const db = hasSupabaseConfig
     )
   : null;
 
-let currentMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+let currentMonth = planningMonthForDate(new Date());
 let summaryMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
 let selectedSummaryEditorId = null;
 let editingShiftId = null;
@@ -182,15 +182,16 @@ const IS_IPHONE = /iPhone|iPod/.test(navigator.userAgent) || IS_SMALL_APPLE_TOUC
 const IS_IPAD = !IS_IPHONE && (/iPad/.test(navigator.userAgent)
   || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1));
 const IS_TOUCH_APPLE = IS_IPAD || IS_IPHONE;
-const IS_MAC_APP = !IS_TOUCH_APPLE;
-const IS_DESKTOP_MAC = IS_MAC_APP && /Macintosh|MacIntel/.test(`${navigator.userAgent} ${navigator.platform}`);
+const IS_MAC_APP = !IS_IPHONE; // iPad supports desktop selection and keyboard commands.
+const IS_DESKTOP_MAC = IS_IPAD || (IS_MAC_APP && /Macintosh|MacIntel/.test(`${navigator.userAgent} ${navigator.platform}`));
 if (IS_DESKTOP_MAC) document.documentElement.classList.add("planning-desktop-mac");
 function updateAppleDeviceLayout() {
   const iphoneLandscape = IS_IPHONE && window.matchMedia("(orientation: landscape)").matches;
   document.documentElement.classList.toggle("is-iphone-device", IS_IPHONE);
   document.documentElement.classList.toggle("is-iphone-landscape", iphoneLandscape);
   document.documentElement.classList.toggle("is-iphone", IS_IPHONE && !iphoneLandscape);
-  document.documentElement.classList.toggle("is-ipad", IS_IPAD || iphoneLandscape);
+  document.documentElement.classList.toggle("is-ipad", iphoneLandscape);
+  document.documentElement.classList.toggle("is-ipad-desktop", IS_IPAD);
 }
 updateAppleDeviceLayout();
 window.addEventListener("orientationchange", () => requestAnimationFrame(updateAppleDeviceLayout));
@@ -379,16 +380,20 @@ function addDays(date, amount) {
   return copy;
 }
 
+// Each Monday–Sunday week belongs to the month of its Thursday.
+function planningMonthForDate(date) {
+  const thursday = addDays(date, 3 - (date.getDay() + 6) % 7);
+  return new Date(thursday.getFullYear(), thursday.getMonth(), 1);
+}
+
 function startOfPlanningMonth(monthDate) {
-  const first = new Date(monthDate.getFullYear(), monthDate.getMonth(), 1);
-  const mondayOffset = (first.getDay() + 6) % 7;
-  return addDays(first, -mondayOffset);
+  const fourth = new Date(monthDate.getFullYear(), monthDate.getMonth(), 4);
+  return addDays(fourth, -(fourth.getDay() + 6) % 7);
 }
 
 function endOfPlanningMonth(monthDate) {
-  const last = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0);
-  const sundayOffset = (7 - last.getDay()) % 7;
-  return addDays(last, sundayOffset);
+  const nextMonth = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 1);
+  return addDays(startOfPlanningMonth(nextMonth), -1);
 }
 
 function planningDates(monthDate) {
@@ -454,7 +459,6 @@ function editorConflict(shift) {
     other.id !== shift.id
     && other.date === shift.date
     && other.editorId === shift.editorId
-    && overlaps(other, shift)
   );
 }
 
@@ -984,7 +988,27 @@ function removeDragGhost() {
 
 function isHoliday(date) {
   const key = `${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-  return ITALIAN_FIXED_HOLIDAYS.has(key);
+  if (ITALIAN_FIXED_HOLIDAYS.has(key)) return true;
+  // Gregorian Easter (Meeus/Jones/Butcher), using local dates.
+  const year = date.getFullYear();
+  const a = year % 19;
+  const b = Math.floor(year / 100);
+  const c = year % 100;
+  const d = Math.floor(b / 4);
+  const e = b % 4;
+  const f = Math.floor((b + 8) / 25);
+  const g = Math.floor((b - f + 1) / 3);
+  const h = (19 * a + b - d - g + 15) % 30;
+  const i = Math.floor(c / 4);
+  const k = c % 4;
+  const l = (32 + 2 * e + 2 * i - h - k) % 7;
+  const m = Math.floor((a + 11 * h + 22 * l) / 451);
+  const month = Math.floor((h + l - 7 * m + 114) / 31);
+  const day = (h + l - 7 * m + 114) % 31 + 1;
+  const easter = new Date(year, month - 1, day);
+  const easterMonday = addDays(easter, 1);
+  return date.toDateString() === easter.toDateString()
+    || date.toDateString() === easterMonday.toDateString();
 }
 
 function fitText(element, minSize) {
@@ -1119,7 +1143,7 @@ function renderCard(shift) {
         ${isVariedShift(shift) ? '<div class="variation-content">' : ""}
       ${isVariedShift(shift) ? '<svg class="variation-cross" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M4 4L96 96M96 4L4 96"/></svg>' : ""}
         <div class="shift-production">${escapeHtml(shift.production)}</div>
-        <button class="iphone-shift-menu" type="button" aria-label="Azioni turno" title="Azioni turno">•••</button>
+        ${IS_IPAD ? "" : '<button class="iphone-shift-menu" type="button" aria-label="Azioni turno" title="Azioni turno">•••</button>'}
         <div class="shift-time">${escapeHtml(displayTime(shift.start))}${IS_IPHONE ? "–" : " – "}${escapeHtml(displayTime(shift.end))}</div>
         <div class="shift-film">${escapeHtml(shift.film)}</div>
         <div class="shift-type${isHighlightedWork ? " shift-type-red" : ""}">${escapeHtml(shift.workType)}${shift.isVariable ? '<span class="variable-label"> - VARIABILE</span>' : ""}${shift.isDoubleStation ? '<span class="double-station-label">DOPPIA POSTAZIONE</span>' : ""}</div>
@@ -1130,7 +1154,7 @@ function renderCard(shift) {
       <div class="shift-editor">
         <span class="editor-name${shift.confirmed ? " confirmed-name" : ""}">${escapeHtml(assignment)}</span>
         ${shift.confirmed ? '<span class="confirmed-lock" title="Turno confermato">●</span>' : ""}
-        ${warning ? '<span class="editor-warning" title="Dipendente presente su più turni sovrapposti">▲</span>' : ""}
+        ${warning ? '<span class="editor-warning" title="Montatore presente su più turni nella stessa giornata">▲</span>' : ""}
       </div>
     </article>
   `;
@@ -1153,15 +1177,8 @@ function buildRenderConflictIds(source = shifts) {
 
   const conflicts = new Set();
   for (const bucket of byEditorDate.values()) {
-    bucket.sort((a, b) => timeToMinutes(a.start) - timeToMinutes(b.start));
-    for (let i = 0; i < bucket.length; i += 1) {
-      for (let j = i + 1; j < bucket.length; j += 1) {
-        if (timeToMinutes(bucket[j].start) >= timeToMinutes(bucket[i].end)) break;
-        if (overlaps(bucket[i], bucket[j])) {
-          conflicts.add(bucket[i].id);
-          conflicts.add(bucket[j].id);
-        }
-      }
+    if (bucket.length > 1) {
+      for (const shift of bucket) conflicts.add(shift.id);
     }
   }
   return conflicts;
@@ -1343,7 +1360,7 @@ function renderPlanning() {
   bindRoomBlockEvents();
   updateSelectionBadge();
   // Mac: comportamento stabile esistente. iPad: niente fit sincrono del testo.
-  if (!IS_TOUCH_APPLE) fitAllCardText(true);
+  if (!IS_TOUCH_APPLE || IS_IPAD) fitAllCardText(true);
   applyPlanningZoom(false);
   planningRenderSignature = currentPlanningSignature();
   if (document.getElementById("variationDialog")?.open) updateVariationRooms();
@@ -2351,7 +2368,7 @@ document.getElementById("nextMonth").addEventListener("click", () => {
 
 document.getElementById("todayBtn").addEventListener("click", () => {
   const now = new Date();
-  currentMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  currentMonth = planningMonthForDate(now);
   clearSelection();
   renderPlanning();
 
@@ -2989,7 +3006,7 @@ function exportSummaryPdf() {
 
 
 // Build 16.2 — Mesi dinamici — Centro Stampa
-let printMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
+let printMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
 
 function printMonthWeeks(monthDate) {
   const first = new Date(monthDate.getFullYear(), monthDate.getMonth(), 1, 12);
@@ -3271,7 +3288,7 @@ function updateIPhoneBackupLight() {
 function openView(viewName, keepPlanningMonth = false) {
   if (viewName === "planning" && !keepPlanningMonth) {
     const now = new Date();
-    currentMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    currentMonth = planningMonthForDate(now);
     clearSelection();
   }
   if (viewName === "summaries") {
@@ -3346,7 +3363,7 @@ document.querySelectorAll("[data-settings-section]").forEach(button => button.ad
   const sections = {
     backup: { title:"Backup", subtitle:"Stato e autorizzazione", html:backupSettingsHtml() },
     print: { title:"Stampa", subtitle:"Centro Stampa", html:printSettingsHtml() },
-    info: { title:"Informazioni", subtitle:"DVS Planning", html:`<img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video"><h2>DVS Planning</h2><p>Applicazione collaborativa per la gestione del Planning di Digital Video Service. Include blocchi sala, modifica multipla, palette a sette colori, Variabili con ID richiesta e Schema turni mensile riservato alla produzione RAI.</p><div class="settings-info-meta"><div><span>Versione</span><strong>v42</strong></div><div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div><div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div></div><p class="settings-info-copyright"><strong>Copyright © 2026 Marco D'Agostino per Digital Video Service</strong><br>Tutti i diritti riservati.</p>` }
+    info: { title:"Informazioni", subtitle:"DVS Planning", html:`<img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video"><h2>DVS Planning</h2><p>Applicazione collaborativa per la gestione del Planning di Digital Video Service. Include blocchi sala, modifica multipla, palette a sette colori, Variabili con ID richiesta e Schema turni mensile riservato alla produzione RAI.</p><div class="settings-info-meta"><div><span>Versione</span><strong>v43.3 TEST iPad</strong></div><div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div><div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div></div><p class="settings-info-copyright"><strong>Copyright © 2026 Marco D'Agostino per Digital Video Service</strong><br>Tutti i diritti riservati.</p>` }
   };
   const selected = sections[section];
   if (!selected) return;
@@ -3359,7 +3376,7 @@ document.querySelectorAll("[data-settings-section]").forEach(button => button.ad
 
 function openPlanningToday() {
   const now = new Date();
-  const targetMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const targetMonth = planningMonthForDate(now);
   currentMonth = targetMonth;
   openView("planning", true);
 
@@ -3899,7 +3916,7 @@ document.getElementById("backupStatusCard")?.addEventListener("click", () => {
 
 loadProfilesFromSupabase().then(() => { initializeProfileGate(); if (activeProfile) { setCurrentProfileOnline(); startPresenceTracking(); } });
 populateShiftSelects();
-if (IS_TOUCH_APPLE && !localStorage.getItem("dvs-planning-touch-zoom-initialized")) {
+if (IS_IPHONE && !localStorage.getItem("dvs-planning-touch-zoom-initialized")) {
   zoomSelect.value = "fit";
 } else {
   zoomSelect.value = String(nearestZoomOption(planningZoom));
@@ -3907,7 +3924,7 @@ if (IS_TOUCH_APPLE && !localStorage.getItem("dvs-planning-touch-zoom-initialized
 applyPlanningZoom(false);
 renderPlanning();
 updateIPhoneChrome("dashboard");
-if (IS_TOUCH_APPLE && !localStorage.getItem("dvs-planning-touch-zoom-initialized")) {
+if (IS_IPHONE && !localStorage.getItem("dvs-planning-touch-zoom-initialized")) {
   requestAnimationFrame(() => {
     fitPlanningToWindow();
     localStorage.setItem("dvs-planning-touch-zoom-initialized", "1");

@@ -1,0 +1,4 @@
+v43.3 TEST iPad — base v43.2
+Solo iPad: layout e zoom Safari del Mac, montatore e altezze card desktop, apertura Planning a 80%, selezione multipla e comandi tastiera desktop, nessun pulsante tre puntini.
+Doppio clic e menu contestuale utilizzano i gestori esistenti del Mac.
+Mac e iPhone conservano le rispettive condizioni e regole. Nessuno SQL.

@@ -402,8 +402,7 @@ button { -webkit-tap-highlight-color: transparent; }
 .day-head .dow { font-style:italic; font-weight:400; }
 .day-head .num { color:#111419; font-weight:700; }
 
-.day-head.weekend,
-.day-head.holiday {
+.day-head.weekend {
   background: rgba(215,155,160,.27);
 }
 
@@ -483,8 +482,7 @@ button { -webkit-tap-highlight-color: transparent; }
   transition: background .13s ease, box-shadow .13s ease;
 }
 
-.planning-cell.weekend,
-.planning-cell.holiday {
+.planning-cell.weekend {
   background: var(--cell-weekend);
 }
 
@@ -493,8 +491,7 @@ button { -webkit-tap-highlight-color: transparent; }
   box-shadow: inset 0 0 0 1px rgba(10,132,255,.035);
 }
 
-.planning-cell.weekend:hover,
-.planning-cell.holiday:hover {
+.planning-cell.weekend:hover {
   background: color-mix(in srgb, var(--cell-weekend) 96%, #ffffff 4%);
 }
 
@@ -1097,9 +1094,8 @@ input,textarea,select,.app-dialog{-webkit-user-select:text;user-select:text}
 .option-card strong { color:#333b43; font-size:10px; }
 .option-card small { color:#7a838c; font-size:9px; font-weight:500; }
 .disabled-field { opacity:.45; }
-.day-head.outside-month,.planning-cell.outside-month { background-color:rgba(220,224,229,.48); }
 .day-head.outside-month .num { color:#111419; }
-.month-mini { display:block; margin-top:1px; color:#9199a1; font-size:7px; font-weight:800; }
+.month-mini { display:inline-block; color:inherit; font-size:12px; font-weight:800; }
 .shift-card.confirmed { cursor:default; filter:saturate(2.35) contrast(1.10) brightness(.98); border-width:1.5px; box-shadow:0 10px 24px rgba(var(--accent-rgb),.34),inset 0 1px 0 rgba(255,255,255,.92); }
 .shift-card.confirmed:hover { animation:none; transform:none; }
 .shift-card.confirmed.provvisorio { filter:saturate(.35) contrast(1.05); }
@@ -2709,3 +2705,25 @@ html.safari-planning-scale body.dvs-drag-active #planningGrid .shift-card.draggi
   backface-visibility:visible;
   transition:box-shadow .15s ease,border-color .15s ease;
 }
+
+/* Festivi: più intensi del weekend, anche nelle intestazioni fisse Safari. */
+.day-head.holiday,
+.planning-cell.holiday {
+  background: #f0c1c7;
+}
+.planning-cell.holiday:hover {
+  background: #f2c7cd;
+}
+.day-head.holiday,
+.day-head.holiday .dow,
+.day-head.holiday .num,
+.day-head.holiday .month-mini {
+  color: #b51e32;
+}
+
+/* iPad with desktop Planning: prevent independent text enlargement. */
+html.is-ipad-desktop #planningView {
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+}
+html.is-ipad-desktop .iphone-shift-menu { display:none !important; }
