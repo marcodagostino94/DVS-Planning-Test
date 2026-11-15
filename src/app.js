@@ -2825,17 +2825,31 @@ function renderConnectedUsers() {
   const avatars = document.getElementById("sidebarOnlineAvatars");
   if (title) title.textContent = countText;
   if (sidebarCount) sidebarCount.textContent = countText;
-  if (avatars) avatars.innerHTML = onlineProfiles.slice(0,3).map(p => `<i class="profile-${escapeHtml(p.tone)}">${escapeHtml(p.initials)}</i>`).join("");
+  if (avatars) {
+    const markup = onlineProfiles.slice(0,3).map(p => `<i class="profile-${escapeHtml(p.tone)}">${escapeHtml(p.initials)}</i>`).join("");
+    if (avatars.innerHTML !== markup) avatars.innerHTML = markup;
+  }
   updateIPhoneOnlineAvatars();
   if (list) list.innerHTML = count ? onlineProfiles.map(profile => `<div class="connected-user-row"><span class="profile-mini-avatar profile-${escapeHtml(profile.tone)}">${escapeHtml(profile.initials)}</span><span><strong>${escapeHtml(profileFullName(profile))}</strong><small>Online</small></span><i class="online-green-dot" aria-label="Online"></i></div>`).join("") : '<div class="empty-dashboard">Nessun utente collegato.</div>';
 }
 
+let onlineProfilesRequest = 0;
 async function loadOnlineProfiles() {
+  const request = ++onlineProfilesRequest;
+  const requestedProfileId = activeProfile?.id;
   if (!db) { onlineProfiles = activeProfile ? [activeProfile] : []; renderConnectedUsers(); return; }
   const cutoff = new Date(Date.now() - 5 * 60 * 1000).toISOString();
   const { data, error } = await db.from("profile_presence").select("profile_id,last_seen,is_online,planning_profiles(*)").eq("is_online", true).gte("last_seen", cutoff).order("last_seen", { ascending:false });
   if (error) { console.warn("Presenza Build 13 non ancora configurata:", error.message); return; }
-  onlineProfiles = (data || []).filter(row => row.planning_profiles).map(row => normalizeProfile(row.planning_profiles));
+  if (request !== onlineProfilesRequest || requestedProfileId !== activeProfile?.id) return;
+  const profiles = new Map((data || []).filter(row => row.planning_profiles).map(row => {
+    const profile = normalizeProfile(row.planning_profiles);
+    return [profile.id, profile];
+  }));
+  // Un'altra finestra può segnare offline lo stesso profilo ancora attivo qui.
+  if (activeProfile && Date.now() - lastUserActivityAt < 5 * 60 * 1000) profiles.set(activeProfile.id, activeProfile);
+  onlineProfiles = [...profiles.values()].sort((a, b) =>
+    profileFullName(a).localeCompare(profileFullName(b), "it") || String(a.id).localeCompare(String(b.id)));
   renderConnectedUsers();
 }
 
@@ -3364,7 +3378,7 @@ document.querySelectorAll("[data-settings-section]").forEach(button => button.ad
   const sections = {
     backup: { title:"Backup", subtitle:"Stato e autorizzazione", html:backupSettingsHtml() },
     print: { title:"Stampa", subtitle:"Centro Stampa", html:printSettingsHtml() },
-    info: { title:"Informazioni", subtitle:"DVS Planning", html:`<img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video"><h2>DVS Planning</h2><p>Applicazione collaborativa per la gestione del Planning di Digital Video Service. Include blocchi sala, modifica multipla, palette a sette colori, Variabili con ID richiesta e Schema turni mensile riservato alla produzione RAI.</p><div class="settings-info-meta"><div><span>Versione</span><strong>2.0 Design test · prova 15</strong></div><div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div><div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div></div><p class="settings-info-copyright"><strong>Copyright © 2026 Marco D'Agostino per Digital Video Service</strong><br>Tutti i diritti riservati.</p>` }
+    info: { title:"Informazioni", subtitle:"DVS Planning", html:`<img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video"><h2>DVS Planning</h2><p>Applicazione collaborativa per la gestione del Planning di Digital Video Service. Include blocchi sala, modifica multipla, palette a sette colori, Variabili con ID richiesta e Schema turni mensile riservato alla produzione RAI.</p><div class="settings-info-meta"><div><span>Versione</span><strong>2.0 Design test · prova 16</strong></div><div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div><div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div></div><p class="settings-info-copyright"><strong>Copyright © 2026 Marco D'Agostino per Digital Video Service</strong><br>Tutti i diritti riservati.</p>` }
   };
   const selected = sections[section];
   if (!selected) return;
@@ -3781,7 +3795,7 @@ function updateBackupSidebar() {
   orb?.classList.toggle("is-red", !healthy);
   const label = healthy ? "Backup aggiornato" : "Backup da verificare";
   orb?.setAttribute("aria-label", `${label}: apri impostazioni backup`);
-  orb?.setAttribute("title", `${label} · ${formatBackupDate(backupAgentStatus?.last_success_at)}`);
+  orb?.removeAttribute("title");
   updateIPhoneBackupLight();
 }
 
