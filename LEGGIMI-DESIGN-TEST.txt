@@ -1,4 +1,4 @@
-Planning DVS 2.0 Design test — Prova 13
+Planning DVS 2.0 Design test — Prova 15
 
 Colori originali v44.1. Dashboard con pannello unico a L, sale fisse per ufficio e Remote, tutti i turni odierni con programma e assegnazione. Promemoria nella posizione originale. Sidebar: avatar senza testo; Backup, Impostazioni ed Esci circolari. Regole del backup invariate.
 
@@ -27,3 +27,7 @@ Prova 11: profilo e versione in fondo anche nelle altre pagine con barra aperta.
 Prova 12: barra laterale senza scorrimento; spazi verticali adattati alle finestre meno alte, identici tra dashboard e barra aperta nelle altre sezioni.
 
 Prova 13: tutti i comandi slim scendono di 60px, utilizzando lo spazio delle informazioni nascoste. Posizione aperta invariata; eliminati 60px di spazio riservato. Per test con dati reali pubblicare tutti i file su GitHub Pages nel sito di test e aprire index.html: il database è quello configurato in src/config.js, condiviso con la versione originale. Le modifiche ai dati vengono salvate realmente.
+
+Prova 14: comandi sempre verticali e fermi durante apertura/chiusura; utenti collegati rialzati. Rubrica a piena larghezza e sottotitolo semplificato. Eliminato il messaggio di selezione dipendente nel dettaglio vuoto dei Riepiloghi.
+
+Prova 15: rilievo al passaggio del mouse sui pulsanti di navigazione, senza movimento. Bordo rosso persistente sulla sezione selezionata.

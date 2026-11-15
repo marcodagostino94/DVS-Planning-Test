@@ -166,12 +166,12 @@
 
 @media(min-width:901px){html:not(.is-iphone) .sidebar-nav .nav-item:not(:disabled):hover{transform:none}}
 
-/* Prova 13 — comandi ancorati in basso, apertura uguale in ogni pagina. */
+/* Prova 14 — comandi verticali con posizione invariata in ogni stato. */
 @media(min-width:901px){
- html:not(.is-iphone) .sidebar-footer{height:154px;min-height:154px;flex-basis:154px}
- html:not(.is-iphone) .sidebar-footer>#backupStatusCard{transform:translate(0,48px)}
- html:not(.is-iphone) .sidebar-footer>[data-view=settings]{transform:translate(calc((var(--rail-content) - 46px)/2),48px)}
- html:not(.is-iphone) .sidebar-footer>#logoutBtn{transform:translate(calc(var(--rail-content) - 46px),48px)}
+ html:not(.is-iphone) .sidebar-footer{height:214px;min-height:214px;flex-basis:214px}
+ html:not(.is-iphone) .sidebar-footer>#backupStatusCard{transform:translate(2px,0)}
+ html:not(.is-iphone) .sidebar-footer>[data-view=settings]{transform:translate(2px,54px)}
+ html:not(.is-iphone) .sidebar-footer>#logoutBtn{transform:translate(2px,108px)}
  html:not(.is-iphone) .sidebar-footer .active-profile-label{top:auto;bottom:34px}
  html:not(.is-iphone) .sidebar-footer .build-pill{top:auto;bottom:0}
  html.sidebar-slim:not(.sidebar-peek):not(.is-iphone) .sidebar-footer>#backupStatusCard{transform:translate(2px,0)}
@@ -196,4 +196,18 @@
  html.sidebar-slim:not(.sidebar-peek):not(.is-iphone) #sidebarOnlineAvatars i{margin-top:-6px}
  html.sidebar-slim:not(.sidebar-peek):not(.is-iphone) #sidebarOnlineAvatars i:first-child{margin-top:0}
  html:not(.is-iphone) .sidebar-footer{margin-top:8px}
+}
+
+/* Rubrica estesa alla larghezza disponibile. */
+#editorsView .editors-card{width:100%;max-width:none}
+
+/* Prova 15 — rilievo al passaggio, bordo rosso della sezione selezionata. */
+@media(min-width:901px){
+ html:not(.is-iphone) .sidebar-nav .nav-item.active{border-color:rgba(255,96,108,.58)}
+ html:not(.is-iphone) .sidebar-nav .nav-item.active::after{bottom:0}
+}
+@media(min-width:901px) and (hover:hover){
+ html:not(.is-iphone) .sidebar-nav .nav-item:not(:disabled):hover{transform:none;box-shadow:inset 0 1px rgba(255,255,255,.22),inset 0 -1px rgba(255,255,255,.08),0 5px 10px rgba(0,0,0,.28)}
+ html:not(.is-iphone) .sidebar-nav .nav-item:not(.active):not(:disabled):hover{border-color:rgba(255,255,255,.24)}
+ html:not(.is-iphone) .sidebar-nav .nav-item.active:not(:disabled):hover{border-color:rgba(255,96,108,.7);box-shadow:inset 0 1px rgba(255,255,255,.22),0 0 0 1px rgba(177,17,34,.16),0 5px 12px rgba(177,17,34,.24)}
 }
