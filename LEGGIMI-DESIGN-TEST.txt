@@ -1,4 +1,4 @@
-Planning DVS 2.0 Design test — Prova 16
+Planning DVS 2.0 Design test — Prova 17
 
 Colori originali v44.1. Dashboard con pannello unico a L, sale fisse per ufficio e Remote, tutti i turni odierni con programma e assegnazione. Promemoria nella posizione originale. Sidebar: avatar senza testo; Backup, Impostazioni ed Esci circolari. Regole del backup invariate.
 
@@ -33,3 +33,5 @@ Prova 14: comandi sempre verticali e fermi durante apertura/chiusura; utenti col
 Prova 15: rilievo al passaggio del mouse sui pulsanti di navigazione, senza movimento. Bordo rosso persistente sulla sezione selezionata.
 
 Prova 16: scritte Backup, Impostazioni ed Esci a barra aperta, senza tooltip nativi; icone ferme. Presenza locale attiva mantenuta anche se altra finestra segna offline lo stesso profilo; ordine avatar stabile, risposte obsolete ignorate, niente ricostruzione avatar invariati. Nessuna SQL.
+
+Prova 17: Impostazioni e tutti i dettagli (Profili, Backup, Stampa, Informazioni) centrati nello spazio libero oltre la barra aperta. Posizione stabile quando la barra si chiude; disposizione a colonna singola sulle finestre più strette.

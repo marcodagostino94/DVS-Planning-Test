@@ -2962,6 +2962,24 @@ html.is-ipad-desktop .iphone-shift-menu { display:none !important; }
  html:not(.is-iphone) .sidebar-footer>#logoutBtn>span:not(.nav-icon){color:#ff5566}
  html.sidebar-slim:not(.sidebar-peek):not(.is-iphone) .sidebar-footer>.nav-item>span:not(.nav-icon){opacity:0;pointer-events:none}
 }
+
+/* Prova 17 — impostazioni centrate oltre l'ingombro della barra aperta. */
+@media(min-width:901px){
+ html:not(.is-iphone) #settingsView>.settings-home,
+ html:not(.is-iphone) #settingsView>.settings-detail{
+  box-sizing:border-box;
+  width:min(1040px,calc(100% - 168px));
+  margin-left:calc(168px + max(0px,(100% - 1208px)/2));
+  margin-right:auto;
+ }
+ html:not(.is-iphone) #settingsView>.settings-home{
+  grid-template-columns:repeat(2,minmax(0,360px));
+  justify-content:center;
+ }
+}
+@media(min-width:901px) and (max-width:1100px){
+ html:not(.is-iphone) #settingsView>.settings-home{grid-template-columns:minmax(0,360px)}
+}
 </style>
 <style>#profileGate{display:none!important}.preview-message{position:fixed;bottom:20px;left:35%;background:#25282e;color:white;padding:14px 20px;border:1px solid #ffffff30;border-radius:16px;z-index:9999}.preview-message:empty{display:none}</style></head>
 <body>
@@ -3026,7 +3044,7 @@ html.is-ipad-desktop .iphone-shift-menu { display:none !important; }
           <span class="nav-icon"><svg class="sf-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 5H5.5A2.5 2.5 0 0 0 3 7.5v9A2.5 2.5 0 0 0 5.5 19H10M14 8l4 4-4 4M8 12h10"/></svg></span><span>Esci</span>
         </button>
         <span id="activeProfileLabel" class="active-profile-label"></span>
-        <span class="build-pill">2.0 Design test · prova 16</span>
+        <span class="build-pill">2.0 Design test · prova 17</span>
       </div>
     </aside>
 
