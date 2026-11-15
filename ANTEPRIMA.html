@@ -2968,8 +2968,8 @@ html.is-ipad-desktop .iphone-shift-menu { display:none !important; }
  html:not(.is-iphone) #settingsView>.settings-home,
  html:not(.is-iphone) #settingsView>.settings-detail{
   box-sizing:border-box;
-  width:min(1040px,calc(100% - 168px));
-  margin-left:calc(168px + max(0px,(100% - 1208px)/2));
+  width:min(1040px,100%);
+  margin-left:auto;
   margin-right:auto;
  }
  html:not(.is-iphone) #settingsView>.settings-home{
@@ -2980,9 +2980,27 @@ html.is-ipad-desktop .iphone-shift-menu { display:none !important; }
 @media(min-width:901px) and (max-width:1100px){
  html:not(.is-iphone) #settingsView>.settings-home{grid-template-columns:minmax(0,360px)}
 }
+
+/* Prova 18 — composizione del logo originale, solo al caricamento. */
+.app-intro{position:fixed;inset:0;z-index:2147483647;display:grid;place-items:center;background:radial-gradient(ellipse at center,rgba(116,18,31,.18),transparent 65%),#0d0f12;opacity:1;transition:opacity .4s ease}
+.app-intro.is-finished{opacity:0;pointer-events:none}
+.intro-brand{width:min(340px,72vw);text-align:center}
+.intro-logo{position:relative;width:100%;aspect-ratio:7787/2346}
+.intro-logo img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;animation:intro-compose .7s cubic-bezier(.2,.8,.2,1) forwards}
+.intro-logo img:nth-child(1){clip-path:inset(0 86.6% 0 0);animation-delay:.1s}
+.intro-logo img:nth-child(2){clip-path:inset(0 73.2% 0 13.4%);animation-delay:.3s}
+.intro-logo img:nth-child(3){clip-path:inset(0 59.7% 0 26.8%);animation-delay:.5s}
+.intro-logo img:nth-child(4){clip-path:inset(0 0 0 40.3%);animation-delay:.75s}
+.intro-planning{margin-top:22px;color:#eee;font-size:13px;font-weight:750;letter-spacing:.42em;text-indent:.42em;opacity:0;animation:intro-planning .6s ease 1.25s forwards}
+@keyframes intro-compose{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes intro-planning{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.intro-logo img,.intro-planning{animation:none;opacity:1}.app-intro{transition:none}}
 </style>
 <style>#profileGate{display:none!important}.preview-message{position:fixed;bottom:20px;left:35%;background:#25282e;color:white;padding:14px 20px;border:1px solid #ffffff30;border-radius:16px;z-index:9999}.preview-message:empty{display:none}</style></head>
 <body>
+<div id="appIntro" class="app-intro" role="status" aria-label="Avvio DVS Planning"><div class="intro-brand"><div class="intro-logo"><img src="./assets/logos/digital-video-full.png" alt="" aria-hidden="true"><img src="./assets/logos/digital-video-full.png" alt="" aria-hidden="true"><img src="./assets/logos/digital-video-full.png" alt="" aria-hidden="true"><img src="./assets/logos/digital-video-full.png" alt="" aria-hidden="true"></div><div class="intro-planning">PLANNING</div></div></div>
+
+
   <section id="profileGate" class="profile-gate" aria-label="Selezione profilo">
     <div class="profile-gate-content">
       <div class="profile-brand">
@@ -3044,7 +3062,7 @@ html.is-ipad-desktop .iphone-shift-menu { display:none !important; }
           <span class="nav-icon"><svg class="sf-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 5H5.5A2.5 2.5 0 0 0 3 7.5v9A2.5 2.5 0 0 0 5.5 19H10M14 8l4 4-4 4M8 12h10"/></svg></span><span>Esci</span>
         </button>
         <span id="activeProfileLabel" class="active-profile-label"></span>
-        <span class="build-pill">2.0 Design test · prova 17</span>
+        <span class="build-pill">2.0 Design test · prova 18</span>
       </div>
     </aside>
 
@@ -3623,10 +3641,28 @@ renderDashboardRooms(data);
 const put=(id,t)=>{const e=document.getElementById(id);if(e)e.textContent=t;};
 put('dashboardGreeting','Buongiorno, Marco');put('dashboardDate',new Intl.DateTimeFormat('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date()));put('sidebarOnlineCount','2 utenti connessi');put('todayShiftCount','7');put('todayPeopleCount','3');put('todayRoomCount','5/15');put('activeProfileLabel','Profilo dimostrativo');put('remindersCount','2');
 document.getElementById('sidebarOnlineAvatars').innerHTML='<i class="profile-orange">MD</i><i class="profile-blue">LB</i>';
-const backup=document.getElementById('backupStatusCard');backup.classList.replace('is-red','is-green');backup.title='Backup aggiornato (dimostrazione)';backup.setAttribute('aria-label',backup.title);
+const backup=document.getElementById('backupStatusCard');backup.classList.replace('is-red','is-green');backup.removeAttribute('title');backup.setAttribute('aria-label','Backup aggiornato (dimostrazione)');
 document.getElementById('remindersList').innerHTML='<div class="reminder-row"><span>Verificare le consegne della settimana</span></div><div class="reminder-row"><span>Visione in sala 5 alle 15:00</span></div>';
 let timer;function message(){put('previewMessage','Anteprima offline: nessun dato viene modificato.');clearTimeout(timer);timer=setTimeout(()=>put('previewMessage',''),3000);}
 document.getElementById('reminderForm').addEventListener('submit',e=>{e.preventDefault();message();});
+
+(() => {
+  const overlay = document.getElementById('appIntro');
+  if (!overlay || overlay.dataset.started) return;
+  overlay.dataset.started = 'true';
+  const panels = [...document.querySelectorAll('#profileGate, .app-shell')];
+  const previous = panels.map(panel => panel.inert);
+  panels.forEach(panel => { panel.inert = true; });
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const finish = () => {
+    overlay.classList.add('is-finished');
+    setTimeout(() => {
+      overlay.remove();
+      panels.forEach((panel, i) => { panel.inert = previous[i]; });
+    }, reduced ? 0 : 400);
+  };
+  setTimeout(finish, reduced ? 150 : 2100);
+})();
 
 // Presentazione soltanto: mantiene la posizione originale su iPhone e schermi stretti.
 (()=>{
