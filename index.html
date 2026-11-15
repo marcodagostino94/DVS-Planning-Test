@@ -3,15 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-  <title>DVS Planning v43.3 TEST iPad</title>
+  <title>Planning DVS 2.0 Design test</title>
   <meta name="theme-color" content="#09090b">
-  <link rel="icon" href="./favicon.ico?v=43.3-ipad" sizes="any">
-  <link rel="icon" type="image/png" sizes="32x32" href="./assets/icons/dvs-planning-32.png?v=43.3-ipad">
-  <link rel="icon" type="image/png" sizes="16x16" href="./assets/icons/dvs-planning-16.png?v=43.3-ipad">
-  <link rel="icon" type="image/png" sizes="64x64" href="./assets/icons/dvs-planning-64.png?v=43.3-ipad">
-  <link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/dvs-planning-180.png?v=43.3-ipad">
-  <link rel="manifest" href="./manifest.webmanifest?v=43.3-ipad">
-  <link rel="stylesheet" href="./src/styles.css?v=43.3-ipad">
+  <link rel="icon" href="./favicon.ico?v=44.1" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/icons/dvs-planning-32.png?v=44.1">
+  <link rel="icon" type="image/png" sizes="16x16" href="./assets/icons/dvs-planning-16.png?v=44.1">
+  <link rel="icon" type="image/png" sizes="64x64" href="./assets/icons/dvs-planning-64.png?v=44.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/dvs-planning-180.png?v=44.1">
+  <link rel="manifest" href="./manifest.webmanifest?v=44.1">
+  <link rel="stylesheet" href="./src/styles.css?v=44.1">
+<link rel="stylesheet" href="./src/design-test.css?v=2.0-test-13">
 </head>
 <body>
   <section id="profileGate" class="profile-gate" aria-label="Selezione profilo">
@@ -32,7 +33,7 @@
     <aside class="sidebar">
       <div class="brand">
         <span class="brand-glow" aria-hidden="true"></span>
-        <img src="./assets/logos/digital-video-full.png" alt="Digital Video">
+        <img src="./assets/logos/digital-video-full.png" alt="Digital Video"><svg class="brand-symbol" viewBox="0 0 3136 2346" aria-hidden="true"><image href="./assets/logos/digital-video-full.png" width="7787" height="2346"/></svg>
         <span class="product-name">PLANNING</span>
       </div>
 
@@ -54,14 +55,7 @@
       </nav>
 
       <div class="sidebar-status-stack">
-        <button id="backupStatusCard" class="status-card backup-card backup-status-button" type="button" aria-label="Apri stato backup">
-          <div class="status-card-icon"><svg class="sf-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18.5H6a4 4 0 0 1-.6-8A6.5 6.5 0 0 1 18 9a4.8 4.8 0 0 1 0 9.5h-1"/><path d="M12 19V10M8.5 13.5 12 10l3.5 3.5"/></svg></div>
-          <div class="status-card-copy">
-            <strong><i id="backupSidebarLight" class="backup-light is-red" aria-hidden="true"></i>Backup</strong>
-            <span id="backupSidebarDate">Nessun backup registrato</span>
-          </div>
-          <span class="status-card-chevron">›</span>
-        </button>
+
 
         <button id="connectedUsersCard" class="status-card users-card" type="button" aria-label="Apri utenti collegati">
           <div class="status-card-icon"><svg class="sf-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3.5 20c.5-4 2.4-6 5.5-6s5 2 5.5 6M14 15c3.7-.4 5.8 1.3 6.5 5"/></svg></div>
@@ -74,14 +68,15 @@
       </div>
 
       <div class="sidebar-footer">
-        <button class="nav-item" data-view="settings" type="button">
+<button id="backupStatusCard" class="nav-item backup-orb is-red" type="button" aria-label="Backup da verificare: apri impostazioni backup" title="Backup da verificare"><span class="nav-icon"><svg class="sf-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18.5H6a4 4 0 0 1-.6-8A6.5 6.5 0 0 1 18 9a4.8 4.8 0 0 1 0 9.5h-1"/><path d="M12 19V10M8.5 13.5 12 10l3.5 3.5"/></svg></span></button>
+        <button class="nav-item" data-view="settings" type="button" aria-label="Impostazioni" title="Impostazioni">
           <span class="nav-icon"><svg class="sf-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6V21h-4v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H3v-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1A1.7 1.7 0 0 0 9 4.6 1.7 1.7 0 0 0 10 3V3h4v.1a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.1v4H21a1.7 1.7 0 0 0-1.6 1z"/></svg></span><span>Impostazioni</span>
         </button>
-        <button id="logoutBtn" class="nav-item logout-item" type="button">
+        <button id="logoutBtn" class="nav-item logout-item" type="button" aria-label="Esci" title="Esci">
           <span class="nav-icon"><svg class="sf-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 5H5.5A2.5 2.5 0 0 0 3 7.5v9A2.5 2.5 0 0 0 5.5 19H10M14 8l4 4-4 4M8 12h10"/></svg></span><span>Esci</span>
         </button>
         <span id="activeProfileLabel" class="active-profile-label"></span>
-        <span class="build-pill">v43.3 TEST iPad</span>
+        <span class="build-pill">2.0 Design test · prova 13</span>
       </div>
     </aside>
 
@@ -123,19 +118,9 @@
           </div>
 
           <div class="dashboard-grid">
-            <article class="dashboard-panel today-planning-panel">
-              <div class="panel-heading"><div><small>OGGI</small><h2>Planning di oggi</h2></div><button id="openTodayPlanning" type="button">Apri</button></div>
-              <div id="todayPlanningList" class="today-planning-list"></div>
-            </article>
-
-            <article class="dashboard-panel rooms-panel">
-              <div class="panel-heading"><div><small>DISPONIBILITÀ</small><h2>Stato sale</h2></div></div>
-              <div id="todayRoomsList" class="compact-dashboard-list"></div>
-            </article>
-
-            <article class="dashboard-panel employees-panel">
-              <div class="panel-heading"><div><small>PRESENZE</small><h2>Dipendenti presenti</h2></div></div>
-              <div id="todayEmployeesList" class="compact-dashboard-list"></div>
+            <article class="room-overview" aria-label="Planning e disponibilità delle sale">
+              <div class="overview-wing overview-chinotto"><div class="overview-today">OGGI</div><div id="officeChinottoList" class="office-list"></div></div>
+              <div class="overview-wing overview-carso"><div id="officeCarsoList" class="office-list"></div></div>
             </article>
 
             <article class="dashboard-panel reminders-panel">
@@ -310,7 +295,7 @@
             <h2>DVS Planning</h2>
             <p>Applicazione collaborativa per la gestione del Planning di Digital Video Service.</p>
             <div class="settings-info-meta">
-              <div><span>Versione</span><strong>v43.3 TEST iPad</strong></div>
+              <div><span>Versione</span><strong>v44.1</strong></div>
               <div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div>
               <div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div>
             </div>
@@ -635,7 +620,9 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="./src/config.js?v=11.0"></script>
-  <script src="./src/safari-scale.js?v=43.3-ipad"></script>
-  <script src="./src/app.js?v=43.3-ipad"></script>
+  <script src="./src/safari-scale.js?v=44.1"></script>
+  <script src="./src/app.js?v=2.0-test-13"></script>
+<script src="./src/dashboard-layout.js?v=2.0-test-13"></script>
+<script src="./src/sidebar-slim.js?v=2.0-test-13"></script>
 </body>
 </html>

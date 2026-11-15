@@ -1,0 +1,6 @@
+DVS Planning v44.1 — Backup Agent 2.2.0 completo
+Ogni backup contiene Excel anno corrente, Excel anno successivo e JSON, anche se il prossimo anno non contiene turni.
+La copia è valida solo dopo la verifica di tutti e tre i file.
+Ultime sette copie per anno di esecuzione; cartelle anni precedenti conservate.
+Compatibilità con copie precedenti a un Excel nella rotazione. Il prossimo backup produce sempre due Excel.
+Download installer aggiornato in Impostazioni > Backup. Nessuno SQL. Interfaccia invariata rispetto alla v44.

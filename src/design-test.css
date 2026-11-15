@@ -1,0 +1,199 @@
+/* Prova 2: colori originali, solo dashboard e comandi laterali. */
+.sidebar-footer{display:grid;grid-template-columns:repeat(3,1fr);align-items:center;gap:10px}
+.sidebar-footer>.nav-item{width:46px;height:46px;min-height:46px;padding:0;display:grid;place-items:center;border-radius:50%;justify-self:center}
+.sidebar-footer>.nav-item>span:not(.nav-icon){display:none}
+.sidebar-footer>.nav-item .nav-icon{margin:0}
+.sidebar-footer .active-profile-label,.sidebar-footer .build-pill{grid-column:1/-1}
+.sidebar-footer .build-pill{font-size:9px}
+.sidebar-footer .backup-orb.is-red{color:#ff7180;border-color:#b83849;background:linear-gradient(145deg,rgba(193,34,51,.44),rgba(93,18,29,.25));box-shadow:inset 0 1px #ffffff24,0 0 14px #c01f3029}
+.sidebar-footer .backup-orb.is-green{color:#8fefb4;border-color:#419867;background:linear-gradient(145deg,rgba(35,142,83,.44),rgba(15,67,42,.25));box-shadow:inset 0 1px #ffffff24,0 0 14px #258e5329}
+#dashboardView .dashboard-grid{--left:56%;--gap:16px;position:relative;grid-template-columns:minmax(0,56fr) minmax(0,44fr);grid-template-rows:minmax(0,62fr) minmax(0,38fr);gap:var(--gap);isolation:isolate}
+#dashboardView .room-overview{display:grid;grid-column:1/-1;grid-row:1/-1;grid-template-columns:subgrid;grid-template-rows:subgrid;min-height:0;min-width:0;pointer-events:none;position:relative}
+#dashboardView .room-overview::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:22px;background:linear-gradient(145deg,#ffffff13,#ffffff06);box-shadow:inset 0 1px #ffffff14;clip-path:polygon(0 0,100% 0,100% calc((100% - 16px)*.62),calc((100% - 16px)*.56) calc((100% - 16px)*.62),calc((100% - 16px)*.56) 100%,0 100%)}
+#dashboardView .overview-wing{min-width:0;min-height:0;padding:19px;pointer-events:auto;display:flex;flex-direction:column;overflow:hidden}
+#dashboardView .overview-chinotto{grid-column:1;grid-row:1/3}
+#dashboardView .overview-carso{grid-column:2;grid-row:1;padding-left:3px}
+#dashboardView .office-list{overflow:auto;min-height:0;scrollbar-width:thin;scrollbar-color:#ffffff30 transparent}
+#dashboardView .office-group h3{font-size:11px;letter-spacing:.035em;color:#dddfe2;margin:0 0 8px;font-weight:750}
+#dashboardView .office-group+.office-group{border-top:1px solid #ffffff14;margin-top:16px;padding-top:16px}
+#dashboardView .overview-room{display:grid;grid-template-columns:78px minmax(0,1fr);gap:8px;align-items:start;padding:10px 0;border-bottom:1px solid #ffffff08}
+#dashboardView .overview-room-label{display:flex;align-items:center;font-size:11px;min-height:18px;white-space:nowrap}
+#dashboardView .overview-room-label .room-dot{flex:0 0 7px}
+#dashboardView .overview-bookings{min-width:0}
+#dashboardView .overview-booking{display:grid;grid-template-columns:76px minmax(0,1fr);gap:3px 8px;font-size:11px;line-height:1.5}
+#dashboardView .overview-booking time{font-size:10px;color:#ff7b87;font-weight:750;white-space:nowrap}
+#dashboardView .overview-booking strong{font-size:11px;overflow-wrap:anywhere;font-weight:650}
+#dashboardView .overview-booking>span{grid-column:2;color:#c5c7cb;font-size:10px}
+#dashboardView .overview-booking+.overview-booking{margin-top:9px;padding-top:8px;border-top:1px solid #ffffff0a}
+#dashboardView .overview-free{font-size:10px;color:#93999f;line-height:18px}
+#dashboardView .reminders-panel{grid-column:2;grid-row:2;z-index:1}
+.overview-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+@supports not (grid-template-columns:subgrid){#dashboardView .room-overview{grid-template-columns:minmax(0,56fr) minmax(0,44fr);grid-template-rows:minmax(0,62fr) minmax(0,38fr);gap:16px}}
+@media(max-width:900px){
+#dashboardView .dashboard-grid{display:flex;flex-direction:column;overflow:auto;flex:1}
+#dashboardView .room-overview{display:flex;flex-direction:column;flex-shrink:0;background:linear-gradient(145deg,#ffffff13,#ffffff06);border-radius:22px}
+#dashboardView .room-overview::before{display:none}
+#dashboardView .overview-wing{overflow:visible;padding:16px}
+#dashboardView .office-list{overflow:visible}
+#dashboardView .reminders-panel{flex-shrink:0;min-height:220px}
+}
+
+/* Prova 3 — righe uniformi e turni affiancati. */
+#dashboardView .dashboard-header>div{order:0}
+#dashboardView .dashboard-open-planning{order:1;border:1px solid #ffffff20;border-radius:12px;padding:8px 12px;background:#ffffff0d;color:#eceef0;cursor:pointer;font-size:11px}
+#dashboardView .overview-chinotto .office-group h3{display:none}
+#dashboardView .overview-chinotto .office-group+.office-group{border-top:2px solid #ffffff66;margin-top:12px;padding-top:12px}
+#dashboardView .overview-bookings{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:10px;align-items:center}
+#dashboardView .overview-booking{grid-template-columns:auto minmax(0,1fr) minmax(0,.8fr);align-items:center;gap:6px;min-width:0}
+#dashboardView .overview-booking>span{grid-column:auto}
+#dashboardView .overview-booking strong,#dashboardView .overview-booking>span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+#dashboardView .overview-booking+.overview-booking{margin:0;padding:0 0 0 10px;border-top:0;border-left:1px solid #ffffff26}
+#dashboardView .overview-room{align-items:center;padding:0;grid-template-columns:64px minmax(0,1fr)}
+@media(min-width:901px){
+ #dashboardView .dashboard-grid{container-type:size}
+ #dashboardView .overview-room{height:clamp(18px,calc((62cqh - 88px)/8),42px);min-height:0}
+ #dashboardView .office-list{overflow:visible;flex:0 0 auto}
+ #dashboardView .overview-wing{padding-top:12px;padding-bottom:12px}
+ #dashboardView .overview-carso .office-group+.office-group{margin-top:8px;padding-top:8px}
+ #dashboardView .overview-chinotto{padding-top:34px}
+}
+@media(max-width:900px){#dashboardView .overview-room{height:38px}}
+
+/* Prova 4: utilizzo completo dell’altezza e nominativo vicino al programma. */
+#dashboardView .office-group h3{display:none}
+#dashboardView .overview-carso .office-group+.office-group{border-top:2px solid #ffffff66;margin-top:12px;padding-top:12px}
+#dashboardView .overview-booking{display:flex;gap:7px;align-items:center}
+#dashboardView .overview-booking time{flex:0 0 auto}
+#dashboardView .overview-booking strong{flex:0 1 auto}
+#dashboardView .overview-booking>span{flex:0 1 auto}
+#dashboardView .overview-today{font-size:9px;letter-spacing:.15em;font-weight:850;color:#e75664;line-height:14px;margin:0 0 10px;flex:0 0 auto}
+@media(min-width:901px){
+ #dashboardView .overview-wing{padding-top:14px;padding-bottom:14px}
+ #dashboardView .office-list{display:grid;flex:1 1 0;min-height:0;overflow:hidden;gap:0}
+ #dashboardView #officeChinottoList{grid-template-rows:minmax(0,5fr) minmax(0,5fr)}
+ #dashboardView #officeCarsoList{grid-template-rows:minmax(0,5fr) minmax(0,3fr)}
+ #dashboardView .office-group{display:grid;grid-template-rows:repeat(5,minmax(0,1fr));min-height:0}
+ #dashboardView #officeCarsoList .office-group:last-child{grid-template-rows:repeat(3,minmax(0,1fr))}
+ #dashboardView .overview-room{height:auto;min-height:0}
+}
+
+@media(min-width:901px){
+ #dashboardView .office-list{gap:18px}
+ #dashboardView .overview-wing .office-group+.office-group{margin:0;padding:0;border-top:0;position:relative}
+ #dashboardView .overview-wing .office-group+.office-group::before{content:"";position:absolute;top:-10px;left:0;right:0;border-top:2px solid #ffffff66}
+}
+
+/* Prova 5: riepiloghi sulla stessa linea del saluto. */
+#dashboardView .reminders-panel .panel-heading h2{margin-top:0}
+@media(min-width:901px){
+ html:not(.is-iphone) #dashboardView .dashboard-header{display:flex;align-items:center;gap:20px;padding-bottom:12px}
+ html:not(.is-iphone) #dashboardView .dashboard-header>div:first-child{flex:1 1 220px;min-width:170px}
+ html:not(.is-iphone) #dashboardView .dashboard-header h1{font-size:clamp(20px,2vw,28px)}
+ html:not(.is-iphone) #dashboardView .dashboard-header .dashboard-kpis{flex:0 1 740px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0;min-width:0}
+ html:not(.is-iphone) #dashboardView .dashboard-header .dashboard-kpi{width:100%;min-width:0;grid-template-columns:44px minmax(0,1fr);gap:10px;padding:16px 14px}
+ html:not(.is-iphone) #dashboardView .dashboard-header .kpi-icon{width:44px;height:44px}
+ html:not(.is-iphone) #dashboardView .dashboard-header .kpi-copy{min-width:0}
+ html:not(.is-iphone) #dashboardView .dashboard-header .kpi-copy small{font-size:11px}
+ html:not(.is-iphone) #dashboardView .dashboard-content{padding-top:0}
+}
+@media(min-width:901px) and (max-width:1150px){
+ html:not(.is-iphone) #dashboardView .dashboard-header{gap:12px}
+ html:not(.is-iphone) #dashboardView .dashboard-header .dashboard-kpis{gap:8px}
+ html:not(.is-iphone) #dashboardView .dashboard-header .dashboard-kpi{grid-template-columns:30px minmax(0,1fr);gap:6px;padding:14px 9px}
+ html:not(.is-iphone) #dashboardView .dashboard-header .kpi-icon{width:30px;height:30px}
+ html:not(.is-iphone) #dashboardView .dashboard-header .kpi-icon svg{width:18px;height:18px}
+}
+
+/* Prova 6: sagoma a L con bordo continuo e raccordi arrotondati. */
+#dashboardView .room-overview::before{display:none}
+#dashboardView .overview-surface{position:absolute;inset:0;width:100%;height:100%;overflow:visible;z-index:-1;pointer-events:none;filter:drop-shadow(0 14px 17px rgba(0,0,0,.17))}
+@media(min-width:901px){
+ html:not(.is-iphone) #dashboardView .dashboard-header .dashboard-kpis{flex-basis:830px}
+}
+@media(max-width:900px){#dashboardView .overview-surface{display:none}}
+
+/* Prova 7 — etichette sala come nel precedente Stato sale. */
+#dashboardView .overview-room{grid-template-columns:88px minmax(0,1fr)}
+#dashboardView .overview-room-label{box-sizing:border-box;width:100%;padding:5px 8px;border-radius:11px;background:rgba(255,255,255,.035);min-height:0}
+#dashboardView .reminders-panel .panel-heading h2{margin-top:3px}
+
+/* Prova 9 — stessa superficie opaca e geometria verticale in tutti gli stati. */
+.sidebar .brand .brand-symbol{display:none}
+@media(min-width:901px){
+ html:not(.is-iphone) .sidebar{--rail-content:219px;position:relative;padding:18px 14px 14px;box-sizing:border-box;overflow:hidden;background:radial-gradient(circle at 15% 0%,rgba(206,35,52,.10),transparent 28%),linear-gradient(165deg,#0d0f12 0%,#181b1f 100%);background-size:248px 100%;background-repeat:no-repeat;backdrop-filter:none;-webkit-backdrop-filter:none;flex-shrink:0}
+ html:not(.is-iphone) .sidebar .brand{height:86px;min-height:86px;flex:0 0 86px;margin-bottom:18px;position:relative;padding:0}
+ html:not(.is-iphone) .sidebar .brand>img{position:absolute;top:14px;left:50%;transform:translateX(-50%);width:160px;opacity:1;transition:opacity .16s ease}
+ html:not(.is-iphone) .sidebar .brand-symbol{display:block;position:absolute;top:18px;left:50%;transform:translateX(-50%);width:46px;height:35px;overflow:hidden;opacity:0;transition:opacity .16s ease}
+ html:not(.is-iphone) .sidebar .product-name{position:absolute;top:67px;left:0;width:100%;text-align:center;white-space:nowrap}
+ html:not(.is-iphone) .sidebar-nav{gap:8px;flex:0 0 auto}
+ html:not(.is-iphone) .sidebar-nav .nav-item{height:48px;min-height:48px;padding:12px 14px;gap:12px;white-space:nowrap;overflow:hidden;transition:background .18s ease,border-color .18s ease,box-shadow .18s ease}
+ html:not(.is-iphone) .sidebar-nav .nav-icon{flex:0 0 20px;width:20px;margin:0}
+ html:not(.is-iphone) .sidebar-nav .nav-item>span:not(.nav-icon){flex:0 0 160px;opacity:1;transition:opacity .15s ease}
+ html:not(.is-iphone) .sidebar-status-stack{margin-top:auto;padding-top:20px;flex:0 0 auto}
+ html:not(.is-iphone) #connectedUsersCard{position:relative;height:78px;min-height:78px;flex-shrink:0;overflow:hidden}
+ html:not(.is-iphone) #connectedUsersCard .status-card-icon{position:absolute;left:12px;top:18px}
+ html:not(.is-iphone) #connectedUsersCard .status-card-copy{position:absolute;left:64px;top:17px;width:82px;transition:opacity .15s ease}
+ html:not(.is-iphone) #sidebarOnlineAvatars{position:absolute;right:12px;top:26px;display:flex;align-items:center;gap:0}
+ html:not(.is-iphone) #sidebarOnlineAvatars i{width:25px;height:25px;flex:0 0 25px;margin-left:-6px}
+ html:not(.is-iphone) .sidebar-footer{position:relative;display:block;height:154px;min-height:154px;flex:0 0 154px;margin-top:12px}
+ html:not(.is-iphone) .sidebar-footer>.nav-item{position:absolute;top:0;left:0;width:46px;height:46px;min-height:46px;margin:0;transition:transform .2s ease}
+ html:not(.is-iphone) .sidebar-footer>#backupStatusCard{transform:translate(0,0)}
+ html:not(.is-iphone) .sidebar-footer>[data-view=settings]{transform:translate(calc((var(--rail-content) - 46px)/2),0)}
+ html:not(.is-iphone) .sidebar-footer>#logoutBtn{transform:translate(calc(var(--rail-content) - 46px),0)}
+ html:not(.is-iphone) .sidebar-footer .active-profile-label{position:absolute;left:0;top:59px;white-space:nowrap;transition:opacity .15s ease}
+ html:not(.is-iphone) .sidebar-footer .build-pill{position:absolute;left:0;top:80px;white-space:nowrap;transition:opacity .15s ease}
+ html.sidebar-slim:not(.is-iphone){--sidebar-width:80px}
+ html.sidebar-slim:not(.is-iphone) .main-area{grid-column:2}
+ html.sidebar-slim:not(.is-iphone) .sidebar{position:fixed;top:0;bottom:0;left:0;z-index:90;width:80px;transition:width .2s ease}
+ html.sidebar-slim.sidebar-peek:not(.is-iphone) .sidebar{width:248px}
+ html.sidebar-slim:not(.sidebar-peek):not(.is-iphone) .sidebar{--rail-content:51px}
+ html.sidebar-slim:not(.sidebar-peek):not(.is-iphone) .sidebar .brand>img{opacity:0}
+ html.sidebar-slim:not(.sidebar-peek):not(.is-iphone) .sidebar .brand-symbol{opacity:1}
+ html.sidebar-slim:not(.sidebar-peek):not(.is-iphone) .sidebar .product-name{font-size:7px;letter-spacing:.12em;text-indent:0}
+ html.sidebar-slim:not(.sidebar-peek):not(.is-iphone) .sidebar-nav .nav-item>span:not(.nav-icon){opacity:0}
+ html.sidebar-slim:not(.sidebar-peek):not(.is-iphone) #connectedUsersCard .status-card-icon,
+ html.sidebar-slim:not(.sidebar-peek):not(.is-iphone) #connectedUsersCard .status-card-copy{opacity:0;pointer-events:none}
+ html.sidebar-slim:not(.sidebar-peek):not(.is-iphone) #sidebarOnlineAvatars{left:12px;right:auto;top:5px;flex-direction:column;gap:0}
+ html.sidebar-slim:not(.sidebar-peek):not(.is-iphone) #sidebarOnlineAvatars i{margin:0;margin-top:-3px}
+ html.sidebar-slim:not(.sidebar-peek):not(.is-iphone) #sidebarOnlineAvatars i:first-child{margin-top:0}
+ html.sidebar-slim:not(.sidebar-peek):not(.is-iphone) .sidebar-footer>#backupStatusCard{transform:translate(2px,0)}
+ html.sidebar-slim:not(.sidebar-peek):not(.is-iphone) .sidebar-footer>[data-view=settings]{transform:translate(2px,54px)}
+ html.sidebar-slim:not(.sidebar-peek):not(.is-iphone) .sidebar-footer>#logoutBtn{transform:translate(2px,108px)}
+ html.sidebar-slim:not(.sidebar-peek):not(.is-iphone) .sidebar-footer .active-profile-label,
+ html.sidebar-slim:not(.sidebar-peek):not(.is-iphone) .sidebar-footer .build-pill{opacity:0;pointer-events:none}
+}
+@media(prefers-reduced-motion:reduce){html .sidebar,html .sidebar *{transition:none!important}}
+
+@media(min-width:901px){html:not(.is-iphone) .sidebar-nav .nav-item:not(:disabled):hover{transform:none}}
+
+/* Prova 13 — comandi ancorati in basso, apertura uguale in ogni pagina. */
+@media(min-width:901px){
+ html:not(.is-iphone) .sidebar-footer{height:154px;min-height:154px;flex-basis:154px}
+ html:not(.is-iphone) .sidebar-footer>#backupStatusCard{transform:translate(0,48px)}
+ html:not(.is-iphone) .sidebar-footer>[data-view=settings]{transform:translate(calc((var(--rail-content) - 46px)/2),48px)}
+ html:not(.is-iphone) .sidebar-footer>#logoutBtn{transform:translate(calc(var(--rail-content) - 46px),48px)}
+ html:not(.is-iphone) .sidebar-footer .active-profile-label{top:auto;bottom:34px}
+ html:not(.is-iphone) .sidebar-footer .build-pill{top:auto;bottom:0}
+ html.sidebar-slim:not(.sidebar-peek):not(.is-iphone) .sidebar-footer>#backupStatusCard{transform:translate(2px,0)}
+ html.sidebar-slim:not(.sidebar-peek):not(.is-iphone) .sidebar-footer>[data-view=settings]{transform:translate(2px,54px)}
+ html.sidebar-slim:not(.sidebar-peek):not(.is-iphone) .sidebar-footer>#logoutBtn{transform:translate(2px,108px)}
+}
+
+/* Prova 12 — barra fissa, spazi adattati alle finestre meno alte. */
+@media(min-width:901px){
+ html:not(.is-iphone) .sidebar{height:100dvh;max-height:100dvh;overflow:clip}
+}
+@media(min-width:901px) and (max-height:820px){
+ html:not(.is-iphone) .sidebar{padding-top:10px;padding-bottom:10px}
+ html:not(.is-iphone) .sidebar .brand{margin-bottom:8px}
+ html:not(.is-iphone) .sidebar-nav .nav-item{height:clamp(32px,calc((100dvh - 480px)/6),48px);min-height:0;padding-top:5px;padding-bottom:5px}
+ html:not(.is-iphone) .sidebar-status-stack{padding-top:8px}
+ html:not(.is-iphone) #connectedUsersCard{height:66px;min-height:66px}
+ html:not(.is-iphone) #connectedUsersCard .status-card-icon{top:12px}
+ html:not(.is-iphone) #connectedUsersCard .status-card-copy{top:11px}
+ html:not(.is-iphone) #sidebarOnlineAvatars{top:20px}
+ html.sidebar-slim:not(.sidebar-peek):not(.is-iphone) #sidebarOnlineAvatars{top:2px}
+ html.sidebar-slim:not(.sidebar-peek):not(.is-iphone) #sidebarOnlineAvatars i{margin-top:-6px}
+ html.sidebar-slim:not(.sidebar-peek):not(.is-iphone) #sidebarOnlineAvatars i:first-child{margin-top:0}
+ html:not(.is-iphone) .sidebar-footer{margin-top:8px}
+}

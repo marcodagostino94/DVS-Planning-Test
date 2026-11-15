@@ -1,4 +1,4 @@
-// DVS Planning v43.3 TEST iPad
+// DVS Planning v44.1
 
 const ROOMS = [
   ...Array.from({ length: 15 }, (_, index) => ({
@@ -3273,7 +3273,7 @@ function updateIPhoneOnlineAvatars() {
   if (!IS_IPHONE) return;
   const container = document.getElementById("iphoneOnlineAvatars");
   if (!container) return;
-  container.innerHTML = onlineProfiles.slice(0,3).map(p => `<i class="profile-${escapeHtml(p.tone)}">${escapeHtml(p.initials)}</i>`).join("");
+  container.innerHTML = onlineProfiles.map(p => `<i class="profile-${escapeHtml(p.tone)}">${escapeHtml(p.initials)}</i>`).join("");
 }
 
 function updateIPhoneBackupLight() {
@@ -3300,6 +3300,7 @@ function openView(viewName, keepPlanningMonth = false) {
   updateIPhoneChrome(viewName);
   document.querySelectorAll(".app-view").forEach(view => view.classList.remove("active"));
   document.getElementById(`${viewName}View`)?.classList.add("active");
+  window.updateSlimSidebar?.(viewName);
   if (viewName === "schema") renderShiftSchema();
   if (viewName === "variables") renderVariables();
   if (viewName === "editors") renderEditors();
@@ -3363,7 +3364,7 @@ document.querySelectorAll("[data-settings-section]").forEach(button => button.ad
   const sections = {
     backup: { title:"Backup", subtitle:"Stato e autorizzazione", html:backupSettingsHtml() },
     print: { title:"Stampa", subtitle:"Centro Stampa", html:printSettingsHtml() },
-    info: { title:"Informazioni", subtitle:"DVS Planning", html:`<img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video"><h2>DVS Planning</h2><p>Applicazione collaborativa per la gestione del Planning di Digital Video Service. Include blocchi sala, modifica multipla, palette a sette colori, Variabili con ID richiesta e Schema turni mensile riservato alla produzione RAI.</p><div class="settings-info-meta"><div><span>Versione</span><strong>v43.3 TEST iPad</strong></div><div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div><div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div></div><p class="settings-info-copyright"><strong>Copyright © 2026 Marco D'Agostino per Digital Video Service</strong><br>Tutti i diritti riservati.</p>` }
+    info: { title:"Informazioni", subtitle:"DVS Planning", html:`<img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video"><h2>DVS Planning</h2><p>Applicazione collaborativa per la gestione del Planning di Digital Video Service. Include blocchi sala, modifica multipla, palette a sette colori, Variabili con ID richiesta e Schema turni mensile riservato alla produzione RAI.</p><div class="settings-info-meta"><div><span>Versione</span><strong>2.0 Design test · prova 13</strong></div><div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div><div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div></div><p class="settings-info-copyright"><strong>Copyright © 2026 Marco D'Agostino per Digital Video Service</strong><br>Tutti i diritti riservati.</p>` }
   };
   const selected = sections[section];
   if (!selected) return;
@@ -3404,6 +3405,17 @@ function dashboardRoomOrder(roomId) {
   return room?.sortOrder ?? Number.MAX_SAFE_INTEGER;
 }
 
+function renderDashboardRooms(todays) {
+  const roomGroup = (title, rooms) => `<section class="office-group"><h3>${escapeHtml(title)}</h3>${rooms.map(room => {
+    const booked = todays.filter(shift => shift.room === room.id);
+    return `<div class="overview-room"><div class="overview-room-label"><i class="room-dot ${booked.length ? 'busy' : ''}" aria-hidden="true"></i><strong>${escapeHtml(room.label.replace(/^Remote\s+/i, 'Remoto '))}</strong><span class="overview-sr">${booked.length ? 'Occupata' : 'Libera'}</span></div><div class="overview-bookings">${booked.length ? booked.map(shift => `<div class="overview-booking"><time>${escapeHtml(shift.start)}–${escapeHtml(shift.end)}</time><strong title="${escapeHtml(shift.film || shift.production || 'Turno')}">${escapeHtml(shift.film || shift.production || 'Turno')}</strong><span title="${escapeHtml(shift.isClient ? 'CLIENTE' : (shift.editorId ? employeeNameById(shift.editorId) : 'Da assegnare'))}">${escapeHtml(shift.isClient ? 'CLIENTE' : (shift.editorId ? employeeNameById(shift.editorId) : 'Da assegnare'))}</span></div>`).join('') : '<span class="overview-free">Libera</span>'}</div></div>`;
+  }).join('')}</section>`;
+  const chinotto = document.getElementById('officeChinottoList');
+  const carso = document.getElementById('officeCarsoList');
+  if(chinotto) chinotto.innerHTML = roomGroup('Uff 1 · Via Chinotto', ROOMS.slice(0,5)) + roomGroup('Uff 2 · Via Chinotto', ROOMS.slice(5,10));
+  if(carso) carso.innerHTML = roomGroup('Uff 3 · Viale Carso', ROOMS.slice(10,15)) + roomGroup('Remote', ROOMS.slice(15));
+}
+
 function renderDashboard() {
   const today = localTodayIso();
   const todays = shifts
@@ -3429,42 +3441,7 @@ function renderDashboard() {
   if (peopleCount) peopleCount.textContent = String(people.length);
   if (roomCount) roomCount.textContent = `${occupiedPhysicalRooms.size}/15`;
 
-  const planningList = document.getElementById("todayPlanningList");
-  if (planningList) {
-    planningList.innerHTML = todays.length ? todays.map(shift => {
-      const room = ROOMS.find(item => item.id === shift.room)?.label || shift.room;
-      return `<div class="today-shift-row"><time>${escapeHtml(shift.start)}–${escapeHtml(shift.end)}</time><span class="room">${escapeHtml(room)}</span><strong>${escapeHtml(shift.film || shift.production || "Turno")}</strong><span>${escapeHtml(employeeNameById(shift.editorId))}</span></div>`;
-    }).join("") : '<div class="empty-dashboard">Nessun turno programmato per oggi.</div>';
-    planningList.scrollTop = 0;
-  }
-
-  const roomsList = document.getElementById("todayRoomsList");
-  if (roomsList) {
-    // Mostra sempre tutte le 15 sale e le 3 postazioni remote.
-    // Il semaforo dipende esclusivamente dalla presenza di un turno odierno.
-    const dashboardRooms = [...ROOMS].sort((a, b) => a.sortOrder - b.sortOrder);
-    const rowsPerColumn = Math.ceil(dashboardRooms.length / 2);
-    roomsList.style.setProperty("--dashboard-room-rows", String(rowsPerColumn));
-    roomsList.innerHTML = dashboardRooms.map(room => {
-      const isBusy = todays.some(shift => shift.room === room.id);
-      const label = room.label.replace(/^Remote\s+/i, "Remoto ");
-      return `<div class="compact-room"><i class="room-dot ${isBusy ? "busy" : ""}" aria-hidden="true"></i><span>${escapeHtml(label)}</span></div>`;
-    }).join("");
-    roomsList.scrollTop = 0;
-  }
-
-  const employeesList = document.getElementById("todayEmployeesList");
-  if (employeesList) {
-    employeesList.innerHTML = people.length ? people.map(id => {
-      const employeeShifts = todays.filter(shift => shift.editorId === id);
-      const roomLabels = [...new Set(employeeShifts.map(shift => {
-        const label = ROOMS.find(item => item.id === shift.room)?.label || shift.room || "—";
-        return label.replace(/^Remote\s+/i, "Remoto ");
-      }))];
-      return `<div class="compact-row"><span>${escapeHtml(employeeNameById(id))}</span><span>${escapeHtml(roomLabels.join(", "))}</span></div>`;
-    }).join("") : '<div class="empty-dashboard">Nessun dipendente presente oggi.</div>';
-    employeesList.scrollTop = 0;
-  }
+  renderDashboardRooms(todays);
 
   renderReminders();
 }
@@ -3497,7 +3474,7 @@ async function loadRemindersFromSupabase() {
 }
 
 document.getElementById("todayShiftsCard")?.addEventListener("click", openPlanningToday);
-document.getElementById("openTodayPlanning")?.addEventListener("click", openPlanningToday);
+
 document.getElementById("reminderForm")?.addEventListener("submit", async event => {
   event.preventDefault();
   const input = document.getElementById("reminderInput");
@@ -3799,6 +3776,12 @@ function updateBackupSidebar() {
   light?.classList.toggle("is-green", healthy);
   light?.classList.toggle("is-red", !healthy);
   if (date) date.textContent = formatBackupDate(backupAgentStatus?.last_success_at);
+  const orb = document.getElementById("backupStatusCard");
+  orb?.classList.toggle("is-green", healthy);
+  orb?.classList.toggle("is-red", !healthy);
+  const label = healthy ? "Backup aggiornato" : "Backup da verificare";
+  orb?.setAttribute("aria-label", `${label}: apri impostazioni backup`);
+  orb?.setAttribute("title", `${label} · ${formatBackupDate(backupAgentStatus?.last_success_at)}`);
   updateIPhoneBackupLight();
 }
 
@@ -3817,7 +3800,7 @@ function backupSettingsHtml() {
       <div class="backup-detail"><span>Cartella backup</span><strong id="backupDetailFolder">—</strong></div>
     </div>
     <div class="backup-actions">
-      <a class="primary-btn backup-download-btn" href="./downloads/DVS_Backup_Agent.pkg" download>Scarica Backup Agent</a>
+      <a class="primary-btn backup-download-btn" href="./downloads/DVS_Backup_Agent.pkg?v=2.2.0" download>Scarica Backup Agent</a>
       <button id="revokeBackupAuthorization" class="danger-outline-btn" type="button">Revoca autorizzazione</button>
     </div>
     <p class="backup-utility-note">Per eseguire “Backup ora”, aprire la cartella o consultare i log usa <strong>DVS Backup Agent Utility</strong> nella cartella Applicazioni del Mac autorizzato.</p>`;

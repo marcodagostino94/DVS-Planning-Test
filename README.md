@@ -1,11 +1,19 @@
-# DVS Planning v43.3 TEST iPad
+# DVS Planning v44.1
 
-Base v43.2. Versione da verificare su iPad con tastiera e trackpad prima della pubblicazione.
+Include Backup Agent 2.2.0 completo. Base interfaccia: v43.3 TEST iPad.
 
-Sostituire i file del sito di test con il contenuto della cartella. Nessuno SQL.
+## Aggiornamento
+Carica il contenuto della cartella su GitHub come di consueto. Dopo la pubblicazione, in Impostazioni > Backup premi Scarica Backup Agent e apri il PKG sul Mac autorizzato. Non occorre disinstallare la versione precedente. Configurazione, stato, autorizzazione e cartella scelta vengono conservati. L'installer archivia il programma precedente e sostituisce programma e runtime.
+Se un backup è in corso, attendi che termini e ripeti l'installazione. Dopo l'installazione premi Backup ora nella Utility e verifica la nuova coppia.
 
-Solo iPad: layout desktop, zoom Safari come Mac, apertura Planning a 80%, selezione con Cmd/Ctrl e Maiusc, selezione a riquadro e trascinamento multiplo. Doppio clic modifica il turno; clic destro apre le azioni. Rimossi i tre puntini. Il touch resta disponibile per scorrere.
+## Nuovo Mac
+Lo stesso PKG installa programma, runtime e Utility anche senza installazioni precedenti. Scegli la cartella di destinazione e autorizza il nuovo computer dalle impostazioni Backup del Planning. In una cartella già usata dal nuovo Agent, le copie complete vengono riconosciute tramite i relativi file di verifica.
 
-Verificare sul dispositivo: 50/80/100/200%, intestazioni fisse durante lo scorrimento, doppio clic, clic destro, selezione con Cmd e Maiusc e trascinamento. I turni confermati conservano i blocchi esistenti. Non è stata eseguita una prova su iPad fisico nell'ambiente di preparazione.
+## Copie
+Nella destinazione scelta viene creata DVS_Backup_Storico/ANNO. Ogni backup riuscito crea una sottocartella con data, ora e identificativo, contenente Planning_ANNO.xlsx, Planning_ANNO_SUCCESSIVO.xlsx, DVS_Planning_Backup.json e backup-completo.json.
+Si conservano le ultime 7 coppie per anno. La pulizia parte solo dopo la verifica della nuova coppia. Il primo backup del nuovo anno crea la nuova cartella senza eliminare copie dell'anno precedente.
+Le vecchie cartelle possono essere rimesse accanto a DVS_Backup_Storico: non vengono cancellate o incorporate automaticamente. Le copie con file aggiunti, modificati o in conflitto sono conservate: in questi casi il numero può superare temporaneamente sette.
+Ogni copia contiene due Excel: anno corrente e successivo, anche quando il successivo è vuoto. Nel 2026: Excel 2026 e 2027; dal primo backup del 2027: Excel 2027 e 2028 nella nuova cartella 2027. Il JSON conserva le tabelle esportate dall'Agent precedente e la vista Planning dei due anni. Questa versione non aggiunge uno schema SQL o nuove tabelle al backup.
 
-Le condizioni Mac e iPhone restano invariate, inclusa la modalità iPhone orizzontale. Conservate settimane senza duplicazioni, triangolino giornaliero e festività della v43.2.
+## Verifiche
+Test locali: rotazione, errori, cambio anno, riconoscimento copie su nuovo Mac, protezione cartelle precedenti e conflitti. Verificati struttura, checksum e script del PKG completo. Installer non firmato/notarizzato; installazione macOS e sincronizzazione iCloud da verificare sul Mac. Nessun accesso al database durante la preparazione. Nessuno SQL da eseguire.
