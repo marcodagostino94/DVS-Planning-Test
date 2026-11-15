@@ -1,4 +1,4 @@
-Planning DVS 2.0 Design test — Prova 18
+Planning DVS 2.0 Design test — Prova 19
 
 Colori originali v44.1. Dashboard con pannello unico a L, sale fisse per ufficio e Remote, tutti i turni odierni con programma e assegnazione. Promemoria nella posizione originale. Sidebar: avatar senza testo; Backup, Impostazioni ed Esci circolari. Regole del backup invariate.
 
@@ -37,3 +37,5 @@ Prova 16: scritte Backup, Impostazioni ed Esci a barra aperta, senza tooltip nat
 Prova 17: Impostazioni e tutti i dettagli (Profili, Backup, Stampa, Informazioni) centrati nello spazio libero oltre la barra aperta. Posizione stabile quando la barra si chiude; disposizione a colonna singola sulle finestre più strette.
 
 Prova 18: impostazioni centrate rispetto alla barra slim. Animazione iniziale di circa 2,5 secondi con composizione del logo originale e comparsa di PLANNING, una volta per caricamento; non si ripete navigando o uscendo dal profilo. Ridotta se attiva la preferenza di sistema Riduci movimento.
+
+Prova 19: logo intero che emerge da un alone rosso con sfocatura progressivamente dissolta, senza ritagli né entrata dal basso. Pausa finale aumentata di un secondo; durata totale circa 3,5 secondi. Dissolvenza verso il login invariata.

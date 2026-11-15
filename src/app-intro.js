@@ -13,5 +13,5 @@
       panels.forEach((panel, i) => { panel.inert = previous[i]; });
     }, reduced ? 0 : 400);
   };
-  setTimeout(finish, reduced ? 150 : 2100);
+  setTimeout(finish, reduced ? 150 : 3100);
 })();
