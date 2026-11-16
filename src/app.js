@@ -1,4 +1,4 @@
-// Planning DVS 50.1
+// Planning DVS 50.2
 
 const ROOMS = [
   ...Array.from({ length: 15 }, (_, index) => ({
@@ -3155,12 +3155,12 @@ function openPrintPreview() {
       });
     });
     const weekLabel=`${shortPrintDate(week.start)} – ${shortPrintDate(week.end)}`;
-    return `<main class="paper"><header class="head"><div><h1>Digital Video Service</h1><p>PLANNING · ${escapeHtml(monthName(printMonth))}</p><small>Settimana ${escapeHtml(weekLabel)}</small></div><strong>${selectedRooms.length===ROOMS.length?'Tutte le sale':`${selectedRooms.length} sale selezionate`}</strong></header><section class="grid">${cells.join('')}</section><footer class="page-footer"><span>Planning DVS 50.1</span><span>Pagina ${pageIndex+1} di ${selectedWeeks.length}</span></footer></main>`;
+    return `<main class="paper"><header class="head"><div><h1>Digital Video Service</h1><p>PLANNING · ${escapeHtml(monthName(printMonth))}</p><small>Settimana ${escapeHtml(weekLabel)}</small></div><strong>${selectedRooms.length===ROOMS.length?'Tutte le sale':`${selectedRooms.length} sale selezionate`}</strong></header><section class="grid">${cells.join('')}</section><footer class="page-footer"><span>Planning DVS 50.2</span><span>Pagina ${pageIndex+1} di ${selectedWeeks.length}</span></footer></main>`;
   }).join('');
   const popup=window.open('','_blank');
   if(!popup)return showToast('Consenti l’apertura della finestra di anteprima');
   popup.document.open();
-  popup.document.write(`<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Planning DVS 50.1 · ${escapeHtml(periodLabel)}</title><style>
+  popup.document.write(`<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Planning DVS 50.2 · ${escapeHtml(periodLabel)}</title><style>
   :root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#17181b;background:#e9eaed}*{box-sizing:border-box}body{margin:0}.preview-bar{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:14px 22px;background:#111318;color:#fff;box-shadow:0 5px 20px #0003}.preview-bar div{display:flex;gap:10px}.preview-bar button{border:0;border-radius:10px;padding:10px 16px;font-weight:700;cursor:pointer}.preview-bar .print{background:#e54b57;color:#fff}.paper{margin:24px auto;background:#fff;width:min(1500px,calc(100vw - 48px));padding:22px;box-shadow:0 12px 45px #0002;break-after:page;page-break-after:always}.paper:last-child{break-after:auto;page-break-after:auto}.head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #17181b;padding-bottom:12px;margin-bottom:14px}.head h1{margin:0;font-size:24px}.head p{margin:4px 0 0;color:#5d626c}.head small{display:block;margin-top:3px;color:#777}.head strong{font-size:13px}.grid{display:grid;grid-template-columns:95px repeat(7,${autoFit?'minmax(0,1fr)':'150px'});width:100%;border:1px solid #cfd2d8;border-right:0;border-bottom:0}.grid>div{border-right:1px solid #cfd2d8;border-bottom:1px solid #cfd2d8}.p-corner,.p-day{height:50px;background:#f1f2f4;display:flex;align-items:center;justify-content:center}.p-corner{font-size:11px;font-weight:800}.p-day{flex-direction:column}.p-day span{font-size:9px;font-weight:800}.p-day b{font-size:18px}.p-day small{font-size:7px}.p-day.weekend,.p-cell.weekend{background:#f7f1f2}.p-day.outside{opacity:.55}.p-room{padding:8px;font-size:11px;font-weight:800;background:#f6f7f8;display:flex;align-items:flex-start}.p-cell{min-height:94px;padding:4px;background:#fff}.p-shift{--accent:61,125,235;border:1px solid rgba(var(--accent),.55);border-radius:7px;background:rgba(var(--accent),.18);overflow:hidden;margin-bottom:4px;font-size:7px;break-inside:avoid}.p-shift.provvisorio{background:#fff;border-style:dashed}.p-main{padding:5px}.p-main b,.p-main strong,.p-main em,.p-main time,.p-main small{display:block;white-space:normal;overflow-wrap:anywhere}.p-main b{font-size:8px}.p-main time{font-weight:700;margin:2px 0}.p-main strong{font-size:8px}.p-main em{font-style:normal;font-weight:700;margin-top:2px}.p-main small{margin-top:3px;border-top:1px solid #0002;padding-top:2px}.p-shift footer{background:rgba(var(--accent),.32);padding:4px 5px;font-weight:800}.p-shift.confirmed footer:after{content:'  ●';font-size:6px}.page-footer{margin-top:12px;display:flex;justify-content:space-between;font-size:9px;color:#777}@page{size:A4 landscape;margin:8mm}@media print{body{background:#fff}.preview-bar{display:none}.paper{margin:0;padding:0;box-shadow:none;width:100%;height:auto;break-after:page;page-break-after:always}.paper:last-child{break-after:auto;page-break-after:auto}.grid{width:100%;grid-template-columns:72px repeat(7,minmax(0,1fr))}.p-cell{min-height:60px;padding:2px}.p-room{font-size:8px;padding:4px}.p-day{height:38px}.p-day b{font-size:13px}.p-shift{font-size:5px;border-radius:3px;margin-bottom:2px}.p-main{padding:2px}.p-main b,.p-main strong{font-size:5.5px}.p-shift footer{padding:2px}.head{margin-bottom:6px;padding-bottom:6px}.head h1{font-size:16px}.head p,.head strong,.head small{font-size:8px}.page-footer{font-size:7px}}
   </style></head><body><div class="preview-bar"><button onclick="window.close()">‹ Torna alle impostazioni</button><div><button class="print" onclick="window.print()">Stampa / Salva PDF</button></div></div>${pages}</body></html>`);
   popup.document.close();
@@ -3185,7 +3185,7 @@ function updateIPhoneChrome(viewName) {
   document.querySelectorAll(".iphone-nav-item[data-view]").forEach(item => item.classList.toggle("active", item.dataset.view === viewName));
   updateIPhoneNavIndicator(viewName);
   const title = document.getElementById("iphoneSectionTitle");
-  if (title) title.textContent = IPHONE_VIEW_TITLES[viewName] || "Planning DVS 50.1";
+  if (title) title.textContent = IPHONE_VIEW_TITLES[viewName] || "Planning DVS 50.2";
   const action = document.getElementById("iphoneContextAction");
   if (!action) return;
   action.classList.add("hidden");
@@ -3378,7 +3378,7 @@ document.querySelectorAll("[data-settings-section]").forEach(button => button.ad
   const sections = {
     backup: { title:"Backup", subtitle:"Stato e autorizzazione", html:backupSettingsHtml() },
     print: { title:"Stampa", subtitle:"Centro Stampa", html:printSettingsHtml() },
-    info: { title:"Informazioni", subtitle:"Planning DVS 50.1", html:`<img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video"><h2>Planning DVS 50.1</h2><p>Applicazione collaborativa per la gestione del Planning di Digital Video Service. Include blocchi sala, modifica multipla, palette a sette colori, Variabili con ID richiesta e Schema turni mensile riservato alla produzione RAI.</p><div class="settings-info-meta"><div><span>Versione</span><strong>Planning DVS 50.1</strong></div><div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div><div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div></div><p class="settings-info-copyright"><strong>Copyright © 2026 Marco D'Agostino per Digital Video Service</strong><br>Tutti i diritti riservati.</p>` }
+    info: { title:"Informazioni", subtitle:"Planning DVS 50.2", html:`<img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video"><h2>Planning DVS 50.2</h2><p>Applicazione collaborativa per la gestione del Planning di Digital Video Service. Include blocchi sala, modifica multipla, palette a sette colori, Variabili con ID richiesta e Schema turni mensile riservato alla produzione RAI.</p><div class="settings-info-meta"><div><span>Versione</span><strong>Planning DVS 50.2</strong></div><div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div><div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div></div><p class="settings-info-copyright"><strong>Copyright © 2026 Marco D'Agostino per Digital Video Service</strong><br>Tutti i diritti riservati.</p>` }
   };
   const selected = sections[section];
   if (!selected) return;
@@ -3419,7 +3419,23 @@ function dashboardRoomOrder(roomId) {
   return room?.sortOrder ?? Number.MAX_SAFE_INTEGER;
 }
 
-function renderDashboardRooms(todays) {
+function dashboardShiftInProgress(shift, now = new Date()) {
+  if (isVariedShift(shift) || !/^\d{4}-\d{2}-\d{2}$/.test(shift.date || '')) return false;
+  const parse = value => {
+    const match = /^(\d{1,2}):(\d{2})(?::\d{2})?$/.exec(String(value || ''));
+    if (!match || +match[1] > 24 || +match[2] > 59 || (+match[1] === 24 && +match[2] !== 0)) return null;
+    return +match[1] * 60 + +match[2];
+  };
+  const start = parse(shift.start), end = parse(shift.end);
+  if (start === null || end === null || start === end) return false;
+  const [year, month, day] = shift.date.split('-').map(Number);
+  const from = new Date(year, month - 1, day, 0, start);
+  const to = new Date(year, month - 1, day + (end < start ? 1 : 0), 0, end);
+  return now >= from && now < to;
+}
+let dashboardRenderedMinute = '';
+
+function renderDashboardRooms(todays, now = new Date()) {
   const compactTime = value => {
     const match = /^(\d{1,2}):(\d{2})(?::\d{2})?$/.exec(String(value || ''));
     return match ? `${Number(match[1])}${match[2] === '00' ? '' : ':' + match[2]}` : String(value || '');
@@ -3427,7 +3443,8 @@ function renderDashboardRooms(todays) {
   const surnameById = id => String(editors.find(editor => editor.id === id)?.lastName || '').trim() || employeeNameById(id);
   const roomGroup = (title, rooms) => `<section class="office-group"><h3>${escapeHtml(title)}</h3>${rooms.map(room => {
     const booked = todays.filter(shift => shift.room === room.id);
-    return `<div class="overview-room"><div class="overview-room-label"><i class="room-dot ${booked.length ? 'busy' : ''}" aria-hidden="true"></i><strong>${escapeHtml(room.label.replace(/^Remote\s+/i, 'Remoto '))}</strong><span class="overview-sr">${booked.length ? 'Occupata' : 'Libera'}</span></div><div class="overview-bookings">${booked.length ? booked.map(shift => `<div class="overview-booking"><time>${escapeHtml(compactTime(shift.start))}-${escapeHtml(compactTime(shift.end))}</time><strong title="${escapeHtml(shift.film || shift.production || 'Turno')}">${escapeHtml(shift.film || shift.production || 'Turno')}</strong><span title="${escapeHtml(shift.isClient ? 'CLIENTE' : (shift.editorId ? employeeNameById(shift.editorId) : 'Da assegnare'))}">${escapeHtml(shift.isClient ? 'CLIENTE' : (shift.editorId ? surnameById(shift.editorId) : 'Da assegnare'))}</span></div>`).join('') : '<span class="overview-free">Libera</span>'}</div></div>`;
+    const busy = booked.some(shift => dashboardShiftInProgress(shift, now));
+    return `<div class="overview-room"><div class="overview-room-label"><i class="room-dot ${busy ? 'busy' : ''}" aria-hidden="true"></i><strong>${escapeHtml(room.label.replace(/^Remote\s+/i, 'Remoto '))}</strong><span class="overview-sr">${busy ? 'Occupata ora' : 'Libera ora'}</span></div><div class="overview-bookings">${booked.length ? booked.map(shift => `<div class="overview-booking${dashboardShiftInProgress(shift, now) ? ' is-current' : ''}"${dashboardShiftInProgress(shift, now) ? ' aria-label="Turno in corso"' : ''}><time>${escapeHtml(compactTime(shift.start))}-${escapeHtml(compactTime(shift.end))}</time><strong title="${escapeHtml(shift.film || shift.production || 'Turno')}">${escapeHtml(shift.film || shift.production || 'Turno')}</strong><span title="${escapeHtml(shift.isClient ? 'CLIENTE' : (shift.editorId ? employeeNameById(shift.editorId) : 'Da assegnare'))}">${escapeHtml(shift.isClient ? 'CLIENTE' : (shift.editorId ? surnameById(shift.editorId) : 'Da assegnare'))}</span></div>`).join('') : '<span class="overview-free">Libera</span>'}</div></div>`;
   }).join('')}</section>`;
   const chinotto = document.getElementById('officeChinottoList');
   const carso = document.getElementById('officeCarsoList');
@@ -3436,9 +3453,11 @@ function renderDashboardRooms(todays) {
 }
 
 function renderDashboard() {
-  const today = localTodayIso();
+  const now = new Date();
+  dashboardRenderedMinute = String(Math.floor(now.getTime() / 60000));
+  const today = isoDate(now.getFullYear(), now.getMonth(), now.getDate());
   const todays = shifts
-    .filter(shift => shift.date === today)
+    .filter(shift => shift.date === today || dashboardShiftInProgress(shift, now))
     .sort((a, b) => {
       const roomDifference = dashboardRoomOrder(a.room) - dashboardRoomOrder(b.room);
       return roomDifference || String(a.start || "").localeCompare(String(b.start || ""));
@@ -3446,12 +3465,12 @@ function renderDashboard() {
 
   const people = [...new Set(todays.filter(shift => shift.editorId).map(shift => shift.editorId))]
     .sort((a, b) => employeeNameById(a).localeCompare(employeeNameById(b), "it", { sensitivity:"base" }));
-  const occupiedPhysicalRooms = new Set(todays.filter(shift => /^sala-\d+$/.test(shift.room)).map(shift => shift.room));
+  const occupiedPhysicalRooms = new Set(todays.filter(shift => /^sala-\d+$/.test(shift.room) && dashboardShiftInProgress(shift, now)).map(shift => shift.room));
 
   const greeting = document.getElementById("dashboardGreeting");
   if (greeting) greeting.textContent = `Buongiorno${activeProfile?.name ? `, ${activeProfile.name.split(" ")[0]}` : ""}`;
   const dateLabel = document.getElementById("dashboardDate");
-  if (dateLabel) dateLabel.textContent = italianLongDate();
+  if (dateLabel) dateLabel.textContent = `${italianLongDate(now)} · ${new Intl.DateTimeFormat("it-IT", { hour:"2-digit", minute:"2-digit" }).format(now)}`;
 
   const shiftCount = document.getElementById("todayShiftCount");
   const peopleCount = document.getElementById("todayPeopleCount");
@@ -3460,10 +3479,18 @@ function renderDashboard() {
   if (peopleCount) peopleCount.textContent = String(people.length);
   if (roomCount) roomCount.textContent = `${occupiedPhysicalRooms.size}/15`;
 
-  renderDashboardRooms(todays);
+  renderDashboardRooms(todays, now);
 
   renderReminders();
 }
+
+function refreshDashboardClock() {
+  if (document.hidden || !document.getElementById('dashboardView')?.classList.contains('active')) return;
+  if (dashboardRenderedMinute !== String(Math.floor(Date.now() / 60000))) renderDashboard();
+}
+setInterval(refreshDashboardClock, 1000);
+document.addEventListener('visibilitychange', refreshDashboardClock);
+window.addEventListener('focus', refreshDashboardClock);
 
 function renderReminders() {
   const list = document.getElementById("remindersList");
