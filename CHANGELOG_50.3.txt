@@ -1,0 +1,2 @@
+Planning DVS 50.3 — 16 novembre 2026
+Rimossa l’evidenziazione del turno in corso nella dashboard. Restano orario, semafori automatici e conteggio delle sale effettivamente occupate secondo gli orari del Planning. Nessuna SQL.

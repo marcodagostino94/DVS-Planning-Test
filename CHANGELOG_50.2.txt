@@ -1,2 +1,0 @@
-Planning DVS 50.2 — 16 novembre 2026
-Dashboard: data e ora, semafori e conteggio sale occupate basati sui turni in corso, evidenziazione del turno attivo. Aggiornamento automatico al cambio minuto e al ritorno nella finestra. Esclusi i turni annullati con SPOSTATO AL; fine turno esclusiva, gestione 24:00 e turni oltre mezzanotte. Nessuna SQL.
