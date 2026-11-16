@@ -251,3 +251,16 @@
 @keyframes intro-planning{from{opacity:0;filter:blur(5px)}to{opacity:1;filter:blur(0)}}
 @media(prefers-reduced-motion:reduce){.intro-logo img,.intro-planning{animation:none;opacity:1}.intro-brand::before{animation:none;opacity:.22}.app-intro{transition:none}}
 
+
+/* Prova sfondo dashboard nelle pagine; superfici di lavoro chiare. */
+html:not(.is-iphone) .main-area>.app-view{
+ background:radial-gradient(circle at 48% -15%,rgba(176,22,40,.18),transparent 34%),linear-gradient(160deg,#0d1014 0%,#171a1f 52%,#0c0e11 100%);
+}
+html:not(.is-iphone) .planning-frame{background:transparent}
+html:not(.is-iphone) .app-view>.topbar{background:linear-gradient(rgba(230,232,235,.9),rgba(230,232,235,.9)),#e5e7ea}
+html:not(.is-iphone) .editors-card{background:linear-gradient(rgba(233,235,238,.9),rgba(233,235,238,.9)),#e5e7ea}
+html:not(.is-iphone) .management-card{background:linear-gradient(rgba(255,255,255,.76),rgba(255,255,255,.76)),#e5e7ea}
+html:not(.is-iphone) .summaries-card,
+html:not(.is-iphone) .summary-detail-panel{background:linear-gradient(rgba(255,255,255,.72),rgba(255,255,255,.72)),#e5e7ea}
+html:not(.is-iphone) .variables-help,
+html:not(.is-iphone) .schema-legend{color:#c4c8ce}
