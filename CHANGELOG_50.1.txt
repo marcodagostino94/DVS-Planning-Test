@@ -1,0 +1,2 @@
+Planning DVS 50.1 — 16 novembre 2026
+Dashboard: solo cognome del dipendente; orari compatti con minuti solo se diversi da 00. Nome completo disponibile al passaggio del mouse. Dati e altre sezioni invariati.

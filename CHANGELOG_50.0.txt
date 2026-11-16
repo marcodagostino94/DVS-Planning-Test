@@ -1,9 +1,0 @@
-Planning DVS 50.0
-Versione definitiva del 15 novembre 2026.
-- Nuova dashboard, sidebar slim e comandi laterali.
-- Rubrica estesa e schermate impostazioni centrate.
-- Stabilizzazione degli avatar durante gli aggiornamenti della presenza.
-- Animazione iniziale con logo originale e alone rosso.
-- Titolo, manifest PWA, informazioni, stampa e riferimenti di versione uniformati.
-- Esclusi anteprima dimostrativa e documenti delle prove.
-- Configurazione database, griglia turni, zoom e Backup Agent invariati rispetto alla prova approvata.
