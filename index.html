@@ -3,20 +3,22 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-  <title>Planning DVS 50.3 · Test sfondo</title>
+  <title>Planning DVS 50.6</title>
   <meta name="theme-color" content="#09090b">
-  <link rel="icon" href="./favicon.ico?v=50.3-bg1" sizes="any">
-  <link rel="icon" type="image/png" sizes="32x32" href="./assets/icons/dvs-planning-32.png?v=50.3-bg1">
-  <link rel="icon" type="image/png" sizes="16x16" href="./assets/icons/dvs-planning-16.png?v=50.3-bg1">
-  <link rel="icon" type="image/png" sizes="64x64" href="./assets/icons/dvs-planning-64.png?v=50.3-bg1">
-  <link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/dvs-planning-180.png?v=50.3-bg1">
-  <link rel="manifest" href="./manifest.webmanifest?v=50.3-bg1">
-  <link rel="stylesheet" href="./src/styles.css?v=50.3-bg1">
-<link rel="stylesheet" href="./src/app-ui.css?v=50.3-bg1">
+  <link rel="icon" href="./favicon.ico?v=50.6" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/icons/dvs-planning-32.png?v=50.6">
+  <link rel="icon" type="image/png" sizes="16x16" href="./assets/icons/dvs-planning-16.png?v=50.6">
+  <link rel="icon" type="image/png" sizes="64x64" href="./assets/icons/dvs-planning-64.png?v=50.6">
+  <link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/dvs-planning-180.png?v=50.6">
+  <link rel="manifest" href="./manifest.webmanifest?v=50.6">
+  <link rel="stylesheet" href="./src/styles.css?v=50.6">
+<link rel="stylesheet" href="./src/app-ui.css?v=50.6">
+<link rel="stylesheet" href="./src/iphone-ui.css?v=50.6">
+<link rel="stylesheet" href="./src/dashboard-kpi.css?v=50.6">
 </head>
 <body>
-<div id="appIntro" class="app-intro" role="status" aria-label="Avvio Planning DVS 50.3 · Test sfondo"><div class="intro-brand"><div class="intro-logo"><img src="./assets/logos/digital-video-full.png" alt="" aria-hidden="true"></div><div class="intro-planning">PLANNING</div></div></div>
-<script src="./src/app-intro.js?v=50.3-bg1" defer></script>
+<div id="appIntro" class="app-intro" role="status" aria-label="Avvio Planning DVS 50.6"><div class="intro-brand"><div class="intro-logo"><img src="./assets/logos/digital-video-full.png" alt="" aria-hidden="true"></div><div class="intro-planning">PLANNING</div></div></div>
+<script src="./src/app-intro.js?v=50.6" defer></script>
 
   <section id="profileGate" class="profile-gate" aria-label="Selezione profilo">
     <div class="profile-gate-content">
@@ -79,7 +81,7 @@
           <span class="nav-icon"><svg class="sf-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 5H5.5A2.5 2.5 0 0 0 3 7.5v9A2.5 2.5 0 0 0 5.5 19H10M14 8l4 4-4 4M8 12h10"/></svg></span><span>Esci</span>
         </button>
         <span id="activeProfileLabel" class="active-profile-label"></span>
-        <span class="build-pill">Planning DVS 50.3 · Test sfondo</span>
+        <span class="build-pill">Planning DVS 50.6</span>
       </div>
     </aside>
 
@@ -109,14 +111,15 @@
 
         <section class="dashboard-content">
           <div class="dashboard-kpis">
-            <button id="todayShiftsCard" class="dashboard-kpi is-clickable" type="button">
-              <span class="kpi-icon"><svg class="sf-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16" rx="3"/><path d="M7 2.5v4M17 2.5v4M3 9h18"/><path d="m9 15 2 2 4-5"/></svg></span><span class="kpi-copy"><small>Turni oggi</small><strong id="todayShiftCount">0</strong></span><span class="kpi-action">Apri Planning&nbsp; →</span>
+            <button id="todayShiftsCard" class="dashboard-kpi kpi-art kpi-shifts is-clickable" type="button">
+              <span class="kpi-copy"><small>Turni oggi</small><strong id="todayShiftCount">0</strong></span>
+              <span class="kpi-action">Apri Planning →</span>
             </button>
-            <article class="dashboard-kpi">
-              <span class="kpi-icon"><svg class="sf-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3.5 20c.5-4 2.4-6 5.5-6s5 2 5.5 6M14 15c3.7-.4 5.8 1.3 6.5 5"/></svg></span><span class="kpi-copy"><small>Persone presenti</small><strong id="todayPeopleCount">0</strong></span>
+            <article class="dashboard-kpi kpi-art kpi-people">
+              <span class="kpi-copy"><small>Persone presenti</small><strong id="todayPeopleCount">0</strong></span>
             </article>
-            <article class="dashboard-kpi">
-              <span class="kpi-icon"><svg class="sf-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4" width="17" height="16" rx="2.5"/><path d="M8 20V8h8v12M11 13h2"/></svg></span><span class="kpi-copy"><small>Sale occupate</small><strong id="todayRoomCount">0/15</strong></span>
+            <article class="dashboard-kpi kpi-art kpi-rooms">
+              <span class="kpi-copy"><small>Sale occupate</small><strong id="todayRoomCount">0/15</strong></span>
             </article>
           </div>
 
@@ -295,10 +298,10 @@
           <div class="settings-detail-toolbar"><button id="backFromGenericSettings" class="toolbar-btn" type="button">‹ Impostazioni</button></div>
           <div id="genericSettingsContent" class="management-card settings-generic-card">
             <img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video">
-            <h2>Planning DVS 50.3 · Test sfondo</h2>
+            <h2>Planning DVS 50.6</h2>
             <p>Applicazione collaborativa per la gestione del Planning di Digital Video Service.</p>
             <div class="settings-info-meta">
-              <div><span>Versione</span><strong>50.3</strong></div>
+              <div><span>Versione</span><strong>50.6</strong></div>
               <div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div>
               <div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div>
             </div>
@@ -622,10 +625,11 @@
   <div id="toast" class="toast" aria-live="polite"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="./src/config.js?v=50.3-bg1"></script>
-  <script src="./src/safari-scale.js?v=50.3-bg1"></script>
-  <script src="./src/app.js?v=50.3-bg1"></script>
-<script src="./src/dashboard-layout.js?v=50.3-bg1"></script>
-<script src="./src/sidebar-slim.js?v=50.3-bg1"></script>
+  <script src="./src/config.js?v=50.6"></script>
+  <script src="./src/safari-scale.js?v=50.6"></script>
+  <script src="./src/app.js?v=50.6"></script>
+<script src="./src/dashboard-layout.js?v=50.6"></script>
+<script src="./src/sidebar-slim.js?v=50.6"></script>
+<script src="./src/kpi-values.js?v=50.6"></script>
 </body>
 </html>

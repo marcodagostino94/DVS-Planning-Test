@@ -1,2 +1,0 @@
-Planning DVS 50.3 · Test sfondo
-Solo prova grafica degli sfondi. Funzioni e dati invariati.
