@@ -3,22 +3,22 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-  <title>Planning DVS 50.6</title>
+  <title>Planning DVS 50.7</title>
   <meta name="theme-color" content="#09090b">
-  <link rel="icon" href="./favicon.ico?v=50.6" sizes="any">
-  <link rel="icon" type="image/png" sizes="32x32" href="./assets/icons/dvs-planning-32.png?v=50.6">
-  <link rel="icon" type="image/png" sizes="16x16" href="./assets/icons/dvs-planning-16.png?v=50.6">
-  <link rel="icon" type="image/png" sizes="64x64" href="./assets/icons/dvs-planning-64.png?v=50.6">
-  <link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/dvs-planning-180.png?v=50.6">
-  <link rel="manifest" href="./manifest.webmanifest?v=50.6">
-  <link rel="stylesheet" href="./src/styles.css?v=50.6">
-<link rel="stylesheet" href="./src/app-ui.css?v=50.6">
-<link rel="stylesheet" href="./src/iphone-ui.css?v=50.6">
-<link rel="stylesheet" href="./src/dashboard-kpi.css?v=50.6">
+  <link rel="icon" href="./favicon.ico?v=50.7" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/icons/dvs-planning-32.png?v=50.7">
+  <link rel="icon" type="image/png" sizes="16x16" href="./assets/icons/dvs-planning-16.png?v=50.7">
+  <link rel="icon" type="image/png" sizes="64x64" href="./assets/icons/dvs-planning-64.png?v=50.7">
+  <link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/dvs-planning-180.png?v=50.7">
+  <link rel="manifest" href="./manifest.webmanifest?v=50.7">
+  <link rel="stylesheet" href="./src/styles.css?v=50.7">
+<link rel="stylesheet" href="./src/app-ui.css?v=50.7">
+<link rel="stylesheet" href="./src/iphone-ui.css?v=50.7">
+<link rel="stylesheet" href="./src/dashboard-kpi.css?v=50.7">
 </head>
 <body>
-<div id="appIntro" class="app-intro" role="status" aria-label="Avvio Planning DVS 50.6"><div class="intro-brand"><div class="intro-logo"><img src="./assets/logos/digital-video-full.png" alt="" aria-hidden="true"></div><div class="intro-planning">PLANNING</div></div></div>
-<script src="./src/app-intro.js?v=50.6" defer></script>
+<div id="appIntro" class="app-intro" role="status" aria-label="Avvio Planning DVS 50.7"><div class="intro-brand"><div class="intro-logo"><img src="./assets/logos/digital-video-full.png" alt="" aria-hidden="true"></div><div class="intro-planning">PLANNING</div></div></div>
+<script src="./src/app-intro.js?v=50.7" defer></script>
 
   <section id="profileGate" class="profile-gate" aria-label="Selezione profilo">
     <div class="profile-gate-content">
@@ -81,7 +81,7 @@
           <span class="nav-icon"><svg class="sf-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 5H5.5A2.5 2.5 0 0 0 3 7.5v9A2.5 2.5 0 0 0 5.5 19H10M14 8l4 4-4 4M8 12h10"/></svg></span><span>Esci</span>
         </button>
         <span id="activeProfileLabel" class="active-profile-label"></span>
-        <span class="build-pill">Planning DVS 50.6</span>
+        <span class="build-pill">Planning DVS 50.7</span>
       </div>
     </aside>
 
@@ -111,14 +111,79 @@
 
         <section class="dashboard-content">
           <div class="dashboard-kpis">
-            <button id="todayShiftsCard" class="dashboard-kpi kpi-art kpi-shifts is-clickable" type="button">
+            <button id="todayShiftsCard" class="dashboard-kpi kpi-art kpi-shifts is-clickable" type="button"><svg class="kpi-scene" viewBox="0 0 240 210" aria-hidden="true" focusable="false"><defs>
+ <linearGradient id="metal-calendar" x2=".8" y2="1"><stop stop-color="#858c98"/><stop offset=".34" stop-color="#303740"/><stop offset="1" stop-color="#12171e"/></linearGradient>
+ <linearGradient id="red-calendar" x2=".8" y2="1"><stop stop-color="#e4727d"/><stop offset=".28" stop-color="#b3394b"/><stop offset="1" stop-color="#4f1826"/></linearGradient>
+ <linearGradient id="paper-calendar" x2=".6" y2="1"><stop stop-color="#fff"/><stop offset=".55" stop-color="#e6e8ed"/><stop offset="1" stop-color="#939aa7"/></linearGradient>
+ <linearGradient id="screen-calendar" x2="1" y2="1"><stop stop-color="#192f43"/><stop offset=".6" stop-color="#244b61"/><stop offset="1" stop-color="#121e30"/></linearGradient>
+ <linearGradient id="chair-calendar" x2="1" y2=".8"><stop stop-color="#41454f"/><stop offset=".45" stop-color="#20242c"/><stop offset="1" stop-color="#11141b"/></linearGradient>
+ <radialGradient id="shadow-calendar"><stop stop-color="#000" stop-opacity=".5"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+ </defs><ellipse cx="130" cy="186" rx="95" ry="18" fill="url(#shadow-calendar)"/>
+ <path d="M80 40 193 33 211 176 111 188Z" fill="#291c28" stroke="#79404d"/>
+ <path d="M51 48Q52 36 64 35L188 26Q201 26 198 41L169 172Q167 183 154 184L29 191Q17 191 21 177Z" fill="#0e121a" stroke="#62636d"/>
+ <path d="M57 46 193 35 166 172Q165 179 156 179L30 186Z" fill="url(#paper-calendar)"/>
+ <path d="M57 43Q59 37 66 36L187 27Q201 26 198 40L190 75 49 85Z" fill="url(#red-calendar)" stroke="#ec9da7" stroke-opacity=".5"/>
+ <path d="M51 84 188 74" stroke="#fff" stroke-opacity=".5"/>
+<path d="M76 51C64 44 69 15 79 15C88 15 88 31 84 37" fill="none" stroke="#111721" stroke-width="8"/><path d="M74 48C66 39 72 16 79 17C85 17 86 27 83 35" fill="none" stroke="url(#paper-calendar)" stroke-width="4"/><path d="M109 51C97 44 102 15 112 15C121 15 121 31 117 37" fill="none" stroke="#111721" stroke-width="8"/><path d="M107 48C99 39 105 16 112 17C118 17 119 27 116 35" fill="none" stroke="url(#paper-calendar)" stroke-width="4"/><path d="M142 51C130 44 135 15 145 15C154 15 154 31 150 37" fill="none" stroke="#111721" stroke-width="8"/><path d="M140 48C132 39 138 16 145 17C151 17 152 27 149 35" fill="none" stroke="url(#paper-calendar)" stroke-width="4"/><path d="M175 51C163 44 168 15 178 15C187 15 187 31 183 37" fill="none" stroke="#111721" stroke-width="8"/><path d="M173 48C165 39 171 16 178 17C184 17 185 27 182 35" fill="none" stroke="url(#paper-calendar)" stroke-width="4"/><path d="M54 94h21l-4 18h-21Z" fill="#c1c5d0" stroke="#9b9fac" stroke-width="1"/><path d="M54 94h21" stroke="#fff" stroke-opacity=".7"/><path d="M83 92h21l-4 18h-21Z" fill="#c1c5d0" stroke="#9b9fac" stroke-width="1"/><path d="M83 92h21" stroke="#fff" stroke-opacity=".7"/><path d="M112 90h21l-4 18h-21Z" fill="#c1c5d0" stroke="#9b9fac" stroke-width="1"/><path d="M112 90h21" stroke="#fff" stroke-opacity=".7"/><path d="M141 88h21l-4 18h-21Z" fill="#c1c5d0" stroke="#9b9fac" stroke-width="1"/><path d="M141 88h21" stroke="#fff" stroke-opacity=".7"/><path d="M48 120h21l-4 18h-21Z" fill="#c1c5d0" stroke="#9b9fac" stroke-width="1"/><path d="M48 120h21" stroke="#fff" stroke-opacity=".7"/><path d="M77 118h21l-4 18h-21Z" fill="#c1c5d0" stroke="#9b9fac" stroke-width="1"/><path d="M77 118h21" stroke="#fff" stroke-opacity=".7"/><path d="M106 116h21l-4 18h-21Z" fill="url(#red-calendar)" stroke="#9b9fac" stroke-width="1"/><path d="M106 116h21" stroke="#fff" stroke-opacity=".7"/><path d="M135 114h21l-4 18h-21Z" fill="#c1c5d0" stroke="#9b9fac" stroke-width="1"/><path d="M135 114h21" stroke="#fff" stroke-opacity=".7"/><path d="M42 146h21l-4 18h-21Z" fill="#c1c5d0" stroke="#9b9fac" stroke-width="1"/><path d="M42 146h21" stroke="#fff" stroke-opacity=".7"/><path d="M71 144h21l-4 18h-21Z" fill="#c1c5d0" stroke="#9b9fac" stroke-width="1"/><path d="M71 144h21" stroke="#fff" stroke-opacity=".7"/><path d="M100 142h21l-4 18h-21Z" fill="#c1c5d0" stroke="#9b9fac" stroke-width="1"/><path d="M100 142h21" stroke="#fff" stroke-opacity=".7"/><path d="M129 140h21l-4 18h-21Z" fill="#c1c5d0" stroke="#9b9fac" stroke-width="1"/><path d="M129 140h21" stroke="#fff" stroke-opacity=".7"/></svg>
               <span class="kpi-copy"><small>Turni oggi</small><strong id="todayShiftCount">0</strong></span>
               <span class="kpi-action">Apri Planning →</span>
             </button>
-            <article class="dashboard-kpi kpi-art kpi-people">
+            <article class="dashboard-kpi kpi-art kpi-people"><svg class="kpi-scene" viewBox="0 0 240 210" aria-hidden="true" focusable="false"><defs>
+ <linearGradient id="metal-editor" x2=".8" y2="1"><stop stop-color="#858c98"/><stop offset=".34" stop-color="#303740"/><stop offset="1" stop-color="#12171e"/></linearGradient>
+ <linearGradient id="red-editor" x2=".8" y2="1"><stop stop-color="#e4727d"/><stop offset=".28" stop-color="#b3394b"/><stop offset="1" stop-color="#4f1826"/></linearGradient>
+ <linearGradient id="paper-editor" x2=".6" y2="1"><stop stop-color="#fff"/><stop offset=".55" stop-color="#e6e8ed"/><stop offset="1" stop-color="#939aa7"/></linearGradient>
+ <linearGradient id="screen-editor" x2="1" y2="1"><stop stop-color="#192f43"/><stop offset=".6" stop-color="#244b61"/><stop offset="1" stop-color="#121e30"/></linearGradient>
+ <linearGradient id="chair-editor" x2="1" y2=".8"><stop stop-color="#41454f"/><stop offset=".45" stop-color="#20242c"/><stop offset="1" stop-color="#11141b"/></linearGradient>
+ <radialGradient id="shadow-editor"><stop stop-color="#000" stop-opacity=".5"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+ </defs><ellipse cx="129" cy="190" rx="110" ry="17" fill="url(#shadow-editor)"/>
+ <path d="M23 140 206 135 229 153 42 161Z" fill="url(#metal-editor)" stroke="#636975" stroke-width=".6"/>
+ <path d="M42 161 229 153 229 158 42 166Z" fill="#10141b"/><path d="M48 163v29m165-35v33" stroke="#424852" stroke-width="5"/>
+ <path d="M130 123v19m-17 2 33-1" stroke="#656c76" stroke-width="6"/>
+ <rect x="62" y="39" width="139" height="88" rx="6" fill="url(#metal-editor)" stroke="#8b909b" stroke-width=".7"/>
+ <rect x="67" y="44" width="129" height="77" rx="2" fill="#111924"/>
+ <rect x="72" y="49" width="21" height="43" rx="1" fill="#293644"/>
+ <rect x="98" y="49" width="75" height="43" fill="url(#screen-editor)"/>
+ <path d="M98 82 115 64 126 73 143 54 172 82V92H98Z" fill="#7896a7"/><path d="m126 73 17-19 13 13-13-6Z" fill="#d3dfe4"/>
+ <path d="M98 86q29-9 75-1v7H98Z" fill="#3a687b"/>
+ <circle cx="184" cy="59" r="5" fill="none" stroke="#b6728e" stroke-width="2"/><circle cx="184" cy="75" r="5" fill="none" stroke="#728ea8" stroke-width="2"/>
+ <rect x="72" y="97" width="118" height="19" fill="#202c38"/>
+ <path d="M75 101h32m4 0h46m-82 5h49m5 0h48m-102 5h22m4 0h61" stroke="#659789" stroke-width="3"/>
+ <path d="M137 96v21" stroke="#d66b79"/>
+ <path d="M82 148 143 146 155 153 90 155Z" fill="#606977"/><path d="m90 149 49-1m-45 3 49-1" stroke="#272e39"/>
+ <ellipse cx="171" cy="151" rx="7" ry="3" fill="#9295a0"/>
+ <path d="M25 92h27v51H25Z" fill="url(#metal-editor)" stroke="#616774" stroke-width=".7"/>
+ <circle cx="38" cy="106" r="6" fill="#0c1119" stroke="#737c88"/><circle cx="38" cy="128" r="10" fill="#101722" stroke="#656d79"/><circle cx="38" cy="128" r="4" fill="#353e4d"/>
+ <path d="M207 86h20v51h-20Z" fill="url(#metal-editor)"/><circle cx="217" cy="99" r="5" fill="#121a25" stroke="#656d79"/><circle cx="217" cy="120" r="8" fill="#121a25" stroke="#656d79"/>
+ <path d="M98 126Q104 112 122 111H143Q161 115 170 143L179 173H78Z" fill="url(#chair-editor)" stroke="#73717b" stroke-width=".7"/><path d="M119 98v20q12 9 24 0V97" fill="#a07869"/><path d="M111 75Q110 54 132 53Q154 54 154 76L149 99Q135 115 120 100Z" fill="#8f6a5d"/><path d="M110 80Q98 53 121 47Q148 40 159 61L153 87 146 73 137 81 128 69 117 82Z" fill="#302b2b" stroke="#635047"/><path d="M113 69Q117 49 138 53m-17 12q7-13 23-8" fill="none" stroke="#6f5546" stroke-width="2"/><path d="M109 78Q104 47 132 45Q161 46 160 81" fill="none" stroke="#6c6e79" stroke-width="4"/><rect x="106" y="75" width="8" height="18" rx="4" fill="#202733"/><rect x="153" y="75" width="8" height="18" rx="4" fill="#202733"/><path d="M86 155Q88 144 101 144L151 143Q166 144 167 155L162 183Q159 193 148 193H103Q90 192 88 182Z" fill="url(#chair-editor)" stroke="#9b6470" stroke-width="1.2"/><path d="M97 153 155 152M98 159l56-1M99 165l54-1M100 171l52-1M101 177l50-1" stroke="#69707b" stroke-opacity=".22"/><path d="M125 194v10m-21 3 21-4 23 3" fill="none" stroke="#6a707a" stroke-width="4"/></svg>
               <span class="kpi-copy"><small>Persone presenti</small><strong id="todayPeopleCount">0</strong></span>
             </article>
-            <article class="dashboard-kpi kpi-art kpi-rooms">
+            <article class="dashboard-kpi kpi-art kpi-rooms"><svg class="kpi-scene" viewBox="0 0 240 210" aria-hidden="true" focusable="false"><defs>
+ <linearGradient id="metal-room" x2=".8" y2="1"><stop stop-color="#858c98"/><stop offset=".34" stop-color="#303740"/><stop offset="1" stop-color="#12171e"/></linearGradient>
+ <linearGradient id="red-room" x2=".8" y2="1"><stop stop-color="#e4727d"/><stop offset=".28" stop-color="#b3394b"/><stop offset="1" stop-color="#4f1826"/></linearGradient>
+ <linearGradient id="paper-room" x2=".6" y2="1"><stop stop-color="#fff"/><stop offset=".55" stop-color="#e6e8ed"/><stop offset="1" stop-color="#939aa7"/></linearGradient>
+ <linearGradient id="screen-room" x2="1" y2="1"><stop stop-color="#192f43"/><stop offset=".6" stop-color="#244b61"/><stop offset="1" stop-color="#121e30"/></linearGradient>
+ <linearGradient id="chair-room" x2="1" y2=".8"><stop stop-color="#41454f"/><stop offset=".45" stop-color="#20242c"/><stop offset="1" stop-color="#11141b"/></linearGradient>
+ <radialGradient id="shadow-room"><stop stop-color="#000" stop-opacity=".5"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+ </defs><ellipse cx="129" cy="190" rx="110" ry="17" fill="url(#shadow-room)"/>
+ <path d="M23 140 206 135 229 153 42 161Z" fill="url(#metal-room)" stroke="#636975" stroke-width=".6"/>
+ <path d="M42 161 229 153 229 158 42 166Z" fill="#10141b"/><path d="M48 163v29m165-35v33" stroke="#424852" stroke-width="5"/>
+ <path d="M130 123v19m-17 2 33-1" stroke="#656c76" stroke-width="6"/>
+ <rect x="62" y="39" width="139" height="88" rx="6" fill="url(#metal-room)" stroke="#8b909b" stroke-width=".7"/>
+ <rect x="67" y="44" width="129" height="77" rx="2" fill="#111924"/>
+ <rect x="72" y="49" width="21" height="43" rx="1" fill="#293644"/>
+ <rect x="98" y="49" width="75" height="43" fill="url(#screen-room)"/>
+ <path d="M98 82 115 64 126 73 143 54 172 82V92H98Z" fill="#7896a7"/><path d="m126 73 17-19 13 13-13-6Z" fill="#d3dfe4"/>
+ <path d="M98 86q29-9 75-1v7H98Z" fill="#3a687b"/>
+ <circle cx="184" cy="59" r="5" fill="none" stroke="#b6728e" stroke-width="2"/><circle cx="184" cy="75" r="5" fill="none" stroke="#728ea8" stroke-width="2"/>
+ <rect x="72" y="97" width="118" height="19" fill="#202c38"/>
+ <path d="M75 101h32m4 0h46m-82 5h49m5 0h48m-102 5h22m4 0h61" stroke="#659789" stroke-width="3"/>
+ <path d="M137 96v21" stroke="#d66b79"/>
+ <path d="M82 148 143 146 155 153 90 155Z" fill="#606977"/><path d="m90 149 49-1m-45 3 49-1" stroke="#272e39"/>
+ <ellipse cx="171" cy="151" rx="7" ry="3" fill="#9295a0"/>
+ <path d="M25 92h27v51H25Z" fill="url(#metal-room)" stroke="#616774" stroke-width=".7"/>
+ <circle cx="38" cy="106" r="6" fill="#0c1119" stroke="#737c88"/><circle cx="38" cy="128" r="10" fill="#101722" stroke="#656d79"/><circle cx="38" cy="128" r="4" fill="#353e4d"/>
+ <path d="M207 86h20v51h-20Z" fill="url(#metal-room)"/><circle cx="217" cy="99" r="5" fill="#121a25" stroke="#656d79"/><circle cx="217" cy="120" r="8" fill="#121a25" stroke="#656d79"/>
+ <path d="M86 155Q88 144 101 144L151 143Q166 144 167 155L162 183Q159 193 148 193H103Q90 192 88 182Z" fill="url(#chair-room)" stroke="#9b6470" stroke-width="1.2"/><path d="M97 153 155 152M98 159l56-1M99 165l54-1M100 171l52-1M101 177l50-1" stroke="#69707b" stroke-opacity=".22"/><path d="M125 194v10m-21 3 21-4 23 3" fill="none" stroke="#6a707a" stroke-width="4"/></svg>
               <span class="kpi-copy"><small>Sale occupate</small><strong id="todayRoomCount">0/15</strong></span>
             </article>
           </div>
@@ -298,10 +363,10 @@
           <div class="settings-detail-toolbar"><button id="backFromGenericSettings" class="toolbar-btn" type="button">‹ Impostazioni</button></div>
           <div id="genericSettingsContent" class="management-card settings-generic-card">
             <img class="settings-info-logo" src="./assets/logos/digital-video-full.png" alt="Digital Video">
-            <h2>Planning DVS 50.6</h2>
+            <h2>Planning DVS 50.7</h2>
             <p>Applicazione collaborativa per la gestione del Planning di Digital Video Service.</p>
             <div class="settings-info-meta">
-              <div><span>Versione</span><strong>50.6</strong></div>
+              <div><span>Versione</span><strong>50.7</strong></div>
               <div><span>Ideazione e sviluppo</span><strong>Marco D'Agostino per Digital Video Service</strong></div>
               <div><span>Sincronizzazione</span><strong>Supabase Realtime</strong></div>
             </div>
@@ -625,11 +690,11 @@
   <div id="toast" class="toast" aria-live="polite"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="./src/config.js?v=50.6"></script>
-  <script src="./src/safari-scale.js?v=50.6"></script>
-  <script src="./src/app.js?v=50.6"></script>
-<script src="./src/dashboard-layout.js?v=50.6"></script>
-<script src="./src/sidebar-slim.js?v=50.6"></script>
-<script src="./src/kpi-values.js?v=50.6"></script>
+  <script src="./src/config.js?v=50.7"></script>
+  <script src="./src/safari-scale.js?v=50.7"></script>
+  <script src="./src/app.js?v=50.7"></script>
+<script src="./src/dashboard-layout.js?v=50.7"></script>
+<script src="./src/sidebar-slim.js?v=50.7"></script>
+<script src="./src/kpi-values.js?v=50.7"></script>
 </body>
 </html>

@@ -1,7 +1,7 @@
-# Planning DVS 50.6
+# Planning DVS 50.7
 
-Aggiornamento grafico dei tre KPI della dashboard con le immagini fornite. Numeri e testi HTML; conteggi e azione Apri Planning invariati. Su iPhone le card sono verticali.
+Tre KPI ricostruiti con superfici CSS e illustrazioni vettoriali separate: calendario, operatore e sala di montaggio. Nessuna immagine del mockup usata come pulsante. Numeri e testi dinamici; bordi e riflessi rossi attenuati.
 
-Pubblicare il contenuto della cartella nel repository come di consueto. Nessuna SQL necessaria. Backup Agent 2.2.0 invariato.
+Pubblicare il contenuto della cartella nel repository come di consueto. Nessuna SQL. Backup Agent invariato.
 
-Le basi PNG sono originali: i ritagli forniti contengono bordi non completamente simmetrici. Il CSS uniforma il formato e lo spazio per i testi, senza ricreare le illustrazioni. Il rilievo dei numeri è reso in CSS, non mediante immagini statiche.
+Le illustrazioni sono nuove interpretazioni vettoriali dei riferimenti, non riproduzioni fotorealistiche. Verifica visiva su Mac e iPhone da effettuare.

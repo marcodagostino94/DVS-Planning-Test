@@ -1,3 +1,0 @@
-Planning DVS 50.6
-Tre card KPI dashboard con basi grafiche originali fornite, testi dinamici e numeri con profondità CSS.
-Card verticali su iPhone. Conteggi, navigazione, database e altre sezioni invariati. Nessuna SQL.
