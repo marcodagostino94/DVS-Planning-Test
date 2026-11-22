@@ -1,7 +1,7 @@
-# Planning DVS 50.7
+# Planning DVS 50.8
 
-Tre KPI ricostruiti con superfici CSS e illustrazioni vettoriali separate: calendario, operatore e sala di montaggio. Nessuna immagine del mockup usata come pulsante. Numeri e testi dinamici; bordi e riflessi rossi attenuati.
+Proposta grafica per i tre KPI, basata sulla 50.5 approvata. Immagini trasparenti originali come illustrazioni separate; contenitori e testi HTML/CSS. Nessuna modifica ai conteggi o al database.
 
-Pubblicare il contenuto della cartella nel repository come di consueto. Nessuna SQL. Backup Agent invariato.
+Pubblicare il contenuto della cartella come di consueto. Nessuna SQL necessaria. Backup Agent invariato.
 
-Le illustrazioni sono nuove interpretazioni vettoriali dei riferimenti, non riproduzioni fotorealistiche. Verifica visiva su Mac e iPhone da effettuare.
+Verificati riferimenti, immagini e integrità del pacchetto. Resa visiva da verificare su Mac e iPhone.

@@ -1,4 +1,0 @@
-Planning DVS 50.7
-Ricostruzione dei tre KPI: card native HTML/CSS, illustrazioni SVG, numeri dinamici con profondità discreta.
-Eliminati i PNG di sfondo e i forti aloni neon.
-Conteggi, azione Apri Planning e tutte le altre schermate invariati. Nessuna SQL.
