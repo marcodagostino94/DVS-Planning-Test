@@ -1,4 +1,4 @@
-/* Planning DVS 50.8 — solo iPhone; layout Mac e iPad invariati. */
+/* Planning DVS 51 — solo iPhone; layout Mac e iPad invariati. */
 html.is-iphone-device .main-area>.app-view{background:radial-gradient(circle at 48% -15%,rgba(176,22,40,.18),transparent 34%),linear-gradient(160deg,#0d1014 0%,#171a1f 52%,#0c0e11 100%)}
 html.is-iphone-device .planning-frame{background:transparent}
 html.is-iphone-device .app-view>.topbar{background:#e7e9ec;flex-shrink:0}

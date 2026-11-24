@@ -1,4 +1,4 @@
-/* Interfaccia Planning DVS 50.8. */
+/* Interfaccia Planning DVS 51. */
 .sidebar-footer{display:grid;grid-template-columns:repeat(3,1fr);align-items:center;gap:10px}
 .sidebar-footer>.nav-item{width:46px;height:46px;min-height:46px;padding:0;display:grid;place-items:center;border-radius:50%;justify-self:center}
 .sidebar-footer>.nav-item>span:not(.nav-icon){display:none}
@@ -38,7 +38,7 @@
 #dashboardView .reminders-panel{flex-shrink:0;min-height:220px}
 }
 
-/* Interfaccia Planning DVS 50.8. */
+/* Interfaccia Planning DVS 51. */
 #dashboardView .dashboard-header>div{order:0}
 #dashboardView .dashboard-open-planning{order:1;border:1px solid #ffffff20;border-radius:12px;padding:8px 12px;background:#ffffff0d;color:#eceef0;cursor:pointer;font-size:11px}
 #dashboardView .overview-chinotto .office-group h3{display:none}
@@ -59,7 +59,7 @@
 }
 @media(max-width:900px){#dashboardView .overview-room{height:38px}}
 
-/* Interfaccia Planning DVS 50.8. */
+/* Interfaccia Planning DVS 51. */
 #dashboardView .office-group h3{display:none}
 #dashboardView .overview-carso .office-group+.office-group{border-top:2px solid #ffffff66;margin-top:12px;padding-top:12px}
 #dashboardView .overview-booking{display:flex;gap:7px;align-items:center}
@@ -83,7 +83,7 @@
  #dashboardView .overview-wing .office-group+.office-group::before{content:"";position:absolute;top:-10px;left:0;right:0;border-top:2px solid #ffffff66}
 }
 
-/* Interfaccia Planning DVS 50.8. */
+/* Interfaccia Planning DVS 51. */
 #dashboardView .reminders-panel .panel-heading h2{margin-top:0}
 @media(min-width:901px){
  html:not(.is-iphone) #dashboardView .dashboard-header{display:flex;align-items:center;gap:20px;padding-bottom:12px}
@@ -104,7 +104,7 @@
  html:not(.is-iphone) #dashboardView .dashboard-header .kpi-icon svg{width:18px;height:18px}
 }
 
-/* Interfaccia Planning DVS 50.8. */
+/* Interfaccia Planning DVS 51. */
 #dashboardView .room-overview::before{display:none}
 #dashboardView .overview-surface{position:absolute;inset:0;width:100%;height:100%;overflow:visible;z-index:-1;pointer-events:none;filter:drop-shadow(0 14px 17px rgba(0,0,0,.17))}
 @media(min-width:901px){
@@ -112,12 +112,12 @@
 }
 @media(max-width:900px){#dashboardView .overview-surface{display:none}}
 
-/* Interfaccia Planning DVS 50.8. */
+/* Interfaccia Planning DVS 51. */
 #dashboardView .overview-room{grid-template-columns:88px minmax(0,1fr)}
 #dashboardView .overview-room-label{box-sizing:border-box;width:100%;padding:5px 8px;border-radius:11px;background:rgba(255,255,255,.035);min-height:0}
 #dashboardView .reminders-panel .panel-heading h2{margin-top:3px}
 
-/* Interfaccia Planning DVS 50.8. */
+/* Interfaccia Planning DVS 51. */
 .sidebar .brand .brand-symbol{display:none}
 @media(min-width:901px){
  html:not(.is-iphone) .sidebar{--rail-content:219px;position:relative;padding:18px 14px 14px;box-sizing:border-box;overflow:hidden;background:radial-gradient(circle at 15% 0%,rgba(206,35,52,.10),transparent 28%),linear-gradient(165deg,#0d0f12 0%,#181b1f 100%);background-size:248px 100%;background-repeat:no-repeat;backdrop-filter:none;-webkit-backdrop-filter:none;flex-shrink:0}
@@ -166,7 +166,7 @@
 
 @media(min-width:901px){html:not(.is-iphone) .sidebar-nav .nav-item:not(:disabled):hover{transform:none}}
 
-/* Interfaccia Planning DVS 50.8. */
+/* Interfaccia Planning DVS 51. */
 @media(min-width:901px){
  html:not(.is-iphone) .sidebar-footer{height:214px;min-height:214px;flex-basis:214px}
  html:not(.is-iphone) .sidebar-footer>#backupStatusCard{transform:translate(2px,0)}
@@ -179,7 +179,7 @@
  html.sidebar-slim:not(.sidebar-peek):not(.is-iphone) .sidebar-footer>#logoutBtn{transform:translate(2px,108px)}
 }
 
-/* Interfaccia Planning DVS 50.8. */
+/* Interfaccia Planning DVS 51. */
 @media(min-width:901px){
  html:not(.is-iphone) .sidebar{height:100dvh;max-height:100dvh;overflow:clip}
 }
@@ -201,7 +201,7 @@
 /* Rubrica estesa alla larghezza disponibile. */
 #editorsView .editors-card{width:100%;max-width:none}
 
-/* Interfaccia Planning DVS 50.8. */
+/* Interfaccia Planning DVS 51. */
 @media(min-width:901px){
  html:not(.is-iphone) .sidebar-nav .nav-item.active{border-color:rgba(255,96,108,.58)}
  html:not(.is-iphone) .sidebar-nav .nav-item.active::after{bottom:0}
@@ -212,7 +212,7 @@
  html:not(.is-iphone) .sidebar-nav .nav-item.active:not(:disabled):hover{border-color:rgba(255,96,108,.7);box-shadow:inset 0 1px rgba(255,255,255,.22),0 0 0 1px rgba(177,17,34,.16),0 5px 12px rgba(177,17,34,.24)}
 }
 
-/* Interfaccia Planning DVS 50.8. */
+/* Interfaccia Planning DVS 51. */
 @media(min-width:901px){
  html:not(.is-iphone) .sidebar-footer>.nav-item{overflow:visible}
  html:not(.is-iphone) .sidebar-footer>.nav-item>span:not(.nav-icon){display:block;position:absolute;left:60px;top:0;height:46px;line-height:46px;white-space:nowrap;text-align:left;font-size:14px;font-weight:750;opacity:1;transition:opacity .15s ease;color:var(--sidebar-text)}
@@ -220,7 +220,7 @@
  html.sidebar-slim:not(.sidebar-peek):not(.is-iphone) .sidebar-footer>.nav-item>span:not(.nav-icon){opacity:0;pointer-events:none}
 }
 
-/* Interfaccia Planning DVS 50.8. */
+/* Interfaccia Planning DVS 51. */
 @media(min-width:901px){
  html:not(.is-iphone) #settingsView>.settings-home,
  html:not(.is-iphone) #settingsView>.settings-detail{
@@ -238,7 +238,7 @@
  html:not(.is-iphone) #settingsView>.settings-home{grid-template-columns:minmax(0,360px)}
 }
 
-/* Interfaccia Planning DVS 50.8. */
+/* Interfaccia Planning DVS 51. */
 .app-intro{position:fixed;inset:0;z-index:2147483647;display:grid;place-items:center;background:radial-gradient(ellipse at center,rgba(116,18,31,.18),transparent 65%),#0d0f12;opacity:1;transition:opacity .4s ease}
 .app-intro.is-finished{opacity:0;pointer-events:none}
 .intro-brand{position:relative;isolation:isolate;width:min(340px,72vw);text-align:center}

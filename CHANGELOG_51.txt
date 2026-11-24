@@ -1,0 +1,7 @@
+Planning DVS 51 — 24 novembre 2026
+Base: versione 50.5 approvata, con i riquadri originali della dashboard.
+Blocco dello zoom nativo da doppio tocco/clic e gesti nelle pagine e nei dialoghi.
+Scorrimento, doppio clic sui turni e zoom interno del Planning mantenuti.
+Campi iPhone almeno 16 px per evitare ingrandimenti automatici al focus.
+Nessuna modifica a database, conteggi o Backup Agent 2.2.0.
+Numerazione aggiornata a 51 su richiesta; grafica della 50.5 approvata.

@@ -1,0 +1,6 @@
+/* Disable browser touch zoom while preserving scrolling and app controls. */
+html, body, dialog { touch-action: pan-x pan-y; }
+/* Avoid automatic input-focus magnification on iPhone. */
+html.is-iphone-device input,
+html.is-iphone-device textarea,
+html.is-iphone-device select { font-size: max(16px, 1em); }

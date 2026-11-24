@@ -1,4 +1,0 @@
-Planning DVS 50.8
-Base 50.5 approvata. Tre KPI con immagini trasparenti fornite, card CSS scure e accenti discreti.
-Testi, conteggi e azione Apri Planning originali. Su iPhone tre card verticali.
-Nessuna SQL. Backup Agent invariato.

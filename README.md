@@ -1,7 +1,11 @@
-# Planning DVS 50.8
+# Planning DVS 51
 
-Proposta grafica per i tre KPI, basata sulla 50.5 approvata. Immagini trasparenti originali come illustrazioni separate; contenitori e testi HTML/CSS. Nessuna modifica ai conteggi o al database.
+Versione basata sulla 50.5 approvata, con grafica originale e protezione dallo zoom accidentale del browser in tutte le schermate. Lo zoom interno del Planning e il doppio clic sui turni restano disponibili.
 
-Pubblicare il contenuto della cartella come di consueto. Nessuna SQL necessaria. Backup Agent invariato.
+## Pubblicazione
+Caricare il contenuto della cartella Planning-DVS-51 nel repository. Riaprire e ricaricare l’app, verificando la versione 51 nelle Informazioni. Versione 51 con blocco zoom, basata sulla 50.5 approvata.
 
-Verificati riferimenti, immagini e integrità del pacchetto. Resa visiva da verificare su Mac e iPhone.
+Nessuna SQL necessaria. Backup Agent 2.2.0 invariato.
+
+## Verifica sul dispositivo
+Verificare doppi tocchi rapidi su dashboard e menu, apertura turno con doppio clic, scorrimento, campi di inserimento e selettore zoom del Planning. Controllati codice e integrità ZIP; prova reale su Safari/iPhone da effettuare. Le impostazioni di accessibilità o i comandi nativi del browser possono prevalere sul blocco della pagina.
